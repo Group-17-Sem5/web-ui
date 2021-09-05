@@ -93,7 +93,7 @@ function NavItem({ item, active }) {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {children.map((item) => {
-              const { title, path } = item;
+              const { title, path ,icon } = item;
               const isActiveSub = active(path);
 
               return (
@@ -123,6 +123,7 @@ function NavItem({ item, active }) {
                         })
                       }}
                     />
+                    {/* {icon && icon} */}
                   </ListItemIconStyle>
                   <ListItemText disableTypography primary={title} />
                 </ListItemStyle>

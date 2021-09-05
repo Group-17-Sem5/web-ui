@@ -3,8 +3,6 @@ import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
 import trash2Fill from '@iconify/icons-eva/trash-2-fill';
 import roundFilterList from '@iconify/icons-ic/round-filter-list';
-
-import { useRef,useState } from 'react';
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import {
@@ -14,9 +12,7 @@ import {
   IconButton,
   Typography,
   OutlinedInput,
-  InputAdornment,
-  Select,
-  MenuItem,
+  InputAdornment
 } from '@material-ui/core';
 
 // ----------------------------------------------------------------------
@@ -41,20 +37,15 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
   }
 }));
 
-
 // ----------------------------------------------------------------------
 
-UserListToolbar.propTypes = {
+TableToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
-  onFilterName: PropTypes.func,
-  filterStatus: PropTypes.string,
-  onFilterStatus: PropTypes.func
+  onFilterName: PropTypes.func
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName,filterStatus,onFilterStatus }) {
-  const [val,setVal] = useState('')
-  
+export default function TableToolbar({ numSelected, filterName, onFilterName }) {
   return (
     <RootStyle
       sx={{
@@ -88,38 +79,11 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
           </IconButton>
         </Tooltip>
       ) : (
-        <>
-        
-        {/* <Tooltip title="Filter list">
-          <IconButton ref={ref} onClick={()=>setIsOpen(true)}>
+        <Tooltip title="Filter list">
+          <IconButton>
             <Icon icon={roundFilterList} />
           </IconButton>
-        </Tooltip> */}
-        {/* <Menu
-        open={isOpen}
-        anchorEl={ref.current}
-        onClose={()=>setIsOpen(false)}
-        PaperProps={{
-          sx: { width: 200, maxWidth: '100%' }
-        }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        value={filterStatus}
-        > */}
-        <Select
-        value={filterStatus}
-        onChange={onFilterStatus}
-        style={{width:'15%'}}
-        value={val}
-        displayEmpty
-        
-        >
-          <MenuItem onClick={()=>setVal('')} sx={{ color: 'text.secondary' }} value=''><em>All</em></MenuItem>
-          <MenuItem onClick={()=>setVal('active')} sx={{ color: 'text.secondary' }} value='active'>Delevered</MenuItem>
-          <MenuItem onClick={()=>setVal('banned')} sx={{ color: 'text.secondary' }} value='banned'>Pending</MenuItem>
-          <MenuItem onClick={()=>setVal('cancelled')} sx={{ color: 'text.secondary' }} value='cancelled'>Cancelled</MenuItem>
-          </Select>{/* </Menu> */}
-        </>
+        </Tooltip>
       )}
     </RootStyle>
   );

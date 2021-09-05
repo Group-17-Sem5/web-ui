@@ -9,23 +9,23 @@ const useStyles = makeStyles((theme) =>
       // Tooltip
       '.apexcharts-tooltip,.apexcharts-xaxistooltip': {
         border: '0 !important',
-        boxShadow: `${theme.customShadows.z24} !important`,
-        color: `${theme.palette.text.primary} !important`,
-        borderRadius: `${theme.shape.borderRadiusSm}px !important`,
-        backgroundColor: `${theme.palette.background.default} !important`
+        // boxShadow: `${theme.customShadows.z24} !important`,
+        // color: `${theme.palette.text.primary} !important`,
+        // borderRadius: `${theme.shape.borderRadiusSm}px !important`,
+        // backgroundColor: `${theme.palette.background.default} !important`
       },
       '.apexcharts-tooltip-title': {
         border: '0 !important',
-        fontWeight: theme.typography.fontWeightBold,
-        backgroundColor: `${theme.palette.grey[500_16]} !important`,
-        color: theme.palette.text.secondary
+        // fontWeight: theme.typography.fontWeightBold,
+        //backgroundColor: `${theme.palette.grey[500_16]} !important`,
+        //color: theme.palette.text.secondary
       },
       '.apexcharts-xaxistooltip-bottom': {
         '&:before': {
           borderBottomColor: 'transparent !important'
         },
         '&:after': {
-          borderBottomColor: `${theme.palette.background.paper} !important`
+         // borderBottomColor: `${theme.palette.background.paper} !important`
         }
       },
 
