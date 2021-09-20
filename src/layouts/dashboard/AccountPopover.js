@@ -1,16 +1,17 @@
 import { Icon } from '@iconify/react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink ,useNavigate} from 'react-router-dom';
 // material
 import { alpha } from '@material-ui/core/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@material-ui/core';
 // components
 import MenuPopover from '../../components/MenuPopover';
-//
-import account from '../../_mocks_/account';
+import { useDetail } from 'src/context/DetailContext';
+import useIntervalFetch from 'src/hooks/useIntervalFetch';
+// import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
 
@@ -18,23 +19,40 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: homeFill,
-    linkTo: '/'
+    linkTo: '/app/dashboard'
   },
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: '#'
+    linkTo: '/app/profile'
   },
   {
-    label: 'Settings',
+    label: 'Edit Details',
     icon: settings2Fill,
-    linkTo: '#'
+    linkTo: '/app/profile/edit'
   }
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const {user,logout} = useDetail()
+  const [data,setData] = useState()
+  const token = localStorage.getItem('adminToken')
+  const id = (user._id)
+  useEffect(()=>{
+    fetch ('http://localhost:5000/admin/postmaster/'+id,{
+      headers: { "Authorization": "Bearer " + token},
+    })
+    .then(result=>{
+      return result.json()
+    })
+    .then(data=>{
+      console.log(data)
+      setData(data)
+    })
+  },[id])
+
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -44,6 +62,14 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    const bool = logout()
+    if (bool){
+      navigate('/')
+    }
+  }
 
   return (
     <>
@@ -67,7 +93,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar>{data && data.username.charAt(0).toUpperCase()}</Avatar>
       </IconButton>
 
       <MenuPopover
@@ -78,10 +104,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+            {data && data.username}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {data && data.email}
           </Typography>
         </Box>
 
@@ -110,7 +136,7 @@ export default function AccountPopover() {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined">
+          <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>
             Logout
           </Button>
         </Box>

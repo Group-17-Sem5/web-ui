@@ -71,8 +71,8 @@ export default function BaseOptionChart() {
     colors: [
       theme.palette.primary.main,
       theme.palette.warning.main,
-      theme.palette.info.main,
       theme.palette.error.main,
+      theme.palette.info.main,
       theme.palette.success.main
     ],
 

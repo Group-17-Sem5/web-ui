@@ -106,7 +106,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         value={filterStatus}
         > */}
-        <Select
+        {/* <Select
         value={filterStatus}
         onChange={onFilterStatus}
         style={{width:'15%'}}
@@ -118,7 +118,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
           <MenuItem onClick={()=>setVal('active')} sx={{ color: 'text.secondary' }} value='active'>Delevered</MenuItem>
           <MenuItem onClick={()=>setVal('banned')} sx={{ color: 'text.secondary' }} value='banned'>Pending</MenuItem>
           <MenuItem onClick={()=>setVal('cancelled')} sx={{ color: 'text.secondary' }} value='cancelled'>Cancelled</MenuItem>
-          </Select>{/* </Menu> */}
+          </Select></Menu> */}
         </>
       )}
     </RootStyle>

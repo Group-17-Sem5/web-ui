@@ -6,9 +6,8 @@ import { Card, Button, Container, Stack, Typography, CardContent } from '@materi
 // components
 import Page from '../components/Page';
 // import AddPostmanForm from '../components/postman/newPostman';
-import AddPostmanForm from '../components/form/addPostman'
-import Add from 'src/components/form/addPost';
-import Profile from 'src/components/form/Profile';
+import AddPost from '../components/form/addPost'
+
 //
 
 
@@ -24,11 +23,11 @@ const SORT_OPTIONS = [
 
 export default function AddPostman() {
   return (
-    <Page title="Dashboard: Add Postman | MIS">
+    <Page title="Dashboard: Add Post | MIS">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Add Postman
+            Add Posts
           </Typography>
           {/* <Button
             variant="contained"
@@ -41,7 +40,7 @@ export default function AddPostman() {
         </Stack>
 
         
-        <AddPostmanForm/>
+        <AddPost/>
         
           {/* <Add/>
           <Profile/> */}

@@ -3,7 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 // material
 import { Card, CardHeader, Box } from '@material-ui/core';
 //
-import { BaseOptionChart } from '../../charts';
+import { BaseOptionChart } from 'src/components/charts';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +14,8 @@ export default function AppWebsiteVisits({title,CHART_DATA,labels,subheader}) {
     plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
     fill: { type: ['solid', 'solid', 'solid'] },
     labels: labels,
-    xaxis: { type: 'datetime' },
+    xaxis: { type: 'datetime',title: {text:'Date'} },
+    yaxis: {title: {text:'Count'} },
     tooltip: {
       shared: true,
       intersect: false,

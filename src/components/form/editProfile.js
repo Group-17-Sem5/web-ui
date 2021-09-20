@@ -26,11 +26,11 @@ import { result } from 'lodash';
 import useEditData from 'src/hooks/useEditData';
 import { useParams } from 'react-router';
 import { id } from 'date-fns/locale';
-
+import { useDetail } from 'src/context/DetailContext';
 
 // ----------------------------------------------------------------------
 
-export default function AddPostmanForm() {
+export default function EditProfile() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [val,setVal] = useState()
@@ -39,22 +39,23 @@ export default function AddPostmanForm() {
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     mobileNumber: Yup.string().required('Mobile number is required').matches(phoneRegExp, 'Mobile number is not valid'),
     // branch: Yup.string().required('Branch name is required'),
-    area: Yup.string().required('Area is required'),
+    // area: Yup.string().required('Area is required'),
     username: Yup.string().required('First Name is required').min(2,'Too short').max(50,'Too long'),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
   const token = localStorage.getItem('adminToken')
-  const {id} = useParams()
-  const url = id ? '/postMaster/postman/update/'+id : '/postMaster/postman/add' 
+  const {user} = useDetail()
+  const id = (user._id)
+  const url = (user.type)=='postmaster' ? '/admin/postmaster/update/'+id : '' 
 
-  useEditData('/postMaster/postman/'+id,
+  useEditData('/admin/postmaster/'+id,
     data=>{
       if(data){
         setVal(data)
+        console.log(data)
         setFieldValue('email',data.email)
         setFieldValue('mobileNumber',data.mobileNumber)
-        setFieldValue('area',data.area)
         setFieldValue('username',data.username)
       }
     }
@@ -65,7 +66,6 @@ export default function AddPostmanForm() {
     initialValues:{
       email: '',
       mobileNumber: '',
-      area: '',
       username:'',
     },
     validationSchema: postmanSchema,
@@ -79,7 +79,7 @@ export default function AddPostmanForm() {
       })
       .then(result=>{
         if(result.status===200){
-          navigate('/app/postman', { replace: true });
+          navigate('/app/profile', { replace: true });
         }
         console.log(result.status)
       })
@@ -98,7 +98,7 @@ export default function AddPostmanForm() {
       <Form autoComplete="on"  onSubmit={handleSubmit}>
       <Box 
       sx={{
-        '& > :not(style)': {mb:3},boxShadow: 3 ,p:5
+        '& > :not(style)': {mb:3},p:5
       }}
       >
         <Grid container spacing={3}>
@@ -148,16 +148,7 @@ export default function AddPostmanForm() {
             <MenuItem value="Jaffna">Jaffna</MenuItem>
           </TextField> */}
           
-          <TextField
-          fullWidth
-          // component="span"
-          //   style={{display:'inline'}}
-            type="area"
-            label="Area"
-            {...getFieldProps('area')}
-            error={Boolean(touched.area && errors.area)}
-            helperText={touched.area && errors.area}
-          />
+         
             </Grid>
         </Grid>
       

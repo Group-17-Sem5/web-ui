@@ -13,6 +13,18 @@ import NotFound from './pages/Page404';
 // import AddPostman from './components/postman/newPostman/index'
 import AddPostman from './pages/AddPostman'
 import AddClerk from './pages/AddClerk'
+import AddPost from './pages/AddPost'
+import Clerk from './pages/Clerk'
+import Post from './pages/Post'
+import Postman from './pages/Postman'
+import Profile from './pages/Profile'
+import ProfileClerk from './pages/ProfileClerk'
+import { useDetail } from './context/DetailContext';
+import EditProfile from './pages/EditProfile'
+import AddMoneyorder from './pages/AddMoneyorder';
+import ViewMoneyorder from './pages/MoneyOrder';
+import AddCourier from './pages/AddCourier';
+import ViewCourier from './pages/Courier';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -28,14 +40,28 @@ export default function Router() {
         { path: 'blog', element: <Blog /> },
 
         { path: '/addPostman', element: <AddPostman /> },
+        { path: '/editPostman/:id', element: <AddPostman /> },
         { path: '/addClerk', element: <AddClerk /> },
+        { path: '/editClerk/:id', element: <AddClerk /> },
+        { path: '/addPost', element: <AddPost /> },
+        { path: '/postman', element: <Postman /> },
+        { path: '/clerk', element: <Clerk /> },
+        { path: '/viewPost', element: <Post /> },
+        { path: '/profile', element: <Profile /> },
+        { path: '/profile/:id', element: <Profile /> },
+        { path: '/profileClerk/:id', element: <ProfileClerk /> },
+        { path: '/profile/edit', element: <EditProfile /> },
+        { path: '/addMoneyOrders', element: <AddMoneyorder /> },
+        { path: '/viewMoneyOrders', element: <ViewMoneyorder /> },
+        { path: '/addCourier', element: <AddCourier /> },
+        { path: '/viewCourier', element: <ViewCourier /> },
       ]
     },
     {
       path: '/',
       element: <LogoOnlyLayout />,
       children: [
-        { path: 'login', element: <Login /> },
+        { path: '', element: <Login /> },
         { path: 'register', element: <Register /> },
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/dashboard" /> },
