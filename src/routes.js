@@ -9,6 +9,8 @@ import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
 import User from './pages/User';
+import MoneyOrder from './pages/MoneyOrder';
+import Mail from './pages/Mail';
 import NotFound from './pages/Page404';
 
 // ----------------------------------------------------------------------
@@ -22,7 +24,8 @@ export default function Router() {
         { path: '/', element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
-        { path: 'products', element: <Products /> },
+        { path: 'moneyorder', element: <MoneyOrder /> },
+        { path: 'mail', element: <Mail /> },
         { path: 'blog', element: <Blog /> }
       ]
     },

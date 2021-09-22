@@ -96,27 +96,21 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         >
           <Box
             component="img"
-            src="/static/illustrations/illustration_rocket.png"
+            src="/static/illustrations/post.png"
             sx={{ width: 100, position: 'absolute', top: -50 }}
           />
 
           <Box sx={{ textAlign: 'center' }}>
             <Typography gutterBottom variant="h6">
-              Get more?
+              Post Office
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              From only $69
+              Galle
+              80000
             </Typography>
           </Box>
 
-          <Button
-            fullWidth
-            href="https://material-ui.com/store/items/minimal-dashboard/"
-            target="_blank"
-            variant="contained"
-          >
-            Upgrade to Pro
-          </Button>
+         
         </Stack>
       </Box>
     </Scrollbar>

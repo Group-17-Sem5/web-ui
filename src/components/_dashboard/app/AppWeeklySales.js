@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import androidFilled from '@iconify/icons-ant-design/android-filled';
+import mailFilled from '@iconify/icons-ant-design/mail-filled';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
@@ -40,11 +40,11 @@ export default function AppWeeklySales() {
   return (
     <RootStyle>
       <IconWrapperStyle>
-        <Icon icon={androidFilled} width={24} height={24} />
+        <Icon icon={mailFilled} width={24} height={24} />
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Weekly Sales
+        Weekly Mails
       </Typography>
     </RootStyle>
   );

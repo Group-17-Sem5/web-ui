@@ -7,13 +7,13 @@ import {
   AppNewUsers,
   AppBugReports,
   AppItemOrders,
-  AppNewsUpdate,
+  //AppNewsUpdate,
   AppWeeklySales,
   AppOrderTimeline,
   AppCurrentVisits,
   AppWebsiteVisits,
   AppTrafficBySite,
-  AppCurrentSubject,
+  //AppCurrentSubject,
   AppConversionRates
 } from '../components/_dashboard/app';
 
@@ -21,7 +21,7 @@ import {
 
 export default function DashboardApp() {
   return (
-    <Page title="Dashboard | Minimal-UI">
+    <Page title="Dashboard">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography variant="h4">Hi, Welcome back</Typography>
@@ -53,26 +53,16 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <AppTrafficBySite />
           </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppTasks />
-          </Grid>
+          
         </Grid>
       </Container>
     </Page>
   );
 }
+         

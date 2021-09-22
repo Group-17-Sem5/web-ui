@@ -1,7 +1,7 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -27,23 +27,22 @@ import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
 //
-import USERLIST from '../_mocks_/user';
-import axios from 'axios';
-import { result } from 'lodash-es';
+import USERLIST from '../_mocks_/mail';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'userID', label: 'UserID', alignRight: false },
-  { id: 'addresID', label: 'AddressID', alignRight: false },
-  { id: 'address', label: 'Address', alignRight: false },
-  { id: 'username', label: 'username', alignRight: false },
-  { id: 'branchID', label: 'branchID', alignRight: false },
-  { id: 'phoneNumber', label: 'PhoneNumber', alignRight: false },
-  { id: 'receivedPostID', label: 'ReceivedPostID', alignRight: false },
-  { id: 'sendPostID', label: 'SendPostID', alignRight: false },
-  { id: 'receivedMoneyOrderID', label: 'ReceivedMoneyOrderID', alignRight: false },
-  { id: 'sendMoneyOrderID', label: 'sendMoneyOrderID', alignRight: false },
+  { id: 'mailID', label: 'mailID', alignRight: false },
+  { id: 'addressID', label: 'AddressID', alignRight: false },
+  { id: 'amount', label: 'Amount', alignRight: false },
+  { id: 'date', label: 'Date', alignRight: false },
+  { id: 'assignedPostmanID', label: 'Assigned PostmanID', alignRight: false },
+  { id: 'sourceBranchID', label: 'Source BranchID', alignRight: false },
+  { id: 'receivingBranchID', label: 'Receiving BranchID', alignRight: false },
+  { id: 'senderID', label: 'SenderID', alignRight: false },
+  { id: 'receiverID', label: 'ReceiverID', alignRight: false },
+  //{ id: 'isConfirmed', label: 'Confirmed', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
 ];
 
@@ -73,7 +72,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.userID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.mailID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -85,18 +84,58 @@ export default function User() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [UserList, setUserList] = useState([]);
+  const [USERLIST,setUSERLIST] = useState([])
+  const [filterStatus,setFilterStatus] = useState('');
+  const [delItem,setDelItem] = useState(null)
+  const [modal,setModal] = useState(false)
+  const [open, setOpen] = React.useState(false);
+  const token = localStorage.getItem('adminToken')
+
+  const handleClose = () => {
+    setModal(false);
+  };
+
 
   useEffect(()=>{
-    fetch('https://jsonplaceholder.typicode.com/posts')
-    .then(res=>{
-      return res.json()
+    fetch ('http://localhost:5000/postMaster/post/',{
+      headers: { "Authorization": "Bearer " + token},
+    })
+    .then(result=>{
+      return result.json()
     })
     .then(data=>{
-      setUserList(data)
+      console.log(data)
+      setUSERLIST(data)
     })
+    setUSERLIST(TABLE_DATA)
   },[])
-  console.log(UserList)
+  console.log(USERLIST)
+
+  const handleDelete = (item) => {
+    // console.log(item)
+    setDelItem(item)
+    setModal(true)
+  }
+
+  const handleConfirmDelete = () => { 
+    const delApiURL = "postMaster/post/delete"+ delItem._id;
+    setDelItem(null)
+    // setIsDelLoading(true)
+    fetch( 'http://localhost:5000/'+delApiURL, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
+    }).then( () => {
+      setUSERLIST(USERLIST.filter(i=>i!==delItem))
+        // setIsDelLoading(false)
+        setModal(false)
+        console.log('success')
+    } )
+    .catch( console.log )
+}
+
+ // const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
+
+  // console.log(USERLISTT)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -106,18 +145,18 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.userID);
+      const newSelecteds = USERLIST.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, userID) => {
-    const selectedIndex = selected.indexOf(userID);
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, userID);
+      newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -151,19 +190,19 @@ export default function User() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="User | Minimal-UI">
+    <Page title="Post | EASY MAIL">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            POST
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="#"
+            to="/app/addPost"
             startIcon={<Icon icon={plusFill} />}
           >
-            User
+            Add Post
           </Button>
         </Stack>
 
@@ -172,6 +211,7 @@ export default function User() {
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
+            onFilterStatus={handleFilterByStatus}
           />
 
           <Scrollbar>
@@ -190,44 +230,54 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, avatarUrl, userID, addresID, address, username, branchID, phoneNumber, receivedPostID, sendPostID, receivedMoneyOrderID, sendMoneyOrderID} = row;
-                      const isItemSelected = selected.indexOf(userID) !== -1;
+                      const { id, mailID, addressID, amount, date, assignedPostmanID, sourceBranchID, receivingBranchID, senderID, receiverID, status } = row;
+                      const isItemSelected = selected.indexOf(mailID) !== -1;
 
                       return (
                         <TableRow
                           hover
                           key={id}
                           tabIndex={-1}
-                          role="checkbox"
+                          addressID="checkbox"
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
                         >
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, userID)}
+                              onChange={(event) => handleClick(event, mailID)}
                             />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={userID} src={avatarUrl} />
+                             
                               <Typography variant="subtitle2" noWrap>
-                                {userID}
+                                {mailID}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{addresID}</TableCell>
-                          <TableCell align="left">{address}</TableCell>
-                          <TableCell align="left">{username}</TableCell>
-                          <TableCell align="left">{branchID}</TableCell>
-                          <TableCell align="left">{phoneNumber}</TableCell>
-                          <TableCell align="left">{receivedPostID}</TableCell>
-                          <TableCell align="left">{sendPostID}</TableCell>
-                          <TableCell align="left">{receivedMoneyOrderID}</TableCell>
-                          <TableCell align="left">{sendMoneyOrderID}</TableCell>
-                          
+                          <TableCell align="left">{addressID}</TableCell>
+                          <TableCell align="left">{amount}</TableCell>
+                          <TableCell align="left">{date}</TableCell>
+                          <TableCell align="left">{assignedPostmanID}</TableCell>
+                          <TableCell align="left">{sourceBranchID}</TableCell>
+                          <TableCell align="left">{receivingBranchID}</TableCell>
+                          <TableCell align="left">{senderID}</TableCell>
+                          <TableCell align="left">{receiverID}</TableCell>
+                          <TableCell align="left">
+                            <Label 
+                              variant="ghost"
+                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
+                            >
+                              {sentenceCase(status)}
+                            </Label>
+                          </TableCell>
 
                           <TableCell align="right">
+                             {/* <UserMoreMenu delUrl={`postMaster/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/app/editPostman/${_id}`}
+                            viewUrl={`/app/profile/${_id}`}
+                            /> */}
                             <UserMoreMenu />
                           </TableCell>
                         </TableRow>
@@ -262,8 +312,25 @@ export default function User() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={modal}>
+          <DialogTitle id="customized-dialog-title" onClose={handleClose} color="error">
+            Confirm Delete
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Are you sure? You want to delete permanantly.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button autoFocus onClick={handleConfirmDelete} color="error">
+              Delete
+            </Button>
+          </DialogActions>
+      </Dialog>
       </Container>
     </Page>
   );
 }
-

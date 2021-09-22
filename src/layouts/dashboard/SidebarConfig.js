@@ -23,12 +23,17 @@ const sidebarConfig = [
     icon: getIcon(peopleFill)
   },
   {
-    title: 'product',
-    path: '/dashboard/products',
+    title: 'money order',
+    path: '/dashboard/moneyorder',
     icon: getIcon(shoppingBagFill)
   },
   {
-    title: 'blog',
+    title: 'mail',
+    path: '/dashboard/mail',
+    icon: getIcon(fileTextFill)
+  },
+  {
+    title: 'send notifiction',
     path: '/dashboard/blog',
     icon: getIcon(fileTextFill)
   },
@@ -42,11 +47,6 @@ const sidebarConfig = [
     path: '/register',
     icon: getIcon(personAddFill)
   },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: getIcon(alertTriangleFill)
-  }
 ];
 
 export default sidebarConfig;

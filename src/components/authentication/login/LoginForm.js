@@ -22,6 +22,9 @@ import { LoadingButton } from '@material-ui/lab';
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [error,setError] = useState('')
+  const {login} = useDetail()
+  const [loading,setLoading] = useState(false)
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -35,8 +38,35 @@ export default function LoginForm() {
       remember: true
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: (values) => {
+
+      setLoading(true)
+      login(values.email, values.password)
+        .then(data => {
+            if (data.status) {
+              console.log(data)
+              navigate('/app', { replace: true });
+                // history.push('/')
+            } else if (data.error) {
+                console.log(data.error)
+                setError(data.error)
+                setLoading(false)
+            }
+        }).catch(() => setError({error: true, email: true, password: true, message: 'Failed to login'}));
+
+      fetch(process.env.REACT_APP_API_HOST+'/clerk/add',{
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(values)
+      })
+      .then(result=>{
+        if (result.status==200){
+          navigate('/dashboard', { replace: true });
+        }
+        {console.log(formik.values)}
+      })
+      //{console.log(formik.values)}
+      //navigate('/dashboard', { replace: true });
     }
   });
 

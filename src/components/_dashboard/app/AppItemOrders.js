@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import windowsFilled from '@iconify/icons-ant-design/windows-filled';
+import windowsFilled from '@iconify/icons-ant-design/paper-clip';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
@@ -34,7 +34,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 1723315;
+const TOTAL = 1723;
 
 export default function AppItemOrders() {
   return (
@@ -44,7 +44,7 @@ export default function AppItemOrders() {
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Item Orders
+        Money Orders
       </Typography>
     </RootStyle>
   );

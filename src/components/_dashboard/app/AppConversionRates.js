@@ -9,7 +9,7 @@ import { BaseOptionChart } from '../../charts';
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [{ data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380] }];
+const CHART_DATA = [{ data: [233.89, 1.89, 156, 145, 2.8, 31.98, 199, 248.98] }];
 
 export default function AppConversionRates() {
   const chartOptions = merge(BaseOptionChart(), {
@@ -23,18 +23,17 @@ export default function AppConversionRates() {
       }
     },
     plotOptions: {
-      bar: { horizontal: true, barHeight: '28%', borderRadius: 2 }
+      bar: { horizontal: true, barHeight: '38%', borderRadius: 2 }
     },
     xaxis: {
       categories: [
-        'Italy',
+        'EU',
         'Japan',
-        'China',
         'Canada',
-        'France',
-        'Germany',
-        'South Korea',
-        'Netherlands',
+        'Austraila',
+        'Singapore',
+        'India',
+        'China',
         'United States',
         'United Kingdom'
       ]
@@ -43,7 +42,7 @@ export default function AppConversionRates() {
 
   return (
     <Card>
-      <CardHeader title="Conversion Rates" subheader="(+43%) than last year" />
+      <CardHeader title="Conversion Rates TO Sri Lanakan Rupees" subheader="(+43%) than last year" />
       <Box sx={{ mx: 3 }} dir="ltr">
         <ReactApexChart type="bar" series={CHART_DATA} options={chartOptions} height={364} />
       </Box>

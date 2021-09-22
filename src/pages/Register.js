@@ -51,8 +51,14 @@ export default function Register() {
 
       <MHidden width="mdDown">
         <SectionStyle>
-          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Manage the job more effectively with Minimal
+          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 0 }}>
+           Post Office
+           </Typography>
+           <Typography variant="h4" sx={{ px: 5, mt: 0, mb: 0 }}>
+           Galle
+          </Typography>
+          <Typography variant="h5" sx={{ px: 5, mt: 0, mb: 0 }}>
+           80000
           </Typography>
           <img alt="register" src="/static/illustrations/illustration_register.png" />
         </SectionStyle>
@@ -65,7 +71,7 @@ export default function Register() {
               Get started absolutely free.
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-              Free forever. No credit card needed.
+           
             </Typography>
           </Box>
 
@@ -74,7 +80,7 @@ export default function Register() {
           <RegisterForm />
 
           <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-            By registering, I agree to Minimal&nbsp;
+            By registering, I agree to Postal&nbsp;
             <Link underline="always" sx={{ color: 'text.primary' }}>
               Terms of Service
             </Link>
