@@ -82,7 +82,7 @@ export default function BaseOptionChart() {
       zoom: { enabled: false },
       // animations: { enabled: false },
       foreColor: theme.palette.text.disabled,
-      fontFamily: theme.typography.fontFamily
+      fontFamily: theme.typography.fontFamily,
     },
 
     // States

@@ -24,6 +24,7 @@ import {
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { Box, width } from '@material-ui/system';
+import useFetch from 'src/hooks/useFetch'
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,10 @@ export default function AddPostmanForm() {
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
+
+  const {data:branches} = useFetch('/admin/branch')
+  const {data:users} = useFetch('/user/')
+  const {data:postman} = useFetch('/postMaster/postman')
 
   const formik = useFormik({
     initialValues: {
@@ -105,9 +110,9 @@ export default function AddPostmanForm() {
            <Grid item xs={12} sm={6} md={6}>
             <Autocomplete
            
-            options={top100Films}
-            onChange={(event, value) =>setFieldValue('sourceBranch',value.title)}
-            getOptionLabel={(option) => option.title}
+            options={postman}
+            onChange={(event, value) =>setFieldValue('sourceBranch',value._id)}
+            getOptionLabel={(option) => option.username}
             renderInput={(params) => <TextField {...params} label="Source Branch" variant="outlined" 
             {...getFieldProps('sourceBranch')}
             name="sourceBranch"
@@ -119,9 +124,9 @@ export default function AddPostmanForm() {
             <Grid item xs={12} sm={6} md={6}>
             <Autocomplete
             
-            options={top100Films}
-            getOptionLabel={(option) => option.title}
-            onChange={(event, value) =>setFieldValue('lastAppearedBranch',value.title)}
+            options={branches}
+            getOptionLabel={(option) => option.branchName}
+            onChange={(event, value) =>setFieldValue('lastAppearedBranch',value._id)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
             {...getFieldProps('lastAppearedBranch')}
             name="lastAppearedBranch"

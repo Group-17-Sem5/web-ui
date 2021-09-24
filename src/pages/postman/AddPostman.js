@@ -2,12 +2,14 @@ import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Grid, Button, Container, Stack, Typography } from '@material-ui/core';
+import { Card, Button, Container, Stack, Typography, CardContent } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../components/_dashboard/blog';
+import Page from '../../components/Page';
+// import AddPostmanForm from '../components/postman/newPostman';
+import AddPostmanForm from '../../components/form/addPostman'
+
 //
-import POSTS from '../_mocks_/blog';
+
 
 // ----------------------------------------------------------------------
 
@@ -19,34 +21,30 @@ const SORT_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function Blog() {
+export default function AddPostman() {
   return (
-    <Page title="Dashboard: Blog | Minimal-UI">
+    <Page title="Dashboard: Add Postman | MIS">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Blog
+            Add Postman
           </Typography>
-          <Button
+          {/* <Button
             variant="contained"
             component={RouterLink}
             to="#"
             startIcon={<Icon icon={plusFill} />}
           >
             New Post
-          </Button>
+          </Button> */}
         </Stack>
 
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <BlogPostsSearch posts={POSTS} />
-          <BlogPostsSort options={SORT_OPTIONS} />
-        </Stack>
-
-        <Grid container spacing={3}>
-          {POSTS.map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index} />
-          ))}
-        </Grid>
+        
+        <AddPostmanForm/>
+        
+          {/* <Add/>
+          <Profile/> */}
+       
       </Container>
     </Page>
   );

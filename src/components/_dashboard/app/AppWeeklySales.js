@@ -39,7 +39,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 export default function AppWeeklySales() {
   const {data} = useFetch('/postMaster/postman/get/count')
-
+  console.log(data)
   return (
     <RootStyle>
       <IconWrapperStyle>

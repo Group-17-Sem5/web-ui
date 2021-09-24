@@ -32,11 +32,11 @@ import {
   DialogActions
 } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 import useFetch from 'src/hooks/useIntervalFetch';
 //
 // import USERLIST from '../_mocks_/user';
@@ -44,14 +44,26 @@ import useFetch from 'src/hooks/useIntervalFetch';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'username', label: 'Username', alignRight: false },
-  { id: 'email', label: 'Email', alignRight: false },
-  // { id: 'password', label: 'Role', alignRight: false },
-  { id: 'mobileNumber', label: 'Phone', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'senderID', label: 'Sender', alignRight: false },
+  { id: 'receiverID', label: 'Receiver', alignRight: false },
+//   { id: 'addressID', label: 'Address', alignRight: false },
+  { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
+  { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
+  { id: 'state', label: 'Status', alignRight: false },
+  { id: 'amount', label: 'Money order', alignRight: false },
   { id: '' }
-];
 
+  
+];
+const TABLE_DATA = [
+  {senderId:'sender1',receiverId:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667',amount:'200'},
+  {senderId:'sender2',receiverId:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667',amount:'350'},
+  {senderId:'sender3',receiverId:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh',amount:'2000'},
+  {senderId:'sender4',receiverId:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
+  {senderId:'sender5',receiverId:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
+  {senderId:'sender6',receiverId:'receiver6',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
+  {senderId:'sender7',receiverId:'receiver7',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
+];
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -78,7 +90,7 @@ function applySortFilter(array, comparator, query,query2) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.senderId.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   // if (query2) {
   //   return filter(array, (_user) => (_user.status)===query2);
@@ -86,7 +98,7 @@ function applySortFilter(array, comparator, query,query2) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function MoneyOrder() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -99,13 +111,14 @@ export default function User() {
   const [modal,setModal] = useState(false)
   const [open, setOpen] = React.useState(false);
   const token = localStorage.getItem('adminToken')
+
   const handleClose = () => {
     setModal(false);
   };
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/clerk/',{
+    fetch ('http://localhost:5000/postMaster/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -115,6 +128,7 @@ export default function User() {
       console.log(data)
       setUSERLIST(data)
     })
+    setUSERLIST(TABLE_DATA)
   },[])
   console.log(USERLIST)
 
@@ -125,12 +139,12 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/clerk/delete/"+ delItem._id;
+    const delApiURL = "postMaster/post/delete"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
     fetch( 'http://localhost:5000/'+delApiURL, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + token }
+        headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {
       setUSERLIST(USERLIST.filter(i=>i!==delItem))
         // setIsDelLoading(false)
@@ -154,18 +168,18 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.username);
+      const newSelecteds = USERLIST.map((n) => n.senderId);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, username) => {
-    const selectedIndex = selected.indexOf(username);
+  const handleClick = (event, senderId) => {
+    const selectedIndex = selected.indexOf(senderId);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, username);
+      newSelected = newSelected.concat(selected, senderId);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -202,19 +216,19 @@ export default function User() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="Clerk | Easy Mail">
+    <Page title="MoneyOrder | Easy Mail">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Money Order
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/app/addClerk"
+            to="/app/addMoneyorders"
             startIcon={<Icon icon={plusFill} />}
           >
-           Add Clerk
+           Add Money Order
           </Button>
         </Stack>
 
@@ -242,8 +256,8 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, username, email, mobileNumber,_id,status } = row;
-                      const isItemSelected = selected.indexOf(username) !== -1;
+                      const { id,senderId,receiverId,lastAppearedBranchID,sourceBranchID,state,_id,amount } = row;
+                      const isItemSelected = selected.indexOf(senderId) !== -1;
 
                       return (
                         <TableRow
@@ -257,34 +271,35 @@ export default function User() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, username)}
+                              onChange={(event) => handleClick(event, senderId)}
                             />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              {/* <Avatar alt={username} src={avatarUrl} /> */}
+                              {/* <Avatar alt={senderId} src={avatarUrl} /> */}
                               <Typography variant="subtitle2" noWrap>
-                                {username}
+                                {senderId}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{email}</TableCell>
-                          <TableCell align="left">{mobileNumber}</TableCell>
-                          {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
+                          <TableCell align="left">{receiverId}</TableCell>
+                          <TableCell align="left">{lastAppearedBranchID}</TableCell>
+                          <TableCell align="left">{sourceBranchID}</TableCell>
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={!status ? 'error' : 'success'}
+                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
                             >
-                              {sentenceCase(status?"active":"not active")}
+                              {sentenceCase(state)}
                             </Label>
                           </TableCell>
+                          <TableCell align="left">{amount} Rs</TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu delUrl={`postMaster/clerk/delete/${_id}`} handleDelete={handleDelete} item={row} 
-                            editUrl={`/app/editClerk/${_id}`}
-                            viewUrl={`/app/profileClerk/${_id}`}
-                            />
+                            {/* <UserMoreMenu delUrl={`postMaster/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/app/editPostman/${_id}`}
+                            viewUrl={`/app/profile/${_id}`}
+                            /> */}
                           </TableCell>
                         </TableRow>
                       );

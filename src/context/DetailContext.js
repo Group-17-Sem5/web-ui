@@ -22,45 +22,6 @@ export function DetailProvider({  children }) {
         localStorage.setItem('adminToken', token || '');
     },[token])
 
-    // useEffect(() => {
-    //     if (!clientId) return
-    //     if (clientId === 'admin') {
-    //         setDetails({ _id: "admin", name: 'Quaxor Admin' })
-    //         setIsLoading(false)
-    //         return
-    //     }
-    //     if (clientId === 'template') {
-    //         setDetails({ _id: "template", name: 'CoreUI Template' })
-    //         setIsLoading(false)
-    //         setLoginStatus(true)
-    //         return
-    //     }
-    //     setIsLoading(true);
-    //     const abortCont = new AbortController();
-    //     fetch(process.env.REACT_APP_API_HOST + '/organizations/clientId/' + clientId, { signal: abortCont.signal })
-    //         .then(res => {
-    //             if (res.status !== 200 && res.status !== 304) {
-    //                 throw Error('could not fetch data')
-    //             }
-    //             return res.json()
-    //         })
-    //         .then(data => {
-    //             setDetails(data || {});
-    //             document.title = data.name;
-    //             setIsLoading(false);
-    //         })
-    //         .catch(err => {
-    //             if (err.name === 'AbortError') {
-    //                 console.log('Fetch aborted');
-    //             } else {
-    //                 setIsLoading(false);
-    //                 //setError(err.message);
-    //             }
-    //         });
-    //     return () => abortCont.abort();
-    // }, [clientId])
-
-
     function customFetch(url, { method = 'GET', headers = {}, ...rest } = {}) {
         return fetch(process.env.REACT_APP_API_HOST + '/admin' + url, {
             method,

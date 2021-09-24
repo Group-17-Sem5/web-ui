@@ -1,9 +1,17 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
 // material
 import {
   Card,
@@ -18,24 +26,29 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
+import useFetch from 'src/hooks/useIntervalFetch';
 //
-import USERLIST from '../_mocks_/user';
+// import USERLIST from '../_mocks_/user';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
+  { id: 'username', label: 'Username', alignRight: false },
+  { id: 'email', label: 'Email', alignRight: false },
+  // { id: 'password', label: 'Role', alignRight: false },
+  { id: 'mobileNumber', label: 'Phone', alignRight: false },
+  { id: 'area', label: 'Area', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
 ];
@@ -66,11 +79,11 @@ function applySortFilter(array, comparator, query,query2) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
-  if (query2) {
-    return filter(array, (_user) => (_user.status)===query2);
-  }
+  // if (query2) {
+  //   return filter(array, (_user) => (_user.status)===query2);
+  // }
   return stabilizedThis.map((el) => el[0]);
 }
 
@@ -81,9 +94,59 @@ export default function User() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [USERLIST,setUSERLIST] = useState([])
   const [filterStatus,setFilterStatus] = useState('');
+  const [delItem,setDelItem] = useState(null)
+  const [modal,setModal] = useState(false)
+  const [open, setOpen] = React.useState(false);
+  const token = localStorage.getItem('adminToken')
+  const handleClose = () => {
+    setModal(false);
+  };
 
+
+  useEffect(()=>{
+    fetch ('http://localhost:5000/postMaster/postman/',{
+      headers: { "Authorization": "Bearer " + token},
+    })
+    .then(result=>{
+      return result.json()
+    })
+    .then(data=>{
+      console.log(data)
+      setUSERLIST(data)
+    })
+  },[])
+  console.log(USERLIST)
+
+  const handleDelete = (item) => {
+    // console.log(item)
+    setDelItem(item)
+    setModal(true)
+  }
+
+  const handleConfirmDelete = () => { 
+    const delApiURL = "postMaster/postman/delete/"+ delItem._id;
+    setDelItem(null)
+    // setIsDelLoading(true)
+    fetch( 'http://localhost:5000/'+delApiURL, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + token }
+    }).then( () => {
+      setUSERLIST(USERLIST.filter(i=>i!==delItem))
+        // setIsDelLoading(false)
+        setModal(false)
+        console.log('success')
+    } )
+    .catch( console.log )
+}
+
+
+
+  // const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
+
+  // console.log(USERLISTT)
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -92,18 +155,18 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = USERLIST.map((n) => n.username);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, username) => {
+    const selectedIndex = selected.indexOf(username);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, username);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -149,10 +212,10 @@ export default function User() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="#"
+            to="/app/addPostman"
             startIcon={<Icon icon={plusFill} />}
           >
-            New User
+           Add Postman
           </Button>
         </Stack>
 
@@ -180,8 +243,8 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
+                      const { id, username, email, mobileNumber,_id,area,status } = row;
+                      const isItemSelected = selected.indexOf(username) !== -1;
 
                       return (
                         <TableRow
@@ -195,31 +258,35 @@ export default function User() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
+                              onChange={(event) => handleClick(event, username)}
                             />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
+                              {/* <Avatar alt={username} src={avatarUrl} /> */}
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                                {username}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{company}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{mobileNumber}</TableCell>
+                          <TableCell align="left">{area}</TableCell>
+                          {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={(status === 'banned' && 'error') || 'success'}
+                              color={!status ? 'error' : 'success'}
                             >
-                              {sentenceCase(status)}
+                              {sentenceCase(status?"active":"not active")}
                             </Label>
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu />
+                            <UserMoreMenu delUrl={`postMaster/postman/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/app/editPostman/${_id}`}
+                            viewUrl={`/app/profile/${_id}`}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -253,6 +320,25 @@ export default function User() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+
+        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={modal}>
+          <DialogTitle id="customized-dialog-title" onClose={handleClose} color="error">
+            Confirm Delete
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Are you sure? You want to delete permanantly.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button autoFocus onClick={handleConfirmDelete} color="error">
+              Delete
+            </Button>
+          </DialogActions>
+      </Dialog>
       </Container>
     </Page>
   );

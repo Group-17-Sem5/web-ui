@@ -32,11 +32,11 @@ import {
   DialogActions
 } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 import useFetch from 'src/hooks/useIntervalFetch';
 //
 // import USERLIST from '../_mocks_/user';
@@ -50,19 +50,16 @@ const TABLE_HEAD = [
   { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
   { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
   { id: 'state', label: 'Status', alignRight: false },
-  { id: 'amount', label: 'Money order', alignRight: false },
   { id: '' }
-
+  // { id: 'status', label: 'Status', alignRight: false },
   
 ];
 const TABLE_DATA = [
-  {senderId:'sender1',receiverId:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667',amount:'200'},
-  {senderId:'sender2',receiverId:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667',amount:'350'},
-  {senderId:'sender3',receiverId:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh',amount:'2000'},
-  {senderId:'sender4',receiverId:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
-  {senderId:'sender5',receiverId:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
-  {senderId:'sender6',receiverId:'receiver6',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
-  {senderId:'sender7',receiverId:'receiver7',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
+  {senderId:'sender1',receiverId:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667'},
+  {senderId:'sender2',receiverId:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667'},
+  {senderId:'sender3',receiverId:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh'},
+  {senderId:'sender4',receiverId:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667'},
+  {senderId:'sender5',receiverId:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg'},
 ];
 // ----------------------------------------------------------------------
 
@@ -98,7 +95,7 @@ function applySortFilter(array, comparator, query,query2) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function MoneyOrder() {
+export default function User() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -216,19 +213,19 @@ export default function MoneyOrder() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="MoneyOrder | Easy Mail">
+    <Page title="Post | Easy Mail">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Money Order
+            Post
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/app/addMoneyorders"
+            to="/app/addPost"
             startIcon={<Icon icon={plusFill} />}
           >
-           Add Money Order
+           Add Post
           </Button>
         </Stack>
 
@@ -256,7 +253,7 @@ export default function MoneyOrder() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id,senderId,receiverId,lastAppearedBranchID,sourceBranchID,state,_id,amount } = row;
+                      const { id,senderId,receiverId,lastAppearedBranchID,sourceBranchID,state,_id } = row;
                       const isItemSelected = selected.indexOf(senderId) !== -1;
 
                       return (
@@ -293,7 +290,6 @@ export default function MoneyOrder() {
                               {sentenceCase(state)}
                             </Label>
                           </TableCell>
-                          <TableCell align="left">{amount} Rs</TableCell>
 
                           <TableCell align="right">
                             {/* <UserMoreMenu delUrl={`postMaster/post/delete/${_id}`} handleDelete={handleDelete} item={row} 

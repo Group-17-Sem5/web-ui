@@ -14,7 +14,8 @@ export default function AppWebsiteVisits({title,CHART_DATA,labels,subheader}) {
     plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
     fill: { type: ['solid', 'solid', 'solid'] },
     labels: labels,
-    xaxis: { type: 'datetime' },
+    xaxis: {type:'datetime',title:{text:'Date'}},
+    yaxis: {title:{text:'Count'}},
     tooltip: {
       shared: true,
       intersect: false,

@@ -88,10 +88,10 @@ export default function Profile() {
                             <Typography variant="body2" color="textSecondary" component="p">
                                 <Label
                                 variant="ghost"
-                                color={!profile.status ? 'error' : 'success'}
+                                color={profile.status ? !profile.status ? 'error' : 'success': ''}
                                 style={{padding:'15px',display:'flex',width:'50%',marginLeft:'25%'}}
                                 >
-                                {sentenceCase(profile.status?"active":"removed")}
+                                {sentenceCase(profile.status ? profile.status?"active":"removed" : '')}
                                 </Label>
                             </Typography>
                         </CardContent>
@@ -99,8 +99,8 @@ export default function Profile() {
                     <hr/>
                     <CardActions style={{float:'right'}}>
                         { id &&
-                        <Button size="small" color={profile.status ? 'error' : 'primary'} onClick={handleChangeStatus}>
-                            {sentenceCase(profile.status?"Disable":"Enable")}
+                        <Button size="small" color={profile.status ? profile.status ? 'error' : 'primary' :''} onClick={handleChangeStatus}>
+                            {sentenceCase(profile.status ? profile.status?"Disable":"Enable":'')}
                         </Button>
                         }
                         <Button size="small" component={RouterLink} to={id ? '/app/editPostman/'+id :'/app/profile/edit'} color="success">

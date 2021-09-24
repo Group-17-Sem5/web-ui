@@ -25,7 +25,7 @@ const sidebarConfig = [
     icon: getIcon(pieChart2Fill)
   },
   {
-    title: 'users',
+    title: 'staff',
     //path: '',
     icon: getIcon(peopleFill),
     children:[
@@ -84,6 +84,11 @@ const sidebarConfig = [
         path: '/app/viewCourier',
       }
     ]
+  },
+  {
+    title: 'Users',
+    path: '/app/users',
+    icon: getIcon(peopleFill)
   },
 
   // {

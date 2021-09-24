@@ -32,35 +32,27 @@ import {
   DialogActions
 } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../Page';
+import Label from '../Label';
+import Scrollbar from '../Scrollbar';
+import SearchNotFound from '../SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../_dashboard/user';
 import useFetch from 'src/hooks/useIntervalFetch';
 //
 // import USERLIST from '../_mocks_/user';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'senderID', label: 'Sender', alignRight: false },
-  { id: 'receiverID', label: 'Receiver', alignRight: false },
-//   { id: 'addressID', label: 'Address', alignRight: false },
-  { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
-  { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
-  { id: 'state', label: 'Status', alignRight: false },
-  { id: '' }
-  // { id: 'status', label: 'Status', alignRight: false },
-  
-];
-const TABLE_DATA = [
-  {senderId:'sender1',receiverId:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667'},
-  {senderId:'sender2',receiverId:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667'},
-  {senderId:'sender3',receiverId:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh'},
-  {senderId:'sender4',receiverId:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667'},
-  {senderId:'sender5',receiverId:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg'},
-];
+// const TABLE_HEAD = [
+//   { id: 'username', label: 'Username', alignRight: false },
+//   { id: 'email', label: 'Email', alignRight: false },
+//   // { id: 'password', label: 'Role', alignRight: false },
+//   { id: 'mobileNumber', label: 'Phone', alignRight: false },
+//   { id: 'area', label: 'Area', alignRight: false },
+//   { id: 'status', label: 'Status', alignRight: false },
+//   { id: '' }
+// ];
+
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -87,7 +79,7 @@ function applySortFilter(array, comparator, query,query2) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.senderId.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   // if (query2) {
   //   return filter(array, (_user) => (_user.status)===query2);
@@ -95,7 +87,7 @@ function applySortFilter(array, comparator, query,query2) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function CustomTable({TABLE_HEAD,itemsUrl,delUrl,editRoute}) {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -108,14 +100,13 @@ export default function User() {
   const [modal,setModal] = useState(false)
   const [open, setOpen] = React.useState(false);
   const token = localStorage.getItem('adminToken')
-
   const handleClose = () => {
     setModal(false);
   };
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/post/',{
+    fetch ('http://localhost:5000'+itemsUrl,{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -125,7 +116,6 @@ export default function User() {
       console.log(data)
       setUSERLIST(data)
     })
-    setUSERLIST(TABLE_DATA)
   },[])
   console.log(USERLIST)
 
@@ -136,12 +126,12 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/post/delete"+ delItem._id;
+    const delApiURL = "postMaster/user/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
     fetch( 'http://localhost:5000/'+delApiURL, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
+        headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + token }
     }).then( () => {
       setUSERLIST(USERLIST.filter(i=>i!==delItem))
         // setIsDelLoading(false)
@@ -165,18 +155,18 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.senderId);
+      const newSelecteds = USERLIST.map((n) => n.username);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, senderId) => {
-    const selectedIndex = selected.indexOf(senderId);
+  const handleClick = (event, username) => {
+    const selectedIndex = selected.indexOf(username);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, senderId);
+      newSelected = newSelected.concat(selected, username);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -213,21 +203,7 @@ export default function User() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="Post | Easy Mail">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Post
-          </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/app/addPost"
-            startIcon={<Icon icon={plusFill} />}
-          >
-           Add Post
-          </Button>
-        </Stack>
+    <>
 
         <Card>
           <UserListToolbar
@@ -252,9 +228,10 @@ export default function User() {
                 <TableBody>
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      const { id,senderId,receiverId,lastAppearedBranchID,sourceBranchID,state,_id } = row;
-                      const isItemSelected = selected.indexOf(senderId) !== -1;
+                    .map((row,id) => {
+                      const _id = row._id
+                      console.log(row)
+                      const isItemSelected = selected.indexOf(row.username) !== -1;
 
                       return (
                         <TableRow
@@ -268,34 +245,40 @@ export default function User() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, senderId)}
+                              onChange={(event) => handleClick(event, row.username)}
                             />
                           </TableCell>
-                          <TableCell component="th" scope="row" padding="none">
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              {/* <Avatar alt={senderId} src={avatarUrl} /> */}
-                              <Typography variant="subtitle2" noWrap>
-                                {senderId}
-                              </Typography>
-                            </Stack>
-                          </TableCell>
-                          <TableCell align="left">{receiverId}</TableCell>
-                          <TableCell align="left">{lastAppearedBranchID}</TableCell>
-                          <TableCell align="left">{sourceBranchID}</TableCell>
-                          <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
-                            >
-                              {sentenceCase(state)}
-                            </Label>
-                          </TableCell>
+                          {TABLE_HEAD.map((column, index) => (
+
+                    <TableCell key={index}>
+                      {column.render
+                        ? (
+                          column.render(row, index)
+                        )
+                        :  
+                        column.id ==="status"
+                        ? 
+                        <Label
+                          variant="ghost"
+                          color={!row[column.id] ? 'error' : 'success'}
+                        >
+                          {sentenceCase(row[column.id]?"active":"not active")}
+                        </Label>
+                        :
+                          (
+                            row[column.id]
+                          )
+                        
+                        
+                      }
+                    </TableCell>
+                  ))}
 
                           <TableCell align="right">
-                            {/* <UserMoreMenu delUrl={`postMaster/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
-                            editUrl={`/app/editPostman/${_id}`}
+                            <UserMoreMenu delUrl={`"/postMaster/user/delete/"${_id}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/app/editUser/${_id}`}
                             viewUrl={`/app/profile/${_id}`}
-                            /> */}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -348,7 +331,6 @@ export default function User() {
             </Button>
           </DialogActions>
       </Dialog>
-      </Container>
-    </Page>
+      </>
   );
 }

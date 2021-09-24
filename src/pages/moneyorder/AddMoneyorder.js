@@ -4,9 +4,9 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Card, Button, Container, Stack, Typography, CardContent } from '@material-ui/core';
 // components
-import Page from '../components/Page';
+import Page from '../../components/Page';
 // import AddPostmanForm from '../components/postman/newPostman';
-import AddMoneyOrder from '../components/form/addMoneyorder'
+import AddMoneyOrder from '../../components/form/addMoneyorder'
 
 //
 
