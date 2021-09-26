@@ -1,9 +1,11 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 // material
 import {
   Card,
@@ -18,7 +20,11 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@material-ui/core';
 // components
 import Page from '../components/Page';
@@ -32,18 +38,26 @@ import USERLIST from '../_mocks_/mail';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'mailID', label: 'mailID', alignRight: false },
-  { id: 'addressID', label: 'AddressID', alignRight: false },
-  { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'date', label: 'Date', alignRight: false },
-  { id: 'assignedPostmanID', label: 'Assigned PostmanID', alignRight: false },
-  { id: 'sourceBranchID', label: 'Source BranchID', alignRight: false },
-  { id: 'receivingBranchID', label: 'Receiving BranchID', alignRight: false },
-  { id: 'senderID', label: 'SenderID', alignRight: false },
-  { id: 'receiverID', label: 'ReceiverID', alignRight: false },
-  //{ id: 'isConfirmed', label: 'Confirmed', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' }
+  { ID: 'mailID', label: 'mailID', alignRight: false },
+  { ID: 'addressID', label: 'AddressID', alignRight: false },
+  { ID: 'amount', label: 'Amount', alignRight: false },
+  { ID: 'date', label: 'Date', alignRight: false },
+  { ID: 'assignedPostmanID', label: 'Assigned PostmanID', alignRight: false },
+  { ID: 'sourceBranchID', label: 'Source BranchID', alignRight: false },
+  { ID: 'receivingBranchID', label: 'Receiving BranchID', alignRight: false },
+  { ID: 'senderID', label: 'SenderID', alignRight: false },
+  { ID: 'receiverID', label: 'ReceiverID', alignRight: false },
+  //{ ID: 'isConfirmed', label: 'Confirmed', alignRight: false },
+  { ID: 'status', label: 'Status', alignRight: false },
+  { ID: '' }
+];
+
+const TABLE_DATA = [
+  {mailID:'1',addressID:'qa222s2dwd',amount:'Rs.223',assignedPostmanID:'362642g',senderID:'sender1',receiverID:'receiver1',sourceBranchID:'jaffna',receivingBranchID:'colombo',status:'pending',_ID:'4545556rt667'},
+  {mailID:'2',addressID:'qa222s2dwd',amount:'Rs.45',assignedPostmanID:'362642g',senderID:'sender2',receiverID:'receiver2',sourceBranchID:'kokuvil',receivingBranchID:'colombo',status:'assigned',_ID:'4545556rtggg667'},
+  {mailID:'3',addressID:'qa222s2dwd',amount:'Rs.3',assignedPostmanID:'362642g',senderID:'sender3',receiverID:'receiver3',sourceBranchID:'koapy',receivingBranchID:'kandy',status:'cancelled',_ID:'4545556rt667gh'},
+  {mailID:'4',addressID:'qa222s2dwd',amount:'Rs.263',assignedPostmanID:'362642g',senderID:'sender4',receiverID:'receiver4',sourceBranchID:'nallur',receivingBranchID:'colombo',status:'pending',_ID:'4545556566rt667'},
+  {mailID:'5',addressID:'qa222s2dwd',amount:'Rs.23',assignedPostmanID:'362642g',senderID:'sender5',receiverID:'receiver5',sourceBranchID:'wellawatta',receivingBranchID:'jaffna',status:'delivered',_ID:'4545556rt66766fg'},
 ];
 
 // ----------------------------------------------------------------------
@@ -118,7 +132,7 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/post/delete"+ delItem._id;
+    const delApiURL = "postMaster/post/delete"+ delItem._ID;
     setDelItem(null)
     // setIsDelLoading(true)
     fetch( 'http://localhost:5000/'+delApiURL, {
@@ -145,7 +159,7 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = USERLIST.map((n) => n.mailID);
       setSelected(newSelecteds);
       return;
     }
@@ -183,6 +197,10 @@ export default function User() {
     setFilterName(event.target.value);
   };
 
+  const handleFilterByStatus = (event) => {
+    setFilterStatus(event.target.value);
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
@@ -215,7 +233,7 @@ export default function User() {
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWIDth: 800 }}>
               <Table>
                 <UserListHead
                   order={order}
@@ -230,13 +248,13 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, mailID, addressID, amount, date, assignedPostmanID, sourceBranchID, receivingBranchID, senderID, receiverID, status } = row;
+                      const { ID, mailID, addressID, amount, date, assignedPostmanID, sourceBranchID, receivingBranchID, senderID, receiverID, status } = row;
                       const isItemSelected = selected.indexOf(mailID) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={id}
+                          key={ID}
                           tabIndex={-1}
                           addressID="checkbox"
                           selected={isItemSelected}
@@ -267,16 +285,16 @@ export default function User() {
                           <TableCell align="left">
                             <Label 
                               variant="ghost"
-                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
+                              color={(status === 'pending' ? 'warning' :(status === 'assigned' ? 'info' : status==='delivered' ? 'primary' : 'error' ))  }
                             >
                               {sentenceCase(status)}
                             </Label>
                           </TableCell>
 
                           <TableCell align="right">
-                             {/* <UserMoreMenu delUrl={`postMaster/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
-                            editUrl={`/app/editPostman/${_id}`}
-                            viewUrl={`/app/profile/${_id}`}
+                             {/* <UserMoreMenu delUrl={`postMaster/post/delete/${_ID}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/app/editPostman/${_ID}`}
+                            viewUrl={`/app/profile/${_ID}`}
                             /> */}
                             <UserMoreMenu />
                           </TableCell>
@@ -313,10 +331,10 @@ export default function User() {
           />
         </Card>
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={modal}>
-          <DialogTitle id="customized-dialog-title" onClose={handleClose} color="error">
+          <DialogTitle ID="customized-dialog-title" onClose={handleClose} color="error">
             Confirm Delete
           </DialogTitle>
-          <DialogContent dividers>
+          <DialogContent divIDers>
             <Typography gutterBottom>
               Are you sure? You want to delete permanantly.
             </Typography>

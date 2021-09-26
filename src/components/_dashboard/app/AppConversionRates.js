@@ -13,6 +13,7 @@ const CHART_DATA = [{ data: [233.89, 1.89, 156, 145, 2.8, 31.98, 199, 248.98] }]
 
 export default function AppConversionRates() {
   const chartOptions = merge(BaseOptionChart(), {
+    yaxis: {title: {text:'Foreign Currency'} },
     tooltip: {
       marker: { show: false },
       y: {
@@ -26,6 +27,7 @@ export default function AppConversionRates() {
       bar: { horizontal: true, barHeight: '38%', borderRadius: 2 }
     },
     xaxis: {
+      title: {text:'Sri Lankan Rupees'},
       categories: [
         'EU',
         'Japan',

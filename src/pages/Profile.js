@@ -86,13 +86,13 @@ export default function Profile() {
                             <h4 style={{display:'flex',justifyContent:'center',marginBottom:'5px'}}>{profile && profile.email}</h4>
                             
                             <Typography variant="body2" color="textSecondary" component="p">
-                                <Label
+                                {/*<Label
                                 variant="ghost"
-                                color={!profile.status ? 'error' : 'success'}
+                                color={profile.status ? !profile.status ? 'error' : 'success': ''}
                                 style={{padding:'15px',display:'flex',width:'50%',marginLeft:'25%'}}
                                 >
                                 {sentenceCase(profile.status?"active":"removed")}
-                                </Label>
+                                </Label>*/}
                             </Typography>
                         </CardContent>
                     </CardActionArea>

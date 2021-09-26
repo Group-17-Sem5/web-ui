@@ -5,6 +5,7 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
+import { Alert } from '@material-ui/core';
 // material
 import {
   Link,
@@ -16,13 +17,14 @@ import {
   FormControlLabel
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-
+import {useDetail} from 'src/context/DetailContext'
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error,setError] = useState('')
+  const [message,setMessage] = useState('')
   const {login} = useDetail()
   const [loading,setLoading] = useState(false)
 
@@ -45,11 +47,12 @@ export default function LoginForm() {
         .then(data => {
             if (data.status) {
               console.log(data)
-              navigate('/app', { replace: true });
+              navigate('/dashboard/profile', { replace: true });
                 // history.push('/')
             } else if (data.error) {
                 console.log(data.error)
                 setError(data.error)
+                setMessage(data.message)
                 setLoading(false)
             }
         }).catch(() => setError({error: true, email: true, password: true, message: 'Failed to login'}));
@@ -78,6 +81,7 @@ export default function LoginForm() {
 
   return (
     <FormikProvider value={formik}>
+      {error && <Alert severity="error">{error.message}</Alert>}
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <TextField
@@ -126,7 +130,7 @@ export default function LoginForm() {
           size="large"
           type="submit"
           variant="contained"
-          loading={isSubmitting}
+          //loading={isSubmitting}
         >
           Login
         </LoadingButton>

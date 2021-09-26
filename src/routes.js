@@ -12,7 +12,7 @@ import User from './pages/User';
 import MoneyOrder from './pages/MoneyOrder';
 import Mail from './pages/Mail';
 import NotFound from './pages/Page404';
-
+import Profile from './pages/Profile';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -26,7 +26,8 @@ export default function Router() {
         { path: 'user', element: <User /> },
         { path: 'moneyorder', element: <MoneyOrder /> },
         { path: 'mail', element: <Mail /> },
-        { path: 'blog', element: <Blog /> }
+        { path: 'blog', element: <Blog /> },
+        {path: '/profile', element: <Profile />}
       ]
     },
     {

@@ -6,7 +6,7 @@ import { Card, Button, Container, Stack, Typography, CardContent } from '@materi
 // components
 import Page from '../components/Page';
 // import AddPostmanForm from '../components/postman/newPostman';
-import AddMoneyOrder from '../components/form/addMoneyorder'
+import AddMoneyOrder from '../components/form/addMoneyOrder'
 
 //
 

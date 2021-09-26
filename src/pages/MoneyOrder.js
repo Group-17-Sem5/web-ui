@@ -1,9 +1,16 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import MuIDialogTitle from '@material-ui/core/DialogTitle';
+import MuIDialogContent from '@material-ui/core/DialogContent';
+import MuIDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
 // material
 import {
   Card,
@@ -18,7 +25,10 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@material-ui/core';
 // components
 import Page from '../components/Page';
@@ -26,26 +36,36 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import useFetch from 'src/hooks/useIntervalFetch';
 //
 import USERLIST from '../_mocks_/moneyorder';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'moneyOrderID', label: 'MoneyOrderID', alignRight: false },
-  { id: 'addressID', label: 'AddressID', alignRight: false },
-  { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'date', label: 'Date', alignRight: false },
-  { id: 'assignedPostmanID', label: 'Assigned PostmanID', alignRight: false },
-  { id: 'sourceBranchID', label: 'Source BranchID', alignRight: false },
-  { id: 'receivingBranchID', label: 'Receiving BranchID', alignRight: false },
-  { id: 'senderID', label: 'SenderID', alignRight: false },
-  { id: 'receiverID', label: 'ReceiverID', alignRight: false },
-  //{ id: 'isConfirmed', label: 'Confirmed', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' }
+  { ID: 'moneyOrderID', label: 'MoneyOrderID', alignRight: false },
+  { ID: 'addressID', label: 'AddressID', alignRight: false },
+  { ID: 'amount', label: 'Amount', alignRight: false },
+  { ID: 'date', label: 'Date', alignRight: false },
+  { ID: 'assignedPostmanID', label: 'Assigned PostmanID', alignRight: false },
+  { ID: 'sourceBranchID', label: 'Source BranchID', alignRight: false },
+  { ID: 'receivingBranchID', label: 'Receiving BranchID', alignRight: false },
+  { ID: 'senderID', label: 'SenderID', alignRight: false },
+  { ID: 'receiverID', label: 'ReceiverID', alignRight: false },
+  //{ ID: 'isConfirmed', label: 'Confirmed', alignRight: false },
+  { ID: 'status', label: 'Status', alignRight: false },
+  { ID: '' }
 ];
 
+const TABLE_DATA = [
+  {moneyOrderID:'1',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender1',receiverID:'receiver1',assignedPostmanID:'3e363636',sourceBranchID:'jaffna',receivingBranchID:'colombo',status:'pending',_ID:'4545556rt667',amount:'200'},
+  {moneyOrderID:'2',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender2',receiverID:'receiver2',assignedPostmanID:'3e363636',sourceBranchID:'kokuvil',receivingBranchID:'colombo',status:'assigned',_ID:'4545556rtggg667',amount:'350'},
+  {moneyOrderID:'3',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender3',receiverID:'receiver3',assignedPostmanID:'3e363636',sourceBranchID:'koapy',receivingBranchID:'kandy',status:'cancelled',_ID:'4545556rt667gh',amount:'2000'},
+  {moneyOrderID:'4',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender4',receiverID:'receiver4',assignedPostmanID:'3e363636',sourceBranchID:'nallur',receivingBranchID:'colombo',status:'pending',_ID:'4545556566rt667',amount:'120'},
+  {moneyOrderID:'5',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender5',receiverID:'receiver5',assignedPostmanID:'3e363636',sourceBranchID:'wellawatta',receivingBranchID:'jaffna',status:'delivered',_ID:'4545556rt66766fg',amount:'130'},
+  {moneyOrderID:'6',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender6',receiverID:'receiver6',assignedPostmanID:'3e363636',sourceBranchID:'nallur',receivingBranchID:'colombo',status:'pending',_ID:'4545556566rt667',amount:'120'},
+  {moneyOrderID:'7',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender7',receiverID:'receiver7',assignedPostmanID:'3e363636',sourceBranchID:'wellawatta',receivingBranchID:'jaffna',status:'delivered',_ID:'4545556rt66766fg',amount:'130'},
+];
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -118,7 +138,7 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/post/delete"+ delItem._id;
+    const delApiURL = "postMaster/post/delete"+ delItem._ID;
     setDelItem(null)
     // setIsDelLoading(true)
     fetch( 'http://localhost:5000/'+delApiURL, {
@@ -132,6 +152,10 @@ export default function User() {
     } )
     .catch( console.log )
 }
+
+// const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
+
+  // console.log(USERLISTT)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -179,6 +203,10 @@ export default function User() {
     setFilterName(event.target.value);
   };
 
+  const handleFilterByStatus = (event) => {
+    setFilterStatus(event.target.value);
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
@@ -195,7 +223,7 @@ export default function User() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="#"
+            to="/app/addMoneyorders"
             startIcon={<Icon icon={plusFill} />}
           >
            Add Money Order
@@ -207,10 +235,11 @@ export default function User() {
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
+            onFilterStatus={handleFilterByStatus}
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWIDth: 800 }}>
               <Table>
                 <UserListHead
                   order={order}
@@ -225,13 +254,13 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, moneyOrderID, addressID, amount, date, assignedPostmanID, sourceBranchID, receivingBranchID, senderID, receiverID, status } = row;
+                      const { ID, moneyOrderID, addressID, amount, date, assignedPostmanID, sourceBranchID, receivingBranchID, senderID, receiverID, status } = row;
                       const isItemSelected = selected.indexOf(moneyOrderID) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={id}
+                          key={ID}
                           tabIndex={-1}
                           addressID="checkbox"
                           selected={isItemSelected}
@@ -262,7 +291,7 @@ export default function User() {
                           <TableCell align="left">
                             <Label 
                               variant="ghost"
-                              color={(status === 'active' && 'error') || 'success'}
+                              color={(status === 'pending' ? 'warning' :(status === 'assigned' ? 'info' : status==='delivered' ? 'primary' : 'error' ))  }
                             >
                               {sentenceCase(status)}
                             </Label>
@@ -304,10 +333,10 @@ export default function User() {
           />
         </Card>
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={modal}>
-          <DialogTitle id="customized-dialog-title" onClose={handleClose} color="error">
+          <DialogTitle ID="customized-dialog-title" onClose={handleClose} color="error">
             Confirm Delete
           </DialogTitle>
-          <DialogContent dividers>
+          <DialogContent divIDers>
             <Typography gutterBottom>
               Are you sure? You want to delete permanantly.
             </Typography>

@@ -14,11 +14,13 @@ import {DetailProvider} from 'src/context/DetailContext'
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
+  <DetailProvider>
   <HelmetProvider>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </HelmetProvider>,
+  </HelmetProvider>
+  </DetailProvider>,
   document.getElementById('root')
 );
 
