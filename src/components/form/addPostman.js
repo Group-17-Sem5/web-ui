@@ -81,7 +81,7 @@ export default function AddPostmanForm() {
         if(result.status===200){
           navigate('/app/postman', { replace: true });
         }
-        console.log(result.status)
+        console.log(result)
       })
      
     }

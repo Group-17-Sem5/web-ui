@@ -25,43 +25,73 @@ import {
 import { LoadingButton } from '@material-ui/lab';
 import { Box, width } from '@material-ui/system';
 import useFetch from 'src/hooks/useFetch'
-
+import { useParams } from 'react-router';
+import useEditData from 'src/hooks/useEditData'
 // ----------------------------------------------------------------------
 
 export default function AddPostmanForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+
   const postSchema = Yup.object().shape({
-    sender: Yup.string().required('Sender is required'),
-    receiver: Yup.string().required('Receiver is required'),
-    sourceBranch: Yup.string().required('Branch is required'),
-    lastAppearedBranch: Yup.string().required('Branch is required'),
+    senderID: Yup.string().required('Sender is required'),
+    receiverID: Yup.string().required('Receiver is required'),
+    // postManID: Yup.string(),
+    lastAppearedBranchID: Yup.string().required('Branch is required'),
     // address: Yup.string().required('Address is required'),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
+  const token = localStorage.getItem('adminToken')
+  const {id} = useParams()
+  const url = id ? '/postMaster/post/update/'+id : '/postMaster/post/add' 
 
   const {data:branches} = useFetch('/admin/branch')
-  const {data:users} = useFetch('/user/')
+  const {data:users} = useFetch('/postMaster/user/')
   const {data:postman} = useFetch('/postMaster/postman')
+
+  useEditData('/postMaster/post/'+id,
+    data=>{
+      if(data){
+        
+        
+        setFieldValue('senderID',data.senderID)
+        setFieldValue('receiverID',data.receiverID)
+        setFieldValue('postManID',data.postManID)
+        setFieldValue('lastAppearedBranchID',data.lastAppearedBranchID)
+      }
+    }
+  )
+  
 
   const formik = useFormik({
     initialValues: {
-      sender: '',
-      receiver: '',
-      sourceBranch: '',
-      lastAppearedBranch: '',
+      senderID: '',
+      receiverID: '',
+      postManID: null,
+      lastAppearedBranchID: '',
       // address:''
     },
     validationSchema: postSchema,
     onSubmit: (values) => {
-        console.log(values)
-    //   navigate('/app/viewPost', { replace: true });
+      fetch(process.env.REACT_APP_API_HOST+url,{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token},
+        body: JSON.stringify( values)
+        // headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token },
+      })
+      .then(result=>{
+        if(result.status===200){
+          navigate('/app/viewPost', { replace: true });
+        }
+        console.log(result.status)
+      })
+      
     }
   });
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps ,setFieldValue} = formik;
-
+console.log(values)
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
@@ -79,31 +109,29 @@ export default function AddPostmanForm() {
           <Grid item xs={12} sm={6} md={6}>
           <Autocomplete
           
-            options={top100Films}
-            onChange={(event, value) =>setFieldValue('sender',value.title)}
-            getOptionLabel={(option) => option.title}
+            options={users}
+            onChange={(event, value) =>setFieldValue('senderID',value._id)}
+            getOptionLabel={(option) => option.name}
             renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
-            name="sender"
-            {...getFieldProps('sender')}
-            error={Boolean(touched.sender && errors.sender)}
-            helperText={touched.sender && errors.sender}
-            value={values.sender}
+            name="senderID"
+            {...getFieldProps('senderID')}
+            error={Boolean(touched.senderID && errors.senderID)}
+            helperText={touched.senderID && errors.senderID}
+            value={values.senderID}
             />}
             />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             
             <Autocomplete
-             
-            
-            options={top100Films}
-            onChange={(event, value) =>setFieldValue('receiver',value.title)}
-            getOptionLabel={(option) => option.title}
+            options={users}
+            onChange={(event, value) =>setFieldValue('receiverID',value._id)}
+            getOptionLabel={(option) => option.name}
             renderInput={(params) => <TextField {...params} label="Receiver" variant="outlined" 
-            {...getFieldProps('receiver')}
-            name="receiver"
-            error={Boolean(touched.receiver && errors.receiver)}
-            helperText={touched.receiver && errors.receiver}
+            {...getFieldProps('receiverID')}
+            name="receiverID"
+            error={Boolean(touched.receiverID && errors.receiverID)}
+            helperText={touched.receiverID && errors.receiverID}
             />}
             />
            </Grid>
@@ -111,13 +139,13 @@ export default function AddPostmanForm() {
             <Autocomplete
            
             options={postman}
-            onChange={(event, value) =>setFieldValue('sourceBranch',value._id)}
+            onChange={(event, value) =>setFieldValue('postManID',value._id)}
             getOptionLabel={(option) => option.username}
-            renderInput={(params) => <TextField {...params} label="Source Branch" variant="outlined" 
-            {...getFieldProps('sourceBranch')}
-            name="sourceBranch"
-            error={Boolean(touched.sourceBranch && errors.sourceBranch)}
-            helperText={touched.sourceBranch && errors.sourceBranch}
+            renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
+            {...getFieldProps('postManID')}
+            name="postManID"
+            error={Boolean(touched.postManID && errors.postManID)}
+            helperText={touched.postManID && errors.postManID}
             />}
             />
             </Grid>
@@ -126,12 +154,12 @@ export default function AddPostmanForm() {
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('lastAppearedBranch',value._id)}
+            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value._id)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
-            {...getFieldProps('lastAppearedBranch')}
-            name="lastAppearedBranch"
-            error={Boolean(touched.lastAppearedBranch && errors.lastAppearedBranch)}
-            helperText={touched.lastAppearedBranch && errors.lastAppearedBranch}
+            {...getFieldProps('lastAppearedBranchID')}
+            name="lastAppearedBranchID"
+            error={Boolean(touched.lastAppearedBranchID && errors.lastAppearedBranchID)}
+            helperText={touched.lastAppearedBranchID && errors.lastAppearedBranchID}
             />}
             />
             </Grid>
@@ -149,7 +177,7 @@ export default function AddPostmanForm() {
      
         
      
-<LoadingButton
+        <LoadingButton
           fullWidth
           style={{width:'100%'}}
           size="large"

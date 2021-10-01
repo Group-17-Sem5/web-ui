@@ -277,7 +277,7 @@ export default function CustomTable({TABLE_HEAD,itemsUrl,delUrl,editRoute}) {
                           <TableCell align="right">
                             <UserMoreMenu delUrl={`"/postMaster/user/delete/"${_id}`} handleDelete={handleDelete} item={row} 
                             editUrl={`/app/editUser/${_id}`}
-                            viewUrl={`/app/profile/${_id}`}
+                            // viewUrl={`/app/profile/${_id}`}
                             />
                           </TableCell>
                         </TableRow>

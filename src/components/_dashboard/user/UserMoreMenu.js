@@ -45,12 +45,12 @@ export default function UserMoreMenu({delUrl,handleDelete,item,editUrl,viewUrl})
           </ListItemIcon>
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
-        <MenuItem component={RouterLink} to={viewUrl} sx={{ color: 'text.secondary' }}>
+        {viewUrl && <MenuItem component={RouterLink} to={viewUrl} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={eyeFill} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="View" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
+        </MenuItem>}
       </Menu>
     </>
   );

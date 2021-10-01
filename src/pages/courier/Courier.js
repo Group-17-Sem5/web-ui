@@ -47,10 +47,11 @@ const TABLE_HEAD = [
   { id: 'senderID', label: 'Sender', alignRight: false },
   { id: 'receiverID', label: 'Receiver', alignRight: false },
 //   { id: 'addressID', label: 'Address', alignRight: false },
-  { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
+  // { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
+  { id: 'postManID', label: 'Postman', alignRight: false },
   { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
-  { id: 'state', label: 'Status', alignRight: false },
   { id: 'weight', label: 'Weight', alignRight: false },
+  { id: 'state', label: 'Status', alignRight: false },
   { id: '' }
 
   
@@ -116,7 +117,7 @@ export default function MoneyOrder() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/post/',{
+    fetch ('http://localhost:5000/postMaster/courier/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -126,9 +127,9 @@ export default function MoneyOrder() {
       console.log(data)
       setUSERLIST(data)
     })
-    setUSERLIST(TABLE_DATA)
+    // setUSERLIST(TABLE_DATA)
   },[])
-  console.log(USERLIST)
+  // console.log(USERLIST)
 
   const handleDelete = (item) => {
     // console.log(item)
@@ -137,7 +138,7 @@ export default function MoneyOrder() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/post/delete"+ delItem._id;
+    const delApiURL = "postMaster/courier/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
     fetch( 'http://localhost:5000/'+delApiURL, {
@@ -254,8 +255,8 @@ export default function MoneyOrder() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id,senderId,receiverId,lastAppearedBranchID,sourceBranchID,state,_id,weight } = row;
-                      const isItemSelected = selected.indexOf(senderId) !== -1;
+                      const {id,senderID,receiverID,lastAppearedBranchID,state,_id,postManID,weight } = row;
+                      const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
                         <TableRow
@@ -269,35 +270,46 @@ export default function MoneyOrder() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, senderId)}
+                              onChange={(event) => handleClick(event, senderID)}
                             />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               {/* <Avatar alt={senderId} src={avatarUrl} /> */}
                               <Typography variant="subtitle2" noWrap>
-                                {senderId}
+                                {senderID}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{receiverId}</TableCell>
+                          <TableCell align="left">{receiverID}</TableCell>
+                          <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
                           <TableCell align="left">{lastAppearedBranchID}</TableCell>
-                          <TableCell align="left">{sourceBranchID}</TableCell>
+                          {/* <TableCell align="left">{sourceBranchID}</TableCell> */}
+                          <TableCell align="left">{weight} g</TableCell>
                           <TableCell align="left">
-                            <Label
+                            { postManID ?
+                              <Label
                               variant="ghost"
                               color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
                             >
                               {sentenceCase(state)}
                             </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not assigned
+                            </Label>
+                            }
                           </TableCell>
-                          <TableCell align="left">{weight} g</TableCell>
+                          
 
                           <TableCell align="right">
-                            {/* <UserMoreMenu delUrl={`postMaster/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
-                            editUrl={`/app/editPostman/${_id}`}
-                            viewUrl={`/app/profile/${_id}`}
-                            /> */}
+                            <UserMoreMenu delUrl={`postMaster/courier/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                              editUrl={`/app/editCourier/${_id}`}
+                              viewUrl={`/app/viewCourier/${_id}`}
+                            />
                           </TableCell>
                         </TableRow>
                       );

@@ -39,8 +39,8 @@ export default function AddUserForm() {
     email: Yup.string().email('Email must be a valid email address'),
     mobileNumber: Yup.string().required('Mobile number is required').matches(phoneRegExp, 'Mobile number is not valid'),
     // branch: Yup.string().required('Branch name is required'),
-    address: Yup.string().required('address is required'),
-    name: Yup.string().required('First Name is required').min(2,'Too short').max(50,'Too long'),
+    address: Yup.string().required('address is required').min(6,'Too short').max(256,'Too long'),
+    name: Yup.string().required('Name is required').min(3,'Too short').max(50,'Too long').matches(/^[a-zA-Z\s]*$/,"Name must contain letters and space only").trim(),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
@@ -51,6 +51,7 @@ export default function AddUserForm() {
   useEditData('/postMaster/user/'+id,
     data=>{
       if(data){
+        console.log(data)
         setVal(data)
         setFieldValue('email',data.email)
         setFieldValue('mobileNumber',data.mobileNumber)
@@ -106,7 +107,7 @@ export default function AddUserForm() {
           <TextField
             fullWidth
             type="text"
-            label="name"
+            label="Fullname"
             {...getFieldProps('name')}
             error={Boolean(touched.name && errors.name)}
             helperText={touched.name && errors.name}

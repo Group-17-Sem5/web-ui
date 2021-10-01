@@ -18,27 +18,33 @@ import ProfileClerk from './pages/ProfileClerk'
 import { useDetail } from './context/DetailContext';
 import EditProfile from './pages/EditProfile'
 import AddMoneyorder from './pages/moneyorder/AddMoneyorder';
-import ViewMoneyorder from './pages/moneyorder/MoneyOrder';
+import Moneyorder from './pages/moneyorder/MoneyOrder';
 import AddCourier from './pages/courier/AddCourier';
-import ViewCourier from './pages/courier/Courier';
+import Courier from './pages/courier/Courier';
 import Login from './pages/Login';
 import User from './pages/user/User'
 import AddUser from './pages/user/AddUser'
-import X from './pages/postman/x'
+import ViewPost from './pages/post/ViewPost';
+import ViewCourier from './pages/courier/ViewCourier';
+import ViewMoneyorder from './pages/moneyorder/ViewMoneyorder';
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const loginStatus = localStorage.getItem('loginStatus')
   return useRoutes([
     {
       path: '/app',
       element: <DashboardLayout />,
       children: [
+        { path: '', element: <DashboardApp /> },
         { path: '/dashboard', element: <DashboardApp /> },
         { path: '/addPostman', element: <AddPostman /> },
         { path: '/editPostman/:id', element: <AddPostman /> },
         { path: '/addClerk', element: <AddClerk /> },
         { path: '/editClerk/:id', element: <AddClerk /> },
         { path: '/addPost', element: <AddPost /> },
+        { path: '/editPost/:id', element: <AddPost /> },
+        { path: '/viewPost/:id', element: <ViewPost /> },
         { path: '/postman', element: <Postman /> },
         { path: '/clerk', element: <Clerk /> },
         { path: '/viewPost', element: <Post /> },
@@ -47,13 +53,16 @@ export default function Router() {
         { path: '/profileClerk/:id', element: <ProfileClerk /> },
         { path: '/profile/edit', element: <EditProfile /> },
         { path: '/addMoneyOrders', element: <AddMoneyorder /> },
-        { path: '/viewMoneyOrders', element: <ViewMoneyorder /> },
+        { path: '/editMoneyorder/:id', element: <AddMoneyorder /> },
+        { path: '/viewMoneyorder/:id', element: <ViewMoneyorder /> },
+        { path: '/viewMoneyOrders', element: <Moneyorder /> },
         { path: '/addCourier', element: <AddCourier /> },
-        { path: '/viewCourier', element: <ViewCourier /> },
+        { path: '/editCourier/:id', element: <AddCourier /> },
+        { path: '/viewCourier', element: <Courier /> },
+        { path: '/viewCourier/:id', element: <ViewCourier /> },
         { path: '/users', element: <User /> },
         { path: '/editUser/:id', element: <AddUser /> },
         { path: '/addUser', element: <AddUser /> },
-        { path: '/x', element: <X /> },
       ]
     },
     {
@@ -61,6 +70,7 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: '', element: <Login /> },
+        // loginStatus && {path: '' , element: <Navigate to="/dashboard"/> },
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/dashboard" /> },
         { path: '*', element: <Navigate to="/404" /> }

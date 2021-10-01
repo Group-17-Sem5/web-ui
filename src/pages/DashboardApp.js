@@ -2,21 +2,16 @@
 import { Box, Grid, Container, Typography } from '@material-ui/core';
 // components
 import Page from '../components/Page';
-import {
-  AppTasks,
-  AppNewUsers,
-  AppBugReports,
-  AppItemOrders,
-  AppNewsUpdate,
-  AppWeeklySales,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppCurrentSubject,
-  AppConversionRates
-} from '../components/_dashboard/app';
-
+import LineChart from 'src/components/dashboard/LineChart';
+import PieChart from 'src/components/dashboard/PieChart';
+import { Icon } from '@iconify/react';
+import CardWidgets from 'src/components/dashboard/CardWidgets';
+import dropboxoutlined from '@iconify/icons-ant-design/dropbox-outlined';
+import dollarcirclefilled from '@iconify/icons-ant-design/dollar-circle-filled';
+import userOutlined from '@iconify/icons-ant-design/user-outlined';
+import mailFilled from '@iconify/icons-ant-design/mail-filled';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
@@ -32,20 +27,36 @@ console.log(date);
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWeeklySales />
+            <CardWidgets 
+            title="Postman"
+            url="/postMaster/postman"
+            Icon = {<Icon icon={userOutlined} width={24} height={24} />}
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppNewUsers />
+            <CardWidgets 
+            title="Mails"
+            url="/postMaster/post"
+            Icon = {<Icon icon={mailFilled} width={24} height={24} />}
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppItemOrders />
+            <CardWidgets 
+            title="Couriers"
+            url="/postMaster/courier"
+            Icon = {<Icon icon={dropboxoutlined} width={24} height={24} />}
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppBugReports />
+            <CardWidgets 
+            title="Money orders"
+            url="/postMaster/moneyorder"
+            Icon = {<Icon icon={dollarcirclefilled} width={24} height={24} />}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits 
+            <LineChart 
             title="Post"
             subheader=""
             CHART_DATA = {[
@@ -69,17 +80,17 @@ console.log(date);
             ]}
             labels={
               [
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003'
+                '09/27/2021',
+                '09/26/2021',
+                '09/25/2021',
+                '09/24/2021',
+                '09/23/2021',
+                '09/22/2021',
+                '09/21/2021',
+                '09/20/2021',
+                '09/19/2021',
+                '09/18/2021',
+                '09/17/2021'
               ]
             }
             
@@ -87,10 +98,10 @@ console.log(date);
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits 
+            <PieChart 
             title="Post total view"
             CHART_DATA={
-              [4344, 5435, 1443]
+              [23, 25, 2]
             }
             labels={
               ['Delivered post', 'Total post', 'Cancelled post']
@@ -99,7 +110,7 @@ console.log(date);
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits 
+            <LineChart 
             title="Courier"
             subheader=""
             CHART_DATA = {[
@@ -141,7 +152,7 @@ console.log(date);
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits 
+            <PieChart 
             title="Courier total view"
             CHART_DATA={
               [4344, 5435, 1443]
@@ -153,7 +164,7 @@ console.log(date);
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits 
+            <LineChart 
             title="Money order"
             subheader=""
             CHART_DATA = {[
@@ -195,7 +206,7 @@ console.log(date);
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits 
+            <PieChart 
             title="Money order total view"
             CHART_DATA={
               [4344, 5435, 1443]
