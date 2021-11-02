@@ -49,7 +49,9 @@ const TABLE_HEAD = [
 //   { id: 'addressID', label: 'Address', alignRight: false },
   { id: 'postManID', label: 'Postman', alignRight: false },
   { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
-  { id: 'state', label: 'Status', alignRight: false },
+  { id: 'isAssigned', label: 'Assigned Status', alignRight: false },
+  { id: 'isDelevered', label: 'Delivery Status', alignRight: false },
+  { id: 'isCancelled', label: 'Cancelled Status', alignRight: false },
   { id: '' }
   // { id: 'status', label: 'Status', alignRight: false },
   
@@ -115,7 +117,7 @@ export default function User() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/post/',{
+    fetch (process.env.REACT_APP_API_HOST+'/postMaster/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -136,11 +138,11 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/post/delete/"+ delItem._id;
+    const delApiURL = "/postMaster/post/delete/"+ delItem._id;
     console.log(delItem._id)
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/'+delApiURL, {
+    fetch( process.env.REACT_APP_API_HOST+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {
@@ -254,7 +256,7 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id,senderID,receiverID,lastAppearedBranchID,state,_id,postManID } = row;
+                      const { id,senderID,receiverID,lastAppearedBranchID,state,_id,postManID,isAssigned,isDelivered,isCancelled } = row;
                       const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
@@ -285,12 +287,12 @@ export default function User() {
                           <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
                           <TableCell align="left">{lastAppearedBranchID}</TableCell>
                           <TableCell align="left">
-                            { postManID ?
+                            { isAssigned ?
                               <Label
                               variant="ghost"
-                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
+                              color='success'
                             >
-                              {sentenceCase(state)}
+                              {sentenceCase('assinged')}
                             </Label>
                             :
                             <Label
@@ -298,6 +300,40 @@ export default function User() {
                               color='error'
                             >
                               Not assigned
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isDelivered ?
+                              <Label
+                              variant="ghost"
+                              color='success'
+                            >
+                              {sentenceCase('delivered')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not Delivered
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isCancelled ?
+                              <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              {sentenceCase('cancelled')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='warning'
+                            >
+                              Not Cancelled
                             </Label>
                             }
                           </TableCell>

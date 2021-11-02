@@ -49,7 +49,8 @@ export default function AddPostmanForm() {
   const {data:branches} = useFetch('/admin/branch')
   const {data:users} = useFetch('/postMaster/user/')
   const {data:postman} = useFetch('/postMaster/postman')
-
+  const {data: address} = useFetch('/postMaster/address')
+  console.log(address)
   useEditData('/postMaster/post/'+id,
     data=>{
       if(data){
@@ -59,6 +60,8 @@ export default function AddPostmanForm() {
         setFieldValue('receiverID',data.receiverID)
         setFieldValue('postManID',data.postManID)
         setFieldValue('lastAppearedBranchID',data.lastAppearedBranchID)
+        setFieldValue('receivingBranchID',data.receivingBranchID)
+        setFieldValue('addressID',data.addressID)
       }
     }
   )
@@ -70,10 +73,13 @@ export default function AddPostmanForm() {
       receiverID: '',
       postManID: null,
       lastAppearedBranchID: '',
+      receivingBranchID:'',
+      addressID:''
       // address:''
     },
     validationSchema: postSchema,
     onSubmit: (values) => {
+      console.log(values)
       fetch(process.env.REACT_APP_API_HOST+url,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token},
@@ -110,8 +116,8 @@ console.log(values)
           <Autocomplete
           
             options={users}
-            onChange={(event, value) =>setFieldValue('senderID',value._id)}
-            getOptionLabel={(option) => option.name}
+            onChange={(event, value) =>setFieldValue('senderID',value.userName)}
+            getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
             name="senderID"
             {...getFieldProps('senderID')}
@@ -125,8 +131,8 @@ console.log(values)
             
             <Autocomplete
             options={users}
-            onChange={(event, value) =>setFieldValue('receiverID',value._id)}
-            getOptionLabel={(option) => option.name}
+            onChange={(event, value) =>setFieldValue('receiverID',value.userName)}
+            getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Receiver" variant="outlined" 
             {...getFieldProps('receiverID')}
             name="receiverID"
@@ -139,7 +145,7 @@ console.log(values)
             <Autocomplete
            
             options={postman}
-            onChange={(event, value) =>setFieldValue('postManID',value._id)}
+            onChange={(event, value) =>setFieldValue('postManID',value.username)}
             getOptionLabel={(option) => option.username}
             renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
             {...getFieldProps('postManID')}
@@ -154,7 +160,7 @@ console.log(values)
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value._id)}
+            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value.branchID)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
             {...getFieldProps('lastAppearedBranchID')}
             name="lastAppearedBranchID"
@@ -163,6 +169,34 @@ console.log(values)
             />}
             />
             </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <Autocomplete
+            
+            options={branches}
+            getOptionLabel={(option) => option.branchName}
+            onChange={(event, value) =>setFieldValue('receivingBranchID',value.branchID)}
+            renderInput={(params) => <TextField {...params} label="ReceivingBranch Branch" variant="outlined" 
+            {...getFieldProps('receivingBranchID')}
+            name="receivingBranchID"
+            error={Boolean(touched.receivingBranchID && errors.receivingBranchID)}
+            helperText={touched.receivingBranchID && errors.receivingBranchID}
+            />}
+            />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            
+            <Autocomplete
+            options={address.addresses}
+            onChange={(event, value) =>setFieldValue('addressID',value.addressID)}
+            getOptionLabel={(option) => option.description}
+            renderInput={(params) => <TextField {...params} label="Address (Only not receiver)" variant="outlined" 
+            {...getFieldProps('addressID')}
+            name="addressID"
+            error={Boolean(touched.addressID && errors.addressID)}
+            helperText={touched.addressID && errors.addressID}
+            />}
+            />
+           </Grid>
             </Grid>
             {/* <Autocomplete
             options={top100Films}

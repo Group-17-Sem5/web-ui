@@ -105,7 +105,7 @@ export default function User() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/clerk/',{
+    fetch (process.env.REACT_APP_API_HOST+'/postMaster/clerk/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -125,10 +125,10 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/clerk/delete/"+ delItem._id;
+    const delApiURL = "/postMaster/clerk/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/'+delApiURL, {
+    fetch( process.env.REACT_APP_API_HOST+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + token }
     }).then( () => {

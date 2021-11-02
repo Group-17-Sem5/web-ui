@@ -41,7 +41,7 @@ export default function AccountPopover() {
   const token = localStorage.getItem('adminToken')
   const id = (user._id)
   useEffect(()=>{
-    fetch ('http://localhost:5000/admin/postmaster/'+id,{
+    fetch (process.env.REACT_APP_API_HOST+'/admin/postmaster/'+id,{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{

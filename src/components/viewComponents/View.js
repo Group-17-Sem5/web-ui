@@ -86,7 +86,7 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
         <Grid item  xs={6}>
             <Autocomplete
                 options={postman}
-                onChange={(event, value) =>setValue(value._id)}
+                onChange={(event, value) =>setValue(value.username)}
                 getOptionLabel={(option) => option.username}
                 renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
                 name="postman"
