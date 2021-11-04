@@ -36,8 +36,8 @@ export default function AddCourier() {
     senderID: Yup.string().required('Sender is required'),
     receiverID: Yup.string().required('Receiver is required'),
     amount: Yup.number().required('weight is required'),
-    
-    lastAppearedBranchID: Yup.string().required('Branch is required'),
+    specialCode: Yup.string().required('Specialcode is required'),
+    // receivingBranchID: Yup.string().required('Branch is required'),
     // address: Yup.string().required('Address is required'),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
@@ -57,7 +57,8 @@ export default function AddCourier() {
         setFieldValue('senderID',data.senderID)
         setFieldValue('receiverID',data.receiverID)
         setFieldValue('postManID',data.postManID)
-        setFieldValue('lastAppearedBranchID',data.lastAppearedBranchID)
+        setFieldValue('receivingBranchID',data.receivingBranchID)
+        setFieldValue('specialCode',data.specialCode)
       }
     }
   )
@@ -67,8 +68,9 @@ export default function AddCourier() {
       senderID: '',
       receiverID: '',
       postManID: null,
-      lastAppearedBranchID: '',
+      receivingBranchID: '',
       amount:0,
+      specialCode:''
       // address:''
     },
     validationSchema: postSchema,
@@ -109,8 +111,8 @@ console.log(values)
           <Autocomplete
             
             options={users}
-            onChange={(event, value) =>setFieldValue('senderID',value._id)}
-            getOptionLabel={(option) => option.name}
+            onChange={(event, value) =>setFieldValue('senderID',value.userName)}
+            getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
             name="senderID"
             {...getFieldProps('senderID')}
@@ -124,8 +126,8 @@ console.log(values)
             
             <Autocomplete
             options={users}
-            onChange={(event, value) =>setFieldValue('receiverID',value._id)}
-            getOptionLabel={(option) => option.name}
+            onChange={(event, value) =>setFieldValue('receiverID',value.userName)}
+            getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Receiver" variant="outlined" 
             {...getFieldProps('receiverID')}
             name="receiverID"
@@ -139,7 +141,7 @@ console.log(values)
             <Autocomplete
            
             options={postman}
-            onChange={(event, value) =>setFieldValue('postManID',value._id)}
+            onChange={(event, value) =>setFieldValue('postManID',value.username)}
             getOptionLabel={(option) => option.username}
             renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
             {...getFieldProps('postManID')}
@@ -154,14 +156,25 @@ console.log(values)
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value._id)}
+            onChange={(event, value) =>setFieldValue('receivingBranchID',value.branchID)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
-            {...getFieldProps('lastAppearedBranchID')}
-            name="lastAppearedBranchID"
-            error={Boolean(touched.lastAppearedBranchID && errors.lastAppearedBranchID)}
-            helperText={touched.lastAppearedBranchID && errors.lastAppearedBranchID}
+            {...getFieldProps('receivingBranchID')}
+            name="receivingBranchID"
+            error={Boolean(touched.receivingBranchID && errors.receivingBranchID)}
+            helperText={touched.receivingBranchID && errors.receivingBranchID}
             />}
             />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <TextField
+            fullWidth
+            // autoComplete="username"
+            type="text"
+            label="specialCode"
+            {...getFieldProps('specialCode')}
+            error={Boolean(touched.specialCode && errors.specialCode)}
+            helperText={touched.specialCode && errors.specialCode}
+          />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             <TextField

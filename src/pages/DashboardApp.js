@@ -12,13 +12,56 @@ import userOutlined from '@iconify/icons-ant-design/user-outlined';
 import mailFilled from '@iconify/icons-ant-design/mail-filled';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import useFetch from 'src/hooks/useFetch';
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
   var date = new Date();
   date.setDate(date.getDate() - 11);
 
-console.log(date);
+  const ChartData = [
+    {
+      name: 'Delivered',
+      type: 'line',
+      // column
+      data: []
+    },
+    {
+      name: 'Total',
+      type: 'line',
+      // area
+      data: []
+    },
+    {
+      name: 'Cancelled',
+      type: 'line',
+      data: []
+    }
+  ]
+
+  const Labels = []
+  const ChartPieDataCourier = []
+
+  const {data:courierCount} = useFetch('/postMaster/courier/count')
+  const {data:courierAllCount} = useFetch('/postMaster/courier/allCount')
+ 
+  courierCount.map((count,i)=>{
+    ChartData[0].data.push(count.deliveredcount)
+    ChartData[1].data.push(count.totalcount)
+    ChartData[2].data.push(count.cancelledcount)
+    Labels.push(count.date)
+  })
+
+  courierAllCount.map((count,i)=>{
+    ChartPieDataCourier.push(count.delivered)
+    ChartPieDataCourier.push(count.assigned)
+    ChartPieDataCourier.push(count.cancelled)
+  })
+  
+  
+console.log(Labels)
+
+console.log(ChartData);
   return (
     <Page title="Dashboard | Easy Mail">
       <Container maxWidth="xl">
@@ -113,40 +156,9 @@ console.log(date);
             <LineChart 
             title="Courier"
             subheader=""
-            CHART_DATA = {[
-              {
-                name: 'Delivered',
-                type: 'line',
-                // column
-                data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-              },
-              {
-                name: 'Total',
-                type: 'line',
-                // area
-                data: [53, 18, 32, 27, 58, 22, 37, 23, 45, 23, 35]
-              },
-              {
-                name: 'Cancelled',
-                type: 'line',
-                data: [30, 7, 10, 0, 45, 0, 0, 0, 2, 1, 5]
-              }
-            ]}
-            labels={
-              [
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003'
-              ]
-            }
+            CHART_DATA = {ChartData}
+            labels={Labels}
+            
             
             />
           </Grid>
@@ -155,10 +167,10 @@ console.log(date);
             <PieChart 
             title="Courier total view"
             CHART_DATA={
-              [4344, 5435, 1443]
+              ChartPieDataCourier
             }
             labels={
-              ['Delivered', 'Total', 'Cancelled']
+              ['Delivered', 'Assigned', 'Cancelled']
             }
             />
           </Grid>

@@ -44,14 +44,16 @@ import useFetch from 'src/hooks/useIntervalFetch';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'courierID', label: 'Courier ID', alignRight: false },
   { id: 'senderID', label: 'Sender', alignRight: false },
   { id: 'receiverID', label: 'Receiver', alignRight: false },
-//   { id: 'addressID', label: 'Address', alignRight: false },
-  // { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
+  // { id: 'addressID', label: 'Address', alignRight: false },
   { id: 'postManID', label: 'Postman', alignRight: false },
-  { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
   { id: 'weight', label: 'Weight', alignRight: false },
-  { id: 'state', label: 'Status', alignRight: false },
+  { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
+  { id: 'isAssigned', label: 'Assigned Status', alignRight: false },
+  { id: 'isDelevered', label: 'Delivery Status', alignRight: false },
+  { id: 'isCancelled', label: 'Cancelled Status', alignRight: false },
   { id: '' }
 
   
@@ -89,7 +91,7 @@ function applySortFilter(array, comparator, query,query2) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.senderId.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.senderID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   // if (query2) {
   //   return filter(array, (_user) => (_user.status)===query2);
@@ -255,7 +257,7 @@ export default function MoneyOrder() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const {id,senderID,receiverID,lastAppearedBranchID,state,_id,postManID,weight } = row;
+                      const { id,senderID,receiverID,lastAppearedBranchID,courierID,_id,postManID,weight,isAssigned,isDelivered,isCancelled } = row;
                       const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
@@ -273,6 +275,7 @@ export default function MoneyOrder() {
                               onChange={(event) => handleClick(event, senderID)}
                             />
                           </TableCell>
+                          <TableCell align="left">{courierID ? courierID : 'Not included' }</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               {/* <Avatar alt={senderId} src={avatarUrl} /> */}
@@ -283,16 +286,17 @@ export default function MoneyOrder() {
                           </TableCell>
                           <TableCell align="left">{receiverID}</TableCell>
                           <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
+                          <TableCell align="left">{weight} g</TableCell>
                           <TableCell align="left">{lastAppearedBranchID}</TableCell>
                           {/* <TableCell align="left">{sourceBranchID}</TableCell> */}
-                          <TableCell align="left">{weight} g</TableCell>
+                         
                           <TableCell align="left">
-                            { postManID ?
+                            { isAssigned ?
                               <Label
                               variant="ghost"
-                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
+                              color='success'
                             >
-                              {sentenceCase(state)}
+                              {sentenceCase('assinged')}
                             </Label>
                             :
                             <Label
@@ -300,6 +304,40 @@ export default function MoneyOrder() {
                               color='error'
                             >
                               Not assigned
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isDelivered ?
+                              <Label
+                              variant="ghost"
+                              color='success'
+                            >
+                              {sentenceCase('delivered')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not Delivered
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isCancelled ?
+                              <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              {sentenceCase('cancelled')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='warning'
+                            >
+                              Not Cancelled
                             </Label>
                             }
                           </TableCell>

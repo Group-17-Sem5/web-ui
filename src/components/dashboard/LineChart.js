@@ -29,7 +29,7 @@ export default function LineChart({title,CHART_DATA,labels,subheader}) {
       }
     }
   });
-
+  const date = new Date()
   return (
     <Card>
       <CardHeader title={title} subheader={subheader} />
@@ -38,7 +38,7 @@ export default function LineChart({title,CHART_DATA,labels,subheader}) {
         id="date"
         label="From"
         type="date"
-        defaultValue="2021-09-27"
+        defaultValue={date}
         // className={classes.textField}
         InputLabelProps={{
           shrink: true,

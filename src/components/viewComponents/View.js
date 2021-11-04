@@ -82,8 +82,9 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
             {title}
           </Typography>
         </Stack>
+        {updatePostmanUrl ? 
         <Grid container spacing={3} sx={{mb:3}}>
-        <Grid item  xs={6}>
+            <Grid item  xs={6}> 
             <Autocomplete
                 options={postman}
                 onChange={(event, value) =>setValue(value.username)}
@@ -112,7 +113,8 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
                 </LoadingButton>
             </Grid>
            
-        </Grid>
+        </Grid> 
+        : null}
 
         <Grid container spacing={3}>
             <Grid  xs={6} item>
@@ -129,7 +131,7 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
                                 </Grid>
                                 <Grid item sm={8} >
                                     <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.senderName}
+                                        {profile && profile.senderID}
                                     </Typography>
                                 </Grid>
                                 <Grid item sm={4} >
@@ -139,7 +141,7 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
                                 </Grid>
                                 <Grid item sm={8} >
                                     <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.senderPhone}
+                                        {profile && profile.mobileNumber}
                                     </Typography>
                                 </Grid>
                                 <Grid item sm={4} >
@@ -171,7 +173,7 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
                                 </Grid>
                                 <Grid item sm={8} >
                                     <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.receiverName}
+                                        {profile && profile.receiverID}
                                     </Typography>
                                 </Grid>
                                 <Grid item sm={4} >

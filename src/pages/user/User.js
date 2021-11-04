@@ -45,7 +45,7 @@ import CustomTable from 'src/components/table';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
+  { id: 'userName', label: 'Username', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   // { id: 'password', label: 'Role', alignRight: false },
   { id: 'mobileNumber', label: 'Phone', alignRight: false },

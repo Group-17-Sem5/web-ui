@@ -79,7 +79,7 @@ function applySortFilter(array, comparator, query,query2) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.userName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   // if (query2) {
   //   return filter(array, (_user) => (_user.status)===query2);
@@ -231,7 +231,7 @@ export default function CustomTable({TABLE_HEAD,itemsUrl,delUrl,editRoute}) {
                     .map((row,id) => {
                       const _id = row._id
                       console.log(row)
-                      const isItemSelected = selected.indexOf(row.username) !== -1;
+                      const isItemSelected = selected.indexOf(row.userName) !== -1;
 
                       return (
                         <TableRow

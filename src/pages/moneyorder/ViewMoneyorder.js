@@ -5,7 +5,7 @@ export default function ViewMoneyorder () {
         <View 
             title="Money order"
             url="/postMaster/moneyorder/"
-            updatePostmanUrl= "/postMaster/moneyorder/updatePostman/"
+            // updatePostmanUrl= "/postMaster/moneyorder/updatePostman/"
             navigateUrl = "/app/viewMoneyOrders"
         />
     )

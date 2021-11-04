@@ -47,10 +47,10 @@ const TABLE_HEAD = [
   { id: 'senderID', label: 'Sender', alignRight: false },
   { id: 'receiverID', label: 'Receiver', alignRight: false },
 //   { id: 'addressID', label: 'Address', alignRight: false },
-  { id: 'postManID', label: 'Postman', alignRight: false },
-  { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
+  { id: 'receivingBranchID', label: 'Receiving Branch', alignRight: false },
   { id: 'amount', label: 'Money order', alignRight: false },
-  { id: 'state', label: 'Status', alignRight: false },
+  { id: '', label: 'Delivery Status', alignRight: false },
+  { id: '', label: 'Cancel Status', alignRight: false },
   { id: '' }
 
   
@@ -90,7 +90,7 @@ function applySortFilter(array, comparator, query,query2) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.senderId.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.senderID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   // if (query2) {
   //   return filter(array, (_user) => (_user.status)===query2);
@@ -256,7 +256,7 @@ export default function MoneyOrder() {
                 {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const {id,senderID,receiverID,lastAppearedBranchID,state,_id,postManID,amount } = row;
+                      const {id,senderID,receiverID,receivingBranchID,state,_id,amount,isDelivered,isCancelled } = row;
                       const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
@@ -283,24 +283,40 @@ export default function MoneyOrder() {
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{receiverID}</TableCell>
-                          <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
-                          <TableCell align="left">{lastAppearedBranchID}</TableCell>
+                          <TableCell align="left">{receivingBranchID}</TableCell>
                           {/* <TableCell align="left">{sourceBranchID}</TableCell> */}
                           <TableCell align="left">{amount} Rs</TableCell>
                           <TableCell align="left">
-                            { postManID ?
+                            { isDelivered ?
                               <Label
                               variant="ghost"
-                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
+                              color='success'
                             >
-                              {sentenceCase(state)}
+                              {sentenceCase('delivered')}
                             </Label>
                             :
                             <Label
                               variant="ghost"
                               color='error'
                             >
-                              Not assigned
+                              Not Delivered
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isCancelled ?
+                              <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              {sentenceCase('cancelled')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='warning'
+                            >
+                              Not Cancelled
                             </Label>
                             }
                           </TableCell>
