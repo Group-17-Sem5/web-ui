@@ -172,7 +172,7 @@ export default function Profile() {
                     </CardActionArea>
                 </Card>
             </Grid>
-            <Grid item  xs={6}>
+            {/* {/* <Grid item  xs={6}>
                 <DetailsChart 
                 title="Post"
                 subheader=""
@@ -294,8 +294,8 @@ export default function Profile() {
                 }
                 
                 />
-            </Grid>
-        </Grid>
+            </Grid> */}
+        </Grid> 
       </Container>
     </Page>
   );

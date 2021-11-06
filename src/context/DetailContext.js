@@ -36,7 +36,7 @@ export function DetailProvider({  children }) {
             })
     }
 
-    function login(email, password) {console.log('dwf')
+    function login(email, password) {
         return fetch(process.env.REACT_APP_API_HOST + `/postMaster/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
@@ -48,6 +48,7 @@ export function DetailProvider({  children }) {
                     setIsLoading(true)
                     setUser(data.user)
                     setToken(data.token)
+                    setLoginStatus(true)
                     localStorage.setItem('loginStatus',true)
                     console.log(data.token)
                 }
@@ -61,6 +62,7 @@ export function DetailProvider({  children }) {
     function logout() {
         setUser(null);
         setToken(null)
+        setLoginStatus(false)
         localStorage.setItem('loginStatus',false)
         localStorage.removeItem('adminUser')
         localStorage.removeItem('adminToken')

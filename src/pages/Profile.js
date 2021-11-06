@@ -1,5 +1,7 @@
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
+import LineChart from 'src/components/dashboard/LineChart';
+import PieChart from 'src/components/dashboard/PieChart';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { 
@@ -38,6 +40,7 @@ export default function Profile() {
     const {id} = useParams()
     const {user} = useDetail()
     const {data:profile} = id ? useFetch('/postMaster/postman/'+id) : useFetch('/admin/postmaster/'+user._id)
+    const postmanID = id ? profile.username : ''
     const navigate = useNavigate()
     const token = localStorage.getItem('adminToken')
     const handleChangeStatus = () => {
@@ -54,6 +57,123 @@ export default function Profile() {
             console.log(result.status)
           })
     }
+
+    const ChartData = [
+      {
+        name: 'Delivered',
+        type: 'line',
+        // column
+        data: []
+      },
+      {
+        name: 'Total',
+        type: 'line',
+        // area
+        data: []
+      },
+      {
+        name: 'Cancelled',
+        type: 'line',
+        data: []
+      }
+    ]
+    const ChartDataPost = [
+      {
+        name: 'Delivered',
+        type: 'line',
+        // column
+        data: []
+      },
+      {
+        name: 'Total',
+        type: 'line',
+        // area
+        data: []
+      },
+      {
+        name: 'Cancelled',
+        type: 'line',
+        data: []
+      }
+    ]
+    // const ChartDataMoneyorder = [
+    //   {
+    //     name: 'Delivered',
+    //     type: 'line',
+    //     // column
+    //     data: []
+    //   },
+    //   {
+    //     name: 'Total',
+    //     type: 'line',
+    //     // area
+    //     data: []
+    //   },
+    //   {
+    //     name: 'Cancelled',
+    //     type: 'line',
+    //     data: []
+    //   }
+    // ]
+    const Labels = []
+    const LabelsPost = []
+    // const LabelsMoneyorder = []
+    // const ChartPieDataCourier = []
+    // const ChartPieDataPost = []
+    // const ChartPieDataMoneyorder = []
+  
+    const {data:courierCount} = useFetch('/postMaster/courier/count/'+postmanID)
+    const {data:postCount} = useFetch('/postMaster/post/count/'+postmanID)
+    // const {data:moneyorderrCount} = useFetch('/postMaster/moneyorder/count/'+postmanID)
+    // const {data:courierAllCount} = useFetch('/postMaster/courier/allCount')
+    // const {data:postAllCount} = useFetch('/postMaster/post/allCount')
+    // const {data:moneyorderAllCount} = useFetch('/postMaster/moneyorder/allCount')
+  
+    courierCount.map((count,i)=>{
+      ChartData[0].data.push(count.deliveredcount)
+      ChartData[1].data.push(count.totalcount)
+      ChartData[2].data.push(count.cancelledcount)
+      Labels.push(count.date)
+    })
+  
+    postCount.map((count,i)=>{
+      ChartDataPost[0].data.push(count.deliveredcount)
+      ChartDataPost[1].data.push(count.totalcount)
+      ChartDataPost[2].data.push(count.cancelledcount)
+      LabelsPost.push(count.date)
+    })
+    
+    // moneyorderrCount.map((count,i)=>{
+    //   ChartDataMoneyorder[0].data.push(count.deliveredcount)
+    //   ChartDataMoneyorder[1].data.push(count.totalcount)
+    //   ChartDataMoneyorder[2].data.push(count.cancelledcount)
+    //   LabelsMoneyorder.push(count.date)
+    // })
+  
+    // courierAllCount.map((count,i)=>{
+    //   ChartPieDataCourier.push(count.delivered)
+    //   ChartPieDataCourier.push(count.assigned)
+    //   ChartPieDataCourier.push(count.cancelled)
+    // })
+  
+    // postAllCount.map((count,i)=>{
+    //   ChartPieDataPost.push(count.delivered)
+    //   ChartPieDataPost.push(count.assigned)
+    //   ChartPieDataPost.push(count.cancelled)
+    // })
+  
+    // moneyorderAllCount.map((count,i)=>{
+    //   ChartPieDataMoneyorder.push(count.delivered)
+    //   ChartPieDataMoneyorder.push(count.assigned)
+    //   ChartPieDataMoneyorder.push(count.cancelled)
+    // })
+    
+    
+  // console.log(ChartDataMoneyorder)
+  console.log(ChartDataPost)
+  console.log(ChartData);
+
+
   return (
     <Page title="Profile | Easy Mail">
       <Container>
@@ -119,7 +239,7 @@ export default function Profile() {
                             <Grid container spacing={3} >
                                 <Grid item sm={3} md={3}>
                                     <Typography  variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        Username
+                                        Username 
                                     </Typography>
                                 </Grid>
                                 <Grid item sm={9} md={9}>
@@ -174,129 +294,81 @@ export default function Profile() {
                     </CardActionArea>
                 </Card>
             </Grid>
-            <Grid item  xs={6}>
-                <DetailsChart 
-                title="Post"
-                subheader=""
-                CHART_DATA = {[
-                  {
-                    name: 'Delivered post',
-                    type: 'line',
-                    // column
-                    data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-                  },
-                  {
-                    name: 'Total post',
-                    type: 'line',
-                    // area
-                    data: [53, 18, 32, 27, 58, 22, 37, 23, 45, 23, 35]
-                  },
-                  {
-                    name: 'Cancelled post',
-                    type: 'line',
-                    data: [30, 7, 10, 0, 45, 0, 0, 0, 2, 1, 5]
-                  }
-                ]}
-                labels={
-                  [
-                    '01/01/2003',
-                    '02/01/2003',
-                    '03/01/2003',
-                    '04/01/2003',
-                    '05/01/2003',
-                    '06/01/2003',
-                    '07/01/2003',
-                    '08/01/2003',
-                    '09/01/2003',
-                    '10/01/2003',
-                    '11/01/2003'
-                  ]
-                }
-                
-                />
-            </Grid>
-            <Grid item  xs={6}>
-                <DetailsChart 
-                 title="Money order"
-                 subheader=""
-                 CHART_DATA = {[
-                   {
-                     name: 'Delivered',
-                     type: 'line',
-                     // column
-                     data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-                   },
-                   {
-                     name: 'Total',
-                     type: 'line',
-                     // area
-                     data: [53, 18, 32, 27, 58, 22, 37, 23, 45, 23, 35]
-                   },
-                   {
-                     name: 'Cancelled',
-                     type: 'line',
-                     data: [30, 7, 10, 0, 45, 0, 0, 0, 2, 1, 5]
-                   }
-                 ]}
-                 labels={
-                   [
-                     '01/01/2003',
-                     '02/01/2003',
-                     '03/01/2003',
-                     '04/01/2003',
-                     '05/01/2003',
-                     '06/01/2003',
-                     '07/01/2003',
-                     '08/01/2003',
-                     '09/01/2003',
-                     '10/01/2003',
-                     '11/01/2003'
-                   ]
-                 }
+            { 
+            postmanID ?
+            <>
+            <Grid item xs={12} md={6}>
+            <LineChart 
+            title="Post"
+            url={'/postMaster/post/filter/'+postmanID}
+            subheader=""
+            CHART_DATA = {ChartDataPost}
+            labels={LabelsPost}
+            
+            />
+          </Grid>
 
-                />
-            </Grid>
-            <Grid item  xs={6}>
-                <DetailsChart 
-                title="Courier"
-                subheader=""
-                CHART_DATA = {[
-                  {
-                    name: 'Delivered',
-                    type: 'line',
-                    // column
-                    data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-                  },
-                  {
-                    name: 'Total',
-                    type: 'line',
-                    // area
-                    data: [53, 18, 32, 27, 58, 22, 37, 23, 45, 23, 35]
-                  },
-                  {
-                    name: 'Cancelled',
-                    type: 'line',
-                    data: [30, 7, 10, 0, 45, 0, 0, 0, 2, 1, 5]
-                  }
-                ]}
-                labels={
-                  [
-                    '01/01/2003',
-                    '02/01/2003',
-                    '03/01/2003',
-                    '04/01/2003',
-                    '05/01/2003',
-                    '06/01/2003',
-                    '07/01/2003',
-                    '08/01/2003',
-                    '09/01/2003',
-                    '10/01/2003',
-                    '11/01/2003'
-                  ]
-                }
-                
-                />
-            </Grid>
+          {/* <Grid item xs={12} md={6} lg={4}>
+            <PieChart 
+            title="Post total view"
+            CHART_DATA={
+              ChartPieDataPost
+            }
+            labels={
+              ['Delivered post', 'Assigned', 'Cancelled post']
+            }
+            />
+          </Grid> */}
+            
+          <Grid item xs={12} md={6}>
+            <LineChart 
+            title="Courier"
+            url={'/postMaster/courier/filter/'+postmanID}
+            subheader=""
+            CHART_DATA = {ChartData}
+            labels={Labels}
+            
+            
+            />
+          </Grid>
+
+          {/* <Grid item xs={12} md={6} lg={4}>
+            <PieChart 
+            title="Courier total view"
+            CHART_DATA={
+              ChartPieDataCourier
+            }
+            labels={
+              ['Delivered', 'Assigned', 'Cancelled']
+            }
+            />
+          </Grid> */}
+
+          {/* <Grid item xs={12} md={6}>
+            <LineChart 
+            title="Money order"
+            url={'/postMaster/moneyorder/filter/'+postmanID}
+            subheader=""
+            CHART_DATA = {ChartDataMoneyorder}
+            labels={LabelsMoneyorder}
+            
+            />
+          </Grid> */}
+          </>
+        :null  
+        }
+
+          {/* <Grid item xs={12} md={6} lg={4}>
+            <PieChart 
+            title="Money order total view"
+            CHART_DATA={
+              ChartPieDataMoneyorder
+            }
+            labels={
+              ['Delivered', 'Assigned', 'Cancelled']
+            }
+            />
+          </Grid> */}
         </Grid>
       </Container>
     </Page>

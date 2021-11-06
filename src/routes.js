@@ -29,12 +29,12 @@ import ViewCourier from './pages/courier/ViewCourier';
 import ViewMoneyorder from './pages/moneyorder/ViewMoneyorder';
 // ----------------------------------------------------------------------
 
-export default function Router() {
-  const loginStatus = localStorage.getItem('loginStatus')
-  return useRoutes([
+ const Router = (loginStatus) =>
+  
+   [
     {
       path: '/app',
-      element: <DashboardLayout />,
+      element: loginStatus ? <DashboardLayout /> : <Navigate to="/" />,
       children: [
         { path: '', element: <DashboardApp /> },
         { path: '/dashboard', element: <DashboardApp /> },
@@ -67,7 +67,7 @@ export default function Router() {
     },
     {
       path: '/',
-      element: <LogoOnlyLayout />,
+      element: !loginStatus ? <LogoOnlyLayout /> : <Navigate to="/app/dashboard"/>,
       children: [
         { path: '', element: <Login /> },
         // loginStatus && {path: '' , element: <Navigate to="/dashboard"/> },
@@ -78,5 +78,6 @@ export default function Router() {
     },
 
     { path: '*', element: <Navigate to="/404" replace /> }
-  ]);
-}
+  ];
+
+  export default Router

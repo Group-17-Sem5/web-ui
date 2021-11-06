@@ -38,13 +38,58 @@ export default function DashboardApp() {
       data: []
     }
   ]
-
+  const ChartDataPost = [
+    {
+      name: 'Delivered',
+      type: 'line',
+      // column
+      data: []
+    },
+    {
+      name: 'Total',
+      type: 'line',
+      // area
+      data: []
+    },
+    {
+      name: 'Cancelled',
+      type: 'line',
+      data: []
+    }
+  ]
+  const ChartDataMoneyorder = [
+    {
+      name: 'Delivered',
+      type: 'line',
+      // column
+      data: []
+    },
+    {
+      name: 'Total',
+      type: 'line',
+      // area
+      data: []
+    },
+    {
+      name: 'Cancelled',
+      type: 'line',
+      data: []
+    }
+  ]
   const Labels = []
+  const LabelsPost = []
+  const LabelsMoneyorder = []
   const ChartPieDataCourier = []
+  const ChartPieDataPost = []
+  const ChartPieDataMoneyorder = []
 
   const {data:courierCount} = useFetch('/postMaster/courier/count')
+  const {data:postCount} = useFetch('/postMaster/post/count')
+  const {data:moneyorderrCount} = useFetch('/postMaster/moneyorder/count')
   const {data:courierAllCount} = useFetch('/postMaster/courier/allCount')
- 
+  const {data:postAllCount} = useFetch('/postMaster/post/allCount')
+  const {data:moneyorderAllCount} = useFetch('/postMaster/moneyorder/allCount')
+
   courierCount.map((count,i)=>{
     ChartData[0].data.push(count.deliveredcount)
     ChartData[1].data.push(count.totalcount)
@@ -52,15 +97,41 @@ export default function DashboardApp() {
     Labels.push(count.date)
   })
 
+  postCount.map((count,i)=>{
+    ChartDataPost[0].data.push(count.deliveredcount)
+    ChartDataPost[1].data.push(count.totalcount)
+    ChartDataPost[2].data.push(count.cancelledcount)
+    LabelsPost.push(count.date)
+  })
+  
+  moneyorderrCount.map((count,i)=>{
+    ChartDataMoneyorder[0].data.push(count.deliveredcount)
+    ChartDataMoneyorder[1].data.push(count.totalcount)
+    ChartDataMoneyorder[2].data.push(count.cancelledcount)
+    LabelsMoneyorder.push(count.date)
+  })
+
   courierAllCount.map((count,i)=>{
     ChartPieDataCourier.push(count.delivered)
     ChartPieDataCourier.push(count.assigned)
     ChartPieDataCourier.push(count.cancelled)
   })
-  
-  
-console.log(Labels)
 
+  postAllCount.map((count,i)=>{
+    ChartPieDataPost.push(count.delivered)
+    ChartPieDataPost.push(count.assigned)
+    ChartPieDataPost.push(count.cancelled)
+  })
+
+  moneyorderAllCount.map((count,i)=>{
+    ChartPieDataMoneyorder.push(count.delivered)
+    ChartPieDataMoneyorder.push(count.assigned)
+    ChartPieDataMoneyorder.push(count.cancelled)
+  })
+  
+  
+console.log(ChartDataMoneyorder)
+console.log(ChartDataPost)
 console.log(ChartData);
   return (
     <Page title="Dashboard | Easy Mail">
@@ -101,41 +172,10 @@ console.log(ChartData);
           <Grid item xs={12} md={6} lg={8}>
             <LineChart 
             title="Post"
+            url={'/postMaster/post/filter'}
             subheader=""
-            CHART_DATA = {[
-              {
-                name: 'Delivered post',
-                type: 'line',
-                // column
-                data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-              },
-              {
-                name: 'Total post',
-                type: 'line',
-                // area
-                data: [53, 18, 32, 27, 58, 22, 37, 23, 45, 23, 35]
-              },
-              {
-                name: 'Cancelled post',
-                type: 'line',
-                data: [30, 7, 10, 0, 45, 0, 0, 0, 2, 1, 5]
-              }
-            ]}
-            labels={
-              [
-                '09/27/2021',
-                '09/26/2021',
-                '09/25/2021',
-                '09/24/2021',
-                '09/23/2021',
-                '09/22/2021',
-                '09/21/2021',
-                '09/20/2021',
-                '09/19/2021',
-                '09/18/2021',
-                '09/17/2021'
-              ]
-            }
+            CHART_DATA = {ChartDataPost}
+            labels={LabelsPost}
             
             />
           </Grid>
@@ -144,17 +184,18 @@ console.log(ChartData);
             <PieChart 
             title="Post total view"
             CHART_DATA={
-              [23, 25, 2]
+              ChartPieDataPost
             }
             labels={
-              ['Delivered post', 'Total post', 'Cancelled post']
+              ['Delivered post', 'Assigned', 'Cancelled post']
             }
             />
           </Grid>
-
+            
           <Grid item xs={12} md={6} lg={8}>
             <LineChart 
             title="Courier"
+            url={'/postMaster/courier/filter'}
             subheader=""
             CHART_DATA = {ChartData}
             labels={Labels}
@@ -178,41 +219,10 @@ console.log(ChartData);
           <Grid item xs={12} md={6} lg={8}>
             <LineChart 
             title="Money order"
+            url={'/postMaster/moneyorder/filter'}
             subheader=""
-            CHART_DATA = {[
-              {
-                name: 'Delivered',
-                type: 'line',
-                // column
-                data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-              },
-              {
-                name: 'Total',
-                type: 'line',
-                // area
-                data: [53, 18, 32, 27, 58, 22, 37, 23, 45, 23, 35]
-              },
-              {
-                name: 'Cancelled',
-                type: 'line',
-                data: [30, 7, 10, 0, 45, 0, 0, 0, 2, 1, 5]
-              }
-            ]}
-            labels={
-              [
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003'
-              ]
-            }
+            CHART_DATA = {ChartDataMoneyorder}
+            labels={LabelsMoneyorder}
             
             />
           </Grid>
@@ -221,10 +231,10 @@ console.log(ChartData);
             <PieChart 
             title="Money order total view"
             CHART_DATA={
-              [4344, 5435, 1443]
+              ChartPieDataMoneyorder
             }
             labels={
-              ['Delivered', 'Total', 'Cancelled']
+              ['Delivered', 'Assigned', 'Cancelled']
             }
             />
           </Grid>
