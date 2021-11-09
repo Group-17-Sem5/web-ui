@@ -50,7 +50,7 @@ export default function AddPostmanForm() {
   const {data:users} = useFetch('/postMaster/user/')
   const {data:postman} = useFetch('/postMaster/postman')
   const {data: address} = useFetch('/postMaster/address')
-  console.log(address)
+  console.log(users)
   useEditData('/postMaster/post/'+id,
     data=>{
       if(data){
@@ -124,9 +124,11 @@ console.log(values)
             error={Boolean(touched.senderID && errors.senderID)}
             helperText={touched.senderID && errors.senderID}
             value={values.senderID}
+            defaultvalue={users.find(v => v.userName==values.senderID)} 
             />}
             />
             </Grid>
+            {console.log(users)}
             <Grid item xs={12} sm={6} md={6}>
             
             <Autocomplete
