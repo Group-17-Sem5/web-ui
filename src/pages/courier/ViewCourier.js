@@ -4,9 +4,9 @@ export default function ViewCourier () {
     return(
         <View 
             title="Courier"
-            url="/postMaster/courier/"
-            updatePostmanUrl= "/postMaster/courier/updatePostman/"
-            navigateUrl = "/app/viewCourier"
+            url="/clerk/courier/"
+            updatePostmanUrl= "/clerk/courier/updatePostman/"
+            navigateUrl = "/dashboard/viewCourier"
         />
     )
 }

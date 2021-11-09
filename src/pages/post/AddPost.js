@@ -6,7 +6,8 @@ import { Card, Button, Container, Stack, Typography, CardContent } from '@materi
 // components
 import Page from '../../components/Page';
 // import AddPostmanForm from '../components/postman/newPostman';
-import AddPost from '../../components/form/addPost'
+import AddPostForm from 'src/components/form/addPost';
+import { useParams } from 'react-router';
 
 //
 
@@ -21,13 +22,14 @@ const SORT_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function AddPostman() {
+export default function AddPost() {
+  const {id} = useParams()
   return (
-    <Page title="Dashboard: Add Post | Easy Mail">
+    <Page title="Dashboard: Add Post | MIS">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Add Posts
+           {id? 'Edit Post': 'Add Post'} 
           </Typography>
           {/* <Button
             variant="contained"
@@ -40,7 +42,7 @@ export default function AddPostman() {
         </Stack>
 
         
-        <AddPost/>
+        <AddPostForm/>
         
           {/* <Add/>
           <Profile/> */}

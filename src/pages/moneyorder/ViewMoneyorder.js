@@ -1,12 +1,12 @@
 import View from "src/components/viewComponents/View";
 
-export default function ViewMoneyorder () {
+export default function ViewMoneyOrder () {
     return(
         <View 
             title="Money order"
-            url="/postMaster/moneyorder/"
-            // updatePostmanUrl= "/postMaster/moneyorder/updatePostman/"
-            navigateUrl = "/app/viewMoneyOrders"
+            url="/clerk/moneyorder/"
+            updatePostmanUrl= "/clerk/moneyorder/updatePostman/"
+            navigateUrl = "/dashboard/viewMoneyOrders"
         />
     )
 }

@@ -44,13 +44,15 @@ import useFetch from 'src/hooks/useIntervalFetch';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'courierID', label: 'Courier ID', alignRight: false },
+  { id: '_id', label: 'Courier ID', alignRight: false },
   { id: 'senderID', label: 'Sender', alignRight: false },
   { id: 'receiverID', label: 'Receiver', alignRight: false },
-  // { id: 'addressID', label: 'Address', alignRight: false },
+  { id: 'addressID', label: 'Address', alignRight: false },
   { id: 'postManID', label: 'Postman', alignRight: false },
   { id: 'weight', label: 'Weight', alignRight: false },
+  { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
   { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
+  { ID: 'receivingBranchID', label: 'Receiving Branch', alignRight: false },
   { id: 'isAssigned', label: 'Assigned Status', alignRight: false },
   { id: 'isDelevered', label: 'Delivery Status', alignRight: false },
   { id: 'isCancelled', label: 'Cancelled Status', alignRight: false },
@@ -91,7 +93,7 @@ function applySortFilter(array, comparator, query,query2) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.senderID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user._id.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   // if (query2) {
   //   return filter(array, (_user) => (_user.status)===query2);
@@ -119,7 +121,7 @@ export default function MoneyOrder() {
 
 
   useEffect(()=>{
-    fetch (process.env.REACT_APP_API_HOST+'/postMaster/courier/',{
+    fetch (process.env.REACT_APP_API_HOST+'/clerk/courier/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -140,7 +142,7 @@ export default function MoneyOrder() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "/postMaster/courier/delete/"+ delItem._id;
+    const delApiURL = "/clerk/courier/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
     fetch( process.env.REACT_APP_API_HOST+delApiURL, {
@@ -148,6 +150,7 @@ export default function MoneyOrder() {
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {
       setUSERLIST(USERLIST.filter(i=>i!==delItem))
+      window.location.reload();
         // setIsDelLoading(false)
         setModal(false)
         console.log('success')
@@ -169,18 +172,18 @@ export default function MoneyOrder() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.senderId);
+      const newSelecteds = USERLIST.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, senderId) => {
-    const selectedIndex = selected.indexOf(senderId);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, senderId);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -226,7 +229,7 @@ export default function MoneyOrder() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/app/addCourier"
+            to="/dashboard/addcourier"
             startIcon={<Icon icon={plusFill} />}
           >
            Add Courier
@@ -257,8 +260,8 @@ export default function MoneyOrder() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id,senderID,receiverID,lastAppearedBranchID,courierID,_id,postManID,weight,isAssigned,isDelivered,isCancelled } = row;
-                      const isItemSelected = selected.indexOf(senderID) !== -1;
+                      const { id,senderID,receiverID,lastAppearedBranchID,sourceBranchID,courierID,_id,postManID,addressID,receivingBranchID,weight,isAssigned,isDelivered,isCancelled } = row;
+                      const isItemSelected = selected.indexOf(_id) !== -1;
 
                       return (
                         <TableRow
@@ -272,23 +275,28 @@ export default function MoneyOrder() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, senderID)}
+                              onChange={(event) => handleClick(event, _id)}
                             />
                           </TableCell>
-                          <TableCell align="left">{courierID ? courierID : 'Not included' }</TableCell>
+                          {/* <TableCell align="left">{courierID ? courierID : 'Not included' }</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              {/* <Avatar alt={senderId} src={avatarUrl} /> */}
+                              <Avatar alt={senderId} src={avatarUrl} /> 
                               <Typography variant="subtitle2" noWrap>
                                 {senderID}
                               </Typography>
                             </Stack>
-                          </TableCell>
+                            
+                          </TableCell>*/}
+                          <TableCell align="left">{_id}</TableCell>
+                          <TableCell align="left">{senderID}</TableCell>
                           <TableCell align="left">{receiverID}</TableCell>
+                          <TableCell align="left">{addressID}</TableCell>
                           <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
                           <TableCell align="left">{weight} g</TableCell>
+                          <TableCell align="left">{sourceBranchID}</TableCell>
                           <TableCell align="left">{lastAppearedBranchID}</TableCell>
-                          {/* <TableCell align="left">{sourceBranchID}</TableCell> */}
+                          <TableCell align="left">{receivingBranchID}</TableCell>
                          
                           <TableCell align="left">
                             { isAssigned ?
@@ -344,9 +352,9 @@ export default function MoneyOrder() {
                           
 
                           <TableCell align="right">
-                            <UserMoreMenu delUrl={`postMaster/courier/delete/${_id}`} handleDelete={handleDelete} item={row} 
-                              editUrl={`/app/editCourier/${_id}`}
-                              viewUrl={`/app/viewCourier/${_id}`}
+                            <UserMoreMenu delUrl={`clerk/courier/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                              editUrl={`/dashboard/editCourier/${_id}`}
+                             // viewUrl={`/app/viewCourier/${_id}`}
                             />
                           </TableCell>
                         </TableRow>

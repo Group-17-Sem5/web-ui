@@ -6,8 +6,8 @@ import { Card, Button, Container, Stack, Typography, CardContent } from '@materi
 // components
 import Page from '../../components/Page';
 // import AddPostmanForm from '../components/postman/newPostman';
-import AddMoneyOrder from '../../components/form/addMoneyorder'
-
+import AddMoneyOrder from '../../components/form/addMoneyOrder'
+import { useParams } from 'react-router';
 //
 
 
@@ -22,12 +22,13 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AddMoneyorder() {
+  const {id} = useParams()
   return (
     <Page title="Dashboard: Add MoneyOrder | MIS">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Add Money Order
+          {id? 'Edit Money Order': 'Add Money Order'} 
           </Typography>
           {/* <Button
             variant="contained"

@@ -4,14 +4,12 @@ import { sentenceCase } from 'change-case';
 import { useEffect, useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
+import MuIDialogTitle from '@material-ui/core/DialogTitle';
+import MuIDialogContent from '@material-ui/core/DialogContent';
+import MuIDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
-// import CloseIcon from '@material-ui/icons/Close';
+import React from 'react';
+import ReactDOM from 'react-dom';
 // material
 import {
   Card,
@@ -27,6 +25,7 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  Dialog,
   DialogTitle,
   DialogContent,
   DialogActions
@@ -37,31 +36,32 @@ import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
-import useFetch from 'src/hooks/useIntervalFetch';
 //
-// import USERLIST from '../_mocks_/user';
+import USERLIST from '../../_mocks_/mail';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'senderID', label: 'Sender', alignRight: false },
-  { id: 'receiverID', label: 'Receiver', alignRight: false },
-//   { id: 'addressID', label: 'Address', alignRight: false },
-  { id: 'postManID', label: 'Postman', alignRight: false },
-  { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
-  { id: 'isAssigned', label: 'Assigned Status', alignRight: false },
-  { id: 'isDelevered', label: 'Delivery Status', alignRight: false },
-  { id: 'isCancelled', label: 'Cancelled Status', alignRight: false },
-  { id: '' }
-  // { id: 'status', label: 'Status', alignRight: false },
+  { ID: 'senderID', label: 'Sender', alignRight: false },
+  { ID: 'receiverID', label: 'Receiver', alignRight: false },
+  { ID: 'addressID', label: 'Address', alignRight: false },
+  { ID: 'sourceBranchID', label: 'Source Branch', alignRight: false },
+  { ID: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
+  { ID: 'receivingBranchID', label: 'Receiving Branch', alignRight: false },
+  { ID: 'postManID', label: 'Postman', alignRight: false },
+  { ID: 'isAssigned', label: 'Assigned', alignRight: false },
+  { ID: 'isCancelled', label: 'Cancelled', alignRight: false },
+  { ID: 'isDelivered', label: 'Delivered', alignRight: false },
+  { ID: '' }
+  // { ID: 'state', label: 'state', alignRight: false },
   
 ];
 const TABLE_DATA = [
-  {senderId:'sender1',receiverId:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667'},
-  {senderId:'sender2',receiverId:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667'},
-  {senderId:'sender3',receiverId:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh'},
-  {senderId:'sender4',receiverId:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667'},
-  {senderId:'sender5',receiverId:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg'},
+  {senderID:'sender1',receiverID:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667'},
+  {senderID:'sender2',receiverID:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667'},
+  {senderID:'sender3',receiverID:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh'},
+  {senderID:'sender4',receiverID:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667'},
+  {senderID:'sender5',receiverID:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg'},
 ];
 // ----------------------------------------------------------------------
 
@@ -69,6 +69,10 @@ function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
+
+
+
+  
   if (b[orderBy] > a[orderBy]) {
     return 1;
   }
@@ -81,7 +85,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query,query2) {
+function applySortFilter(array, comparator, query) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -91,9 +95,6 @@ function applySortFilter(array, comparator, query,query2) {
   if (query) {
     return filter(array, (_user) => _user.senderID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
-  // if (query2) {
-  //   return filter(array, (_user) => (_user.status)===query2);
-  // }
   return stabilizedThis.map((el) => el[0]);
 }
 
@@ -105,7 +106,7 @@ export default function User() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [USERLIST,setUSERLIST] = useState([])
-  const [filterStatus,setFilterStatus] = useState('');
+  const [filterstate,setFilterstate] = useState('');
   const [delItem,setDelItem] = useState(null)
   const [modal,setModal] = useState(false)
   const [open, setOpen] = React.useState(false);
@@ -117,7 +118,7 @@ export default function User() {
 
 
   useEffect(()=>{
-    fetch (process.env.REACT_APP_API_HOST+'/postMaster/post/',{
+    fetch ('http://localhost:5000/clerk/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -127,9 +128,9 @@ export default function User() {
       console.log(data)
       setUSERLIST(data)
     })
-    // setUSERLIST(TABLE_DATA)
+    //setUSERLIST(TABLE_DATA)
   },[])
-  // console.log(USERLIST)
+  console.log(USERLIST)
 
   const handleDelete = (item) => {
     // console.log(item)
@@ -138,11 +139,11 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "/postMaster/post/delete/"+ delItem._id;
+    const delApiURL = "clerk/post/delete/"+ delItem._id;
     console.log(delItem._id)
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( process.env.REACT_APP_API_HOST+delApiURL, {
+    fetch( 'http://localhost:5000/'+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {
@@ -154,12 +155,10 @@ export default function User() {
     .catch( console.log )
 }
 
-
-
-  // const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
+ // const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
 
   // console.log(USERLISTT)
-  
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -168,18 +167,18 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.senderId);
+      const newSelecteds = USERLIST.map((n) => n.senderID);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, senderId) => {
-    const selectedIndex = selected.indexOf(senderId);
+  const handleClick = (event, senderID) => {
+    const selectedIndex = selected.indexOf(senderID);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, senderId);
+      newSelected = newSelected.concat(selected, senderID);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -205,30 +204,31 @@ export default function User() {
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
   };
-  const handleFilterByStatus = (event) => {
-    setFilterStatus(event.target.value);
+
+  const handleFilterBystate = (event) => {
+    setFilterstate(event.target.value);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName,filterStatus);
+  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="Post | Easy Mail">
+    <Page title="Post | EASY MAIL">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Post
+            POST
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/app/addPost"
+            to="/dashboard/addpost"
             startIcon={<Icon icon={plusFill} />}
           >
-           Add Post
+            Add Post
           </Button>
         </Stack>
 
@@ -237,11 +237,11 @@ export default function User() {
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
-            onFilterStatus={handleFilterByStatus}
+            onFilterstate={handleFilterBystate}
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWIDth: 800 }}>
               <Table>
                 <UserListHead
                   order={order}
@@ -256,7 +256,7 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id,senderID,receiverID,lastAppearedBranchID,state,_id,postManID,isAssigned,isDelivered,isCancelled } = row;
+                      const { id,senderID,receiverID,addressID,sourceBranchID,lastAppearedBranchID,receivingBranchID,postManID,isAssigned,_id,isCancelled,isDelivered } = row;
                       const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
@@ -274,20 +274,24 @@ export default function User() {
                               onChange={(event) => handleClick(event, senderID)}
                             />
                           </TableCell>
-                          {/* <TableCell component="th" scope="row" padding="none">
-                            <Stack direction="row" alignItems="center" spacing={2}> */}
-                              {/* <Avatar alt={senderId} src={avatarUrl} /> */}
-                              {/* <Typography variant="subtitle2" noWrap>
-                                
+                          {/*<TableCell component="th" scope="row" padding="none">
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                             
+                              <Typography variant="subtitle2" noWrap>
+                                {senderID}
                               </Typography>
-                            </Stack> */}
-                          {/* </TableCell> */}
+                            </Stack>
+                          </TableCell>*/}
                           <TableCell align="left">{senderID}</TableCell>
                           <TableCell align="left">{receiverID}</TableCell>
-                          <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
+                          <TableCell align="left">{addressID}</TableCell>
+                          <TableCell align="left">{sourceBranchID}</TableCell>
                           <TableCell align="left">{lastAppearedBranchID}</TableCell>
+                          <TableCell align="left">{receivingBranchID}</TableCell>
+                          <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
+                         
                           <TableCell align="left">
-                            { isAssigned ?
+                            { postManID ?
                               <Label
                               variant="ghost"
                               color='success'
@@ -300,6 +304,23 @@ export default function User() {
                               color='error'
                             >
                               Not assigned
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isCancelled ?
+                              <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              {sentenceCase('cancelled')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='warning'
+                            >
+                              Not Cancelled
                             </Label>
                             }
                           </TableCell>
@@ -321,30 +342,32 @@ export default function User() {
                             }
                           </TableCell>
                           <TableCell align="left">
-                            { isCancelled ?
+                         
+                          {/* postManID ?
                               <Label
                               variant="ghost"
-                              color='error'
+                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
                             >
-                              {sentenceCase('cancelled')}
+                              {sentenceCase(state)}
                             </Label>
                             :
                             <Label
                               variant="ghost"
-                              color='warning'
+                              color='error'
                             >
-                              Not Cancelled
+                              Not assigned
                             </Label>
-                            }
+                          */}
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu delUrl={`postMaster/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
-                            editUrl={`/app/editPost/${_id}`}
-                            viewUrl={`/app/viewPost/${_id}`}
+                            <UserMoreMenu delUrl={`clerk/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/dashboard/editPost/${_id}`}
+                            //viewUrl={`/dashboard/viewpost/${_id}`}
                             />
                           </TableCell>
-                        </TableRow>
+
+                      </TableRow>
                       );
                     })}
                   {emptyRows > 0 && (
@@ -376,7 +399,6 @@ export default function User() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
-
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={modal}>
           <DialogTitle id="customized-dialog-title" onClose={handleClose} color="error">
             Confirm Delete

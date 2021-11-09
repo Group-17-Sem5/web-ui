@@ -46,23 +46,25 @@ import useFetch from 'src/hooks/useIntervalFetch';
 const TABLE_HEAD = [
   { id: 'senderID', label: 'Sender', alignRight: false },
   { id: 'receiverID', label: 'Receiver', alignRight: false },
-//   { id: 'addressID', label: 'Address', alignRight: false },
+  { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
   { id: 'receivingBranchID', label: 'Receiving Branch', alignRight: false },
-  { id: 'amount', label: 'Money order', alignRight: false },
-  { id: '', label: 'Delivery Status', alignRight: false },
-  { id: '', label: 'Cancel Status', alignRight: false },
+
+  { id: 'amount', label: 'Amount', alignRight: false },
+  { id: 'specialCode', label: 'Special Code', alignRight: false },
+  { id: 'isCancelled', label: 'Cancelled', alignRight: false },
+  { id: 'isDelivered', label: 'Delivered', alignRight: false },
   { id: '' }
 
   
 ];
 const TABLE_DATA = [
-  {senderId:'sender1',receiverId:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667',amount:'200'},
-  {senderId:'sender2',receiverId:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667',amount:'350'},
-  {senderId:'sender3',receiverId:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh',amount:'2000'},
-  {senderId:'sender4',receiverId:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
-  {senderId:'sender5',receiverId:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
-  {senderId:'sender6',receiverId:'receiver6',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
-  {senderId:'sender7',receiverId:'receiver7',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
+  {senderID:'sender1',receiverID:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667',amount:'200'},
+  {senderID:'sender2',receiverID:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667',amount:'350'},
+  {senderID:'sender3',receiverID:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh',amount:'2000'},
+  {senderID:'sender4',receiverID:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
+  {senderID:'sender5',receiverID:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
+  {senderID:'sender6',receiverID:'receiver6',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
+  {senderID:'sender7',receiverID:'receiver7',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
 ];
 // ----------------------------------------------------------------------
 
@@ -108,7 +110,9 @@ export default function MoneyOrder() {
   const [USERLIST,setUSERLIST] = useState([])
   const [filterStatus,setFilterStatus] = useState('');
   const [delItem,setDelItem] = useState(null)
+  const [canItem,setCanItem] = useState(null)
   const [modal,setModal] = useState(false)
+  const [canmodal,setCanModal] = useState(false)
   const [open, setOpen] = React.useState(false);
   const token = localStorage.getItem('adminToken')
 
@@ -116,9 +120,13 @@ export default function MoneyOrder() {
     setModal(false);
   };
 
+  const handleConfirm = () => {
+    setCanModal(false);
+  };
+
 
   useEffect(()=>{
-    fetch (process.env.REACT_APP_API_HOST+'/postMaster/moneyorder/',{
+    fetch ('http://localhost:5000/clerk/moneyorder/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -138,20 +146,43 @@ export default function MoneyOrder() {
     setModal(true)
   }
 
+  const handleCancel = (item) => {
+    // console.log(item)
+    setCanItem(item)
+    setCanModal(true)
+  }
   const handleConfirmDelete = () => { 
-    const delApiURL = "/postMaster/moneyorder/delete/"+ delItem._id;
+    const delApiURL = "clerk/moneyorder/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( process.env.REACT_APP_API_HOST+delApiURL, {
+    fetch( 'http://localhost:5000/'+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {
       setUSERLIST(USERLIST.filter(i=>i!==delItem))
+      window.location.reload();
         // setIsDelLoading(false)
         setModal(false)
         console.log('success')
     } )
     .catch( console.log )
+}
+
+const handleConfirmCancel = () => { 
+  const conApiURL = "clerk/moneyorder/confirm/"+ canItem._id;
+  setCanItem(null)
+  // setIsDelLoading(true)
+  fetch( 'http://localhost:5000/'+conApiURL, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
+  }).then( () => {
+    window.location.reload();
+    //setUSERLIST(USERLIST.filter(i=>i!==canItem))
+      // setIsDelLoading(false)
+      setCanModal(false)
+      console.log('success')
+  } )
+  .catch( console.log )
 }
 
 
@@ -168,18 +199,18 @@ export default function MoneyOrder() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.senderId);
+      const newSelecteds = USERLIST.map((n) => n.senderID);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, senderId) => {
-    const selectedIndex = selected.indexOf(senderId);
+  const handleClick = (event, senderID) => {
+    const selectedIndex = selected.indexOf(senderID);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, senderId);
+      newSelected = newSelected.concat(selected, senderID);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -225,7 +256,7 @@ export default function MoneyOrder() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/app/addMoneyorders"
+            to="/dashboard/addmoneyorder"
             startIcon={<Icon icon={plusFill} />}
           >
            Add Money Order
@@ -256,7 +287,7 @@ export default function MoneyOrder() {
                 {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const {id,senderID,receiverID,receivingBranchID,state,_id,amount,isDelivered,isCancelled } = row;
+                      const {id,senderID,receiverID,sourceBranchID,receivingBranchID,_id,amount,specialCode,isCancelled,isDelivered } = row;
                       const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
@@ -274,35 +305,21 @@ export default function MoneyOrder() {
                               onChange={(event) => handleClick(event, senderID)}
                             />
                           </TableCell>
-                          <TableCell component="th" scope="row" padding="none">
+                          {/*<TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              {/* <Avatar alt={senderId} src={avatarUrl} /> */}
+                               <Avatar alt={senderID} src={avatarUrl} /> 
                               <Typography variant="subtitle2" noWrap>
                                 {senderID}
                               </Typography>
                             </Stack>
-                          </TableCell>
+                          </TableCell>*/}
+                          <TableCell align="left">{senderID}</TableCell>
                           <TableCell align="left">{receiverID}</TableCell>
-                          <TableCell align="left">{receivingBranchID}</TableCell>
-                          {/* <TableCell align="left">{sourceBranchID}</TableCell> */}
-                          <TableCell align="left">{amount} Rs</TableCell>
-                          <TableCell align="left">
-                            { isDelivered ?
-                              <Label
-                              variant="ghost"
-                              color='success'
-                            >
-                              {sentenceCase('delivered')}
-                            </Label>
-                            :
-                            <Label
-                              variant="ghost"
-                              color='error'
-                            >
-                              Not Delivered
-                            </Label>
-                            }
-                          </TableCell>
+                          <TableCell align="left">{sourceBranchID}</TableCell>
+                          <TableCell align="left">{receivingBranchID}</TableCell> 
+                          
+                          <TableCell align="left">Rs. {amount}</TableCell>
+                          <TableCell align="left">{specialCode}</TableCell>
                           <TableCell align="left">
                             { isCancelled ?
                               <Label
@@ -321,11 +338,48 @@ export default function MoneyOrder() {
                             }
                           </TableCell>
                           
+                          <TableCell align="left">
+                            { isDelivered ?
+                              <Label
+                              variant="ghost"
+                              color='success'
+                            >
+                              {sentenceCase('delivered')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not Delivered
+                            </Label>
+                            }
+                          </TableCell>
+                         
+                          <TableCell align="left">
+                            {/* postManID ?
+                              <Label
+                              variant="ghost"
+                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
+                            >
+                              {sentenceCase(state)}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not assigned
+                            </Label>
+                            */}
+                          </TableCell>
+                          
 
                           <TableCell align="right">
-                            <UserMoreMenu delUrl={`postMaster/moneyorder/delete/${_id}`} handleDelete={handleDelete} item={row} 
-                              editUrl={`/app/editMoneyorder/${_id}`}
-                              viewUrl={`/app/viewMoneyorder/${_id}`}
+                            <UserMoreMenu delUrl={`clerk/moneyorder/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                              editUrl={`/dashboard/editMoneyorder/${_id}`}
+                              conUrl={`clerk/moneyorder/confirm/${_id}`} handleCancel={handleCancel} item={row} 
+                              //viewUrl={`/dashboard/viewMoneyorder/${_id}`}
                             />
                           </TableCell>
                         </TableRow>
@@ -376,6 +430,25 @@ export default function MoneyOrder() {
             </Button>
             <Button autoFocus onClick={handleConfirmDelete} color="error">
               Delete
+            </Button>
+          </DialogActions>
+      </Dialog>
+
+      <Dialog onClose={handleConfirm} aria-labelledby="customized-dialog-title" open={canmodal}>
+          <DialogTitle id="customized-dialog-title" onClose={handleConfirm} color="primary">
+            Confirm Money Order
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Are you sure? You want to Confirm Money Order
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleConfirm} color="error">
+              Cancel
+            </Button>
+            <Button autoFocus onClick={handleConfirmCancel} color="success">
+              Confirm
             </Button>
           </DialogActions>
       </Dialog>

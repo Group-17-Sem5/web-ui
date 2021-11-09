@@ -1,9 +1,5 @@
 import PropTypes from 'prop-types';
-<<<<<<< HEAD
-import { useEffect, useState } from 'react';
-=======
 import { useEffect,useState } from 'react';
->>>>>>> main
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
@@ -15,11 +11,6 @@ import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
 import sidebarConfig from './SidebarConfig';
-<<<<<<< HEAD
-import account from '../../_mocks_/account';
-=======
-
->>>>>>> main
 import { useDetail } from 'src/context/DetailContext';
 
 // ----------------------------------------------------------------------
