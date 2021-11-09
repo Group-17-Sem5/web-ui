@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
+import { result } from 'lodash-es';
 
 // ----------------------------------------------------------------------
 
@@ -33,8 +34,21 @@ export default function RegisterForm() {
       password: ''
     },
     validationSchema: RegisterSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: (values) => {
+
+      fetch(process.env.REACT_APP_API_HOST+'/clerk/add',{
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(values)
+      })
+      .then(result=>{
+        if (result.status==200){
+          navigate('/dashboard', { replace: true });
+        }
+        {console.log(formik.values)}
+      })
+      //{console.log(formik.values)}
+      //navigate('/dashboard', { replace: true });
     }
   });
 

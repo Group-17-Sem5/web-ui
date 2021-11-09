@@ -19,6 +19,7 @@
 
 - [Dashboard](https://minimal-kit-react.vercel.app/dashboard/app)
 - [Users](https://minimal-kit-react.vercel.app/dashboard/user)
+- [MoneyOrders](https://minimal-kit-react.vercel.app/dashboard/moneyorder)
 - [Product](https://minimal-kit-react.vercel.app/dashboard/products)
 - [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
 - [Login](https://minimal-kit-react.vercel.app/login)

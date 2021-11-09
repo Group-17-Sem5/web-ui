@@ -1,10 +1,12 @@
 import { Icon } from '@iconify/react';
-import androidFilled from '@iconify/icons-ant-design/android-filled';
+import mailFilled from '@iconify/icons-ant-design/mail-filled';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
+import React, { useState, useEffect } from 'react'
+
 
 // ----------------------------------------------------------------------
 
@@ -37,14 +39,33 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 const TOTAL = 714000;
 
 export default function AppWeeklySales() {
+
+  const [LIST,setLIST] = useState([])
+  const token = localStorage.getItem('adminToken')
+
+  useEffect(()=>{
+    fetch ('http://localhost:5000/clerk/post/',{
+      headers: { "Authorization": "Bearer " + token},
+    })
+    .then(result=>{
+      return result.json()
+    })
+    .then(data=>{
+      console.log(data)
+      setLIST(data)
+    })
+    
+  },[])
+  console.log(LIST)
+
   return (
     <RootStyle>
       <IconWrapperStyle>
-        <Icon icon={androidFilled} width={24} height={24} />
+        <Icon icon={mailFilled} width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{fShortenNumber(LIST.length)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Weekly Sales
+        Weekly Posts
       </Typography>
     </RootStyle>
   );

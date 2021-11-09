@@ -1,10 +1,11 @@
 import { Icon } from '@iconify/react';
-import appleFilled from '@iconify/icons-ant-design/apple-filled';
+import user from '@iconify/icons-ant-design/usergroup-add';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
+import React, { useState, useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -34,17 +35,33 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 1352831;
+const TOTAL = 135;
 
 export default function AppNewUsers() {
+  const [LIST,setLIST] = useState([])
+  const token = localStorage.getItem('adminToken')
+
+  useEffect(()=>{
+    fetch ('http://localhost:5000/clerk/user/',{
+      headers: { "Authorization": "Bearer " + token},
+    })
+    .then(result=>{
+      return result.json()
+    })
+    .then(data=>{
+      console.log(data)
+      setLIST(data)
+    })
+    
+  },[])
   return (
     <RootStyle>
       <IconWrapperStyle>
-        <Icon icon={appleFilled} width={24} height={24} />
+        <Icon icon={user} width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{fShortenNumber(LIST.length)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        New Users
+        Current Users
       </Typography>
     </RootStyle>
   );
