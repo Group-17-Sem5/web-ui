@@ -12,6 +12,7 @@ import MenuPopover from '../../components/MenuPopover';
 import { useDetail } from 'src/context/DetailContext';
 import useIntervalFetch from 'src/hooks/useIntervalFetch';
 import account from '../../_mocks_/account';
+// import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
 
@@ -19,17 +20,17 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: homeFill,
-    linkTo: '/dashboard/app'
+    linkTo: '/app/dashboard'
   },
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: '/dashboard/profile'
+    linkTo: '/app/profile'
   },
   {
     label: 'Edit Details',
     icon: settings2Fill,
-    linkTo: '/dashboard/profile/edit'
+    linkTo: '/app/profile/edit'
   }
 ];
 
@@ -41,7 +42,7 @@ export default function AccountPopover() {
   const token = localStorage.getItem('adminToken')
   const id = (user._id)
   useEffect(()=>{
-    fetch (process.env.REACT_APP_API_HOST+'/clerk/clerk/'+id,{
+    fetch (process.env.REACT_APP_API_HOST+'/admin/postmaster/'+id,{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -93,7 +94,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL">{data && data.username.charAt(0).toUpperCase()}</Avatar>
+        <Avatar>{data && data.username.charAt(0).toUpperCase()}</Avatar>
       </IconButton>
 
       <MenuPopover

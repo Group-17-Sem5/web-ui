@@ -44,6 +44,7 @@ export default function ChangePassword() {
   const {user} = useDetail()
   const id = (user._id)
   const url = (user.type)=='clerk' ? '/changepassword/change' : '' 
+  const url = (user.type)=='postmaster' ? '/changepassword/change' : '' 
 
 
 

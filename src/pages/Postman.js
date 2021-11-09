@@ -32,11 +32,11 @@ import {
   DialogActions
 } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 import useFetch from 'src/hooks/useIntervalFetch';
 //
 // import USERLIST from '../_mocks_/user';
@@ -48,7 +48,6 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', alignRight: false },
   // { id: 'password', label: 'Role', alignRight: false },
   { id: 'mobileNumber', label: 'Phone', alignRight: false },
-  { id: 'area', label: 'Area', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
 ];
@@ -106,7 +105,7 @@ export default function User() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/postman/',{
+    fetch (process.env.REACT_APP_API_HOST+'/postMaster/clerk/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -126,10 +125,10 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/postman/delete/"+ delItem._id;
+    const delApiURL = "/postMaster/clerk/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/'+delApiURL, {
+    fetch( process.env.REACT_APP_API_HOST+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + token }
     }).then( () => {
@@ -203,7 +202,7 @@ export default function User() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="User | Minimal-UI">
+    <Page title="Clerk | Easy Mail">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -212,10 +211,10 @@ export default function User() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/app/addPostman"
+            to="/app/addClerk"
             startIcon={<Icon icon={plusFill} />}
           >
-           Add Postman
+           Add Clerk
           </Button>
         </Stack>
 
@@ -243,7 +242,7 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, username, email, mobileNumber,_id,area,status } = row;
+                      const { id, username, email, mobileNumber,_id,status } = row;
                       const isItemSelected = selected.indexOf(username) !== -1;
 
                       return (
@@ -271,7 +270,6 @@ export default function User() {
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{mobileNumber}</TableCell>
-                          <TableCell align="left">{area}</TableCell>
                           {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                           <TableCell align="left">
                             <Label
@@ -283,9 +281,9 @@ export default function User() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu delUrl={`postMaster/postman/delete/${_id}`} handleDelete={handleDelete} item={row} 
-                            editUrl={`/app/editPostman/${_id}`}
-                            viewUrl={`/app/profile/${_id}`}
+                            <UserMoreMenu delUrl={`postMaster/clerk/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/app/editClerk/${_id}`}
+                            viewUrl={`/app/profileClerk/${_id}`}
                             />
                           </TableCell>
                         </TableRow>

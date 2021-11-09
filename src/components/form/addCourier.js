@@ -35,6 +35,7 @@ export default function AddCourier() {
   const postSchema = Yup.object().shape({
     senderID: Yup.string().required('Sender is required'),
     receiverID: Yup.string().required('Receiver is required'),
+<<<<<<< HEAD
     postManID: Yup.string(),
     weight: Yup.number().required('weight is required'),
     courierID: Yup.string().required('CourierID is required'),
@@ -42,11 +43,18 @@ export default function AddCourier() {
     lastAppearedBranchID: Yup.string().required('Branch is required'),
     receivingBranchID: Yup.string().required('Branch is required'),
     addressID: Yup.string().required('Address is required'),
+=======
+    weight: Yup.number().required('weight is required'),
+    courierID: Yup.string().required('CourierID is required'),
+    lastAppearedBranchID: Yup.string().required('Branch is required'),
+    // address: Yup.string().required('Address is required'),
+>>>>>>> main
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
   const token = localStorage.getItem('adminToken')
   const {id} = useParams()
+<<<<<<< HEAD
   const url = id ? '/clerk/courier/update/'+id : '/clerk/courier/add' 
 
   const {data:branches} = useFetch('/admin/branch')
@@ -68,6 +76,26 @@ export default function AddCourier() {
         setFieldValue('addressID',data.addressID)
         setFieldValue('weight',data.weight)
         //setFieldValue('courierID',data.courierID)
+=======
+  const url = id ? '/postMaster/courier/update/'+id : '/postMaster/courier/add' 
+
+  const {data:branches} = useFetch('/admin/branch')
+  const {data:users} = useFetch('/postMaster/user/')
+  const {data:postman} = useFetch('/postMaster/postman')
+  const {data: address} = useFetch('/postMaster/address')
+  const [val,setVal]=useState('')
+  useEditData('/postMaster/courier/'+id,
+    data=>{
+      if(data){
+        setFieldValue('weight',data.weight)
+        setFieldValue('senderID',data.senderID)
+        setFieldValue('receiverID',data.receiverID)
+        setFieldValue('postManID',data.postManID)
+        setFieldValue('lastAppearedBranchID',data.lastAppearedBranchID)
+        setFieldValue('receivingBranch',data.receivingBranch)
+        setFieldValue('addressID',data.addressID)
+        setFieldValue('courierID',data.courierID)
+>>>>>>> main
       }
     }
   )
@@ -76,6 +104,7 @@ export default function AddCourier() {
     initialValues: {
       senderID: '',
       receiverID: '',
+<<<<<<< HEAD
       postManID: '',
       sourceBranchID:'',
       lastAppearedBranchID: '',
@@ -86,6 +115,17 @@ export default function AddCourier() {
     validationSchema: postSchema,
     onSubmit: (values) => {
       console.log("post",values)
+=======
+      postManID: null,
+      lastAppearedBranchID: '',
+      weight:0,
+      receivingBranch:'',
+      addressID:'',
+      courierID:''
+    },
+    validationSchema: postSchema,
+    onSubmit: (values) => {
+>>>>>>> main
       fetch(process.env.REACT_APP_API_HOST+url,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token},
@@ -94,12 +134,20 @@ export default function AddCourier() {
       })
       .then(result=>{
         if(result.status===200){
+<<<<<<< HEAD
           navigate('/dashboard/courier', { replace: true });
         }
         console.log(result.status)
       
       })
     
+=======
+          navigate('/app/viewCourier', { replace: true });
+        }
+        console.log(result.status)
+      })
+      
+>>>>>>> main
       }
 });
 
@@ -108,7 +156,11 @@ export default function AddCourier() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+<<<<<<< HEAD
   console.log("not going",values)
+=======
+
+>>>>>>> main
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="on"  onSubmit={handleSubmit}>
@@ -169,20 +221,6 @@ export default function AddCourier() {
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('sourceBranchID',value.branchID)}
-            renderInput={(params) => <TextField {...params} label="Source Branch" variant="outlined" 
-            {...getFieldProps('sourceBranchID')}
-            name="sourceBranchID"
-            error={Boolean(touched.sourceBranchID && errors.sourceBranchID)}
-            helperText={touched.sourceBranchID && errors.sourceBranchID}
-            />}
-            />
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-            <Autocomplete
-            
-            options={branches}
-            getOptionLabel={(option) => option.branchName}
             onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value.branchID)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
             {...getFieldProps('lastAppearedBranchID')}
@@ -197,22 +235,21 @@ export default function AddCourier() {
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('receivingBranchID',value.branchID)}
+            onChange={(event, value) =>setFieldValue('receivingBranch',value.branchID)}
             renderInput={(params) => <TextField {...params} label="ReceivingBranch Branch" variant="outlined" 
-            {...getFieldProps('receivingBranchID')}
-            name="receivingBranchID"
-            error={Boolean(touched.receivingBranchID && errors.receivingBranchID)}
-            helperText={touched.receivingBranchID && errors.receivingBranchID}
+            {...getFieldProps('receivingBranch')}
+            name="receivingBranch"
+            error={Boolean(touched.receivingBranch && errors.receivingBranch)}
+            helperText={touched.receivingBranch && errors.receivingBranch}
             />}
             />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             
             <Autocomplete
-            options={address}
-            getOptionLabel={(option) => option.addressID}
+            options={address.addresses}
             onChange={(event, value) =>setFieldValue('addressID',value.addressID)}
-            //getOptionLabel={(option) => option.description}
+            getOptionLabel={(option) => option.description}
             renderInput={(params) => <TextField {...params} label="Address (Only not receiver)" variant="outlined" 
             {...getFieldProps('addressID')}
             name="addressID"
@@ -225,7 +262,7 @@ export default function AddCourier() {
             <TextField
             fullWidth
             // autoComplete="username"
-            type="number"
+            type="weight"
             label="Weight"
             {...getFieldProps('weight')}
             error={Boolean(touched.weight && errors.weight)}

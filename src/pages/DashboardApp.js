@@ -2,25 +2,17 @@
 import { Box, Grid, Container, Typography } from '@material-ui/core';
 // components
 import Page from '../components/Page';
-import {
-  AppTasks,
-  AppNewUsers,
-  AppBugReports,
-  AppItemOrders,
-  AppCouriers,
-  AppWeeklySales,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppClerks,
-  AppConversionRates
-} from '../components/_dashboard/app';
+import LineChart from 'src/components/dashboard/LineChart';
+import PieChart from 'src/components/dashboard/PieChart';
+import { Icon } from '@iconify/react';
+import CardWidgets from 'src/components/dashboard/CardWidgets';
+import dropboxoutlined from '@iconify/icons-ant-design/dropbox-outlined';
+import dollarcirclefilled from '@iconify/icons-ant-design/dollar-circle-filled';
+import userOutlined from '@iconify/icons-ant-design/user-outlined';
+import mailFilled from '@iconify/icons-ant-design/mail-filled';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import useFetch from 'src/hooks/useFetch';
-import LineChart from 'src/components/dashboard/LineChart';
-import PieChart from 'src/components/dashboard/PieChart';
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
@@ -91,19 +83,19 @@ export default function DashboardApp() {
   const ChartPieDataPost = []
   const ChartPieDataMoneyorder = []
 
-  const {data:courierCount} = useFetch('/clerk/courier/count')
-  const {data:postCount} = useFetch('/clerk/post/count')
-  const {data:moneyorderrCount} = useFetch('/clerk/moneyorder/count')
-  const {data:courierAllCount} = useFetch('/clerk/courier/allCount')
-  const {data:postAllCount} = useFetch('/clerk/post/allCount')
-  const {data:moneyorderAllCount} = useFetch('/clerk/moneyorder/allCount')
+  const {data:courierCount} = useFetch('/postMaster/courier/count')
+  const {data:postCount} = useFetch('/postMaster/post/count')
+  const {data:moneyorderrCount} = useFetch('/postMaster/moneyorder/count')
+  const {data:courierAllCount} = useFetch('/postMaster/courier/allCount')
+  const {data:postAllCount} = useFetch('/postMaster/post/allCount')
+  const {data:moneyorderAllCount} = useFetch('/postMaster/moneyorder/allCount')
 
-   courierCount.map((count,i)=>{
-     ChartData[0].data.push(count.deliveredcount)
-     ChartData[1].data.push(count.totalcount)
-     ChartData[2].data.push(count.cancelledcount)
-     Labels.push(count.date)
-   })
+  courierCount.map((count,i)=>{
+    ChartData[0].data.push(count.deliveredcount)
+    ChartData[1].data.push(count.totalcount)
+    ChartData[2].data.push(count.cancelledcount)
+    Labels.push(count.date)
+  })
 
   postCount.map((count,i)=>{
     ChartDataPost[0].data.push(count.deliveredcount)
@@ -112,18 +104,18 @@ export default function DashboardApp() {
     LabelsPost.push(count.date)
   })
   
-   moneyorderrCount.map((count,i)=>{
-     ChartDataMoneyorder[0].data.push(count.deliveredcount)
-     ChartDataMoneyorder[1].data.push(count.totalcount)
-     ChartDataMoneyorder[2].data.push(count.cancelledcount)
-     LabelsMoneyorder.push(count.date)
-   })
+  moneyorderrCount.map((count,i)=>{
+    ChartDataMoneyorder[0].data.push(count.deliveredcount)
+    ChartDataMoneyorder[1].data.push(count.totalcount)
+    ChartDataMoneyorder[2].data.push(count.cancelledcount)
+    LabelsMoneyorder.push(count.date)
+  })
 
-   courierAllCount.map((count,i)=>{
-     ChartPieDataCourier.push(count.delivered)
-     ChartPieDataCourier.push(count.assigned)
-     ChartPieDataCourier.push(count.cancelled)
-   })
+  courierAllCount.map((count,i)=>{
+    ChartPieDataCourier.push(count.delivered)
+    ChartPieDataCourier.push(count.assigned)
+    ChartPieDataCourier.push(count.cancelled)
+  })
 
   postAllCount.map((count,i)=>{
     ChartPieDataPost.push(count.delivered)
@@ -131,16 +123,16 @@ export default function DashboardApp() {
     ChartPieDataPost.push(count.cancelled)
   })
 
-   moneyorderAllCount.map((count,i)=>{
-     ChartPieDataMoneyorder.push(count.delivered)
-     ChartPieDataMoneyorder.push(count.assigned)
-     ChartPieDataMoneyorder.push(count.cancelled)
-   })
+  moneyorderAllCount.map((count,i)=>{
+    ChartPieDataMoneyorder.push(count.delivered)
+    ChartPieDataMoneyorder.push(count.assigned)
+    ChartPieDataMoneyorder.push(count.cancelled)
+  })
   
   
-console.log("ChartDataMoneyorder",ChartDataMoneyorder)
-console.log("ChartDataPost",ChartDataPost)
-console.log("ChartData",ChartData);
+console.log(ChartDataMoneyorder)
+console.log(ChartDataPost)
+console.log(ChartData);
   return (
     <Page title="Dashboard | Easy Mail">
       <Container maxWidth="xl">
@@ -150,35 +142,38 @@ console.log("ChartData",ChartData);
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWeeklySales />
+            <CardWidgets 
+            title="Postman"
+            url="/postMaster/postman"
+            Icon = {<Icon icon={userOutlined} width={24} height={24} />}
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppNewUsers />
+            <CardWidgets 
+            title="Mails"
+            url="/postMaster/post"
+            Icon = {<Icon icon={mailFilled} width={24} height={24} />}
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppItemOrders />
+            <CardWidgets 
+            title="Couriers"
+            url="/postMaster/courier"
+            Icon = {<Icon icon={dropboxoutlined} width={24} height={24} />}
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppCouriers />
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <AppClerks />
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <AppBugReports />
-          </Grid>
-          {/*<Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits />
+            <CardWidgets 
+            title="Money orders"
+            url="/postMaster/moneyorder"
+            Icon = {<Icon icon={dollarcirclefilled} width={24} height={24} />}
+            />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits />
-          </Grid>*/}
-         
           <Grid item xs={12} md={6} lg={8}>
             <LineChart 
             title="Post"
-            url={'/clerk/post/filter'}
+            url={'/postMaster/post/filter'}
             subheader=""
             CHART_DATA = {ChartDataPost}
             labels={LabelsPost}
@@ -201,13 +196,64 @@ console.log("ChartData",ChartData);
           <Grid item xs={12} md={6} lg={8}>
             <LineChart 
             title="Courier"
-            url={'/clerk/courier/filter'}
+            url={'/postMaster/courier/filter'}
             subheader=""
             CHART_DATA = {ChartData}
             labels={Labels}
             
             
-          /> 
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={4}>
+            <PieChart 
+            title="Courier total view"
+            CHART_DATA={
+              ChartPieDataCourier
+            }
+            labels={
+              ['Delivered', 'Assigned', 'Cancelled']
+            }
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={4}>
+            <PieChart 
+            title="Post total view"
+            CHART_DATA={
+              ChartPieDataPost
+            }
+            labels={
+              ['Delivered post', 'Assigned', 'Cancelled post']
+            }
+            />
+          </Grid>
+            
+          <Grid item xs={12} md={6} lg={8}>
+            <LineChart 
+            title="Money order"
+            url={'/postMaster/moneyorder/filter'}
+            subheader=""
+            CHART_DATA = {ChartDataMoneyorder}
+            labels={LabelsMoneyorder}
+            
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={4}>
+            <PieChart 
+            title="Money order total view"
+            CHART_DATA={
+              ChartPieDataMoneyorder
+            }
+            labels={
+              ['Delivered', 'Assigned', 'Cancelled']
+            }
+            />
+          </Grid>
+
+          {/* <Grid item xs={12} md={6} lg={8}>
+            <AppConversionRates />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>

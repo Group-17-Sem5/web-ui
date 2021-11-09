@@ -3,65 +3,74 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
-import Login from './pages/Login';
-import Register from './pages/Register';
+
 import DashboardApp from './pages/DashboardApp';
-import Products from './pages/Products';
-import Blog from './pages/Blog';
-import User from './pages/User/User';
-import MoneyOrder from './pages/MoneyOrder/MoneyOrder';
-import Post from './pages/Post/Post';
-import Courier from './pages/Courier/Courier'
 import NotFound from './pages/Page404';
-import Profile from './pages/Profile';
-import AddPost from './pages/Post/AddPost';
-//import EditProfile from './components/form/editProfile';
-import AddMoneyorder from './pages/MoneyOrder/AddMoneyOrder';
-import AddCourier from './pages/Courier/AddCourier';
-import AddUser from './pages/AddUser';
-import ViewPost from './pages/Post/ViewPost';
-import ViewCourier from './pages/Courier/ViewCourier';
-import ViewMoneyorder from './pages/MoneyOrder/ViewMoneyOrder';
+// import AddPostman from './components/postman/newPostman/index'
+import AddPostman from './components/form/addPostman'
+import AddClerk from './pages/clerk/AddClerk'
+import AddPost from './pages/post/AddPost'
+import Clerk from './pages/clerk/Clerk'
+import Post from './pages/post/Post'
+import Postman from './pages/postman/Postman'
+import Profile from './pages/Profile'
+import ProfileClerk from './pages/ProfileClerk'
+import { useDetail } from './context/DetailContext';
 import EditProfile from './pages/EditProfile'
+import AddMoneyorder from './pages/moneyorder/AddMoneyorder';
+import Moneyorder from './pages/moneyorder/MoneyOrder';
+import AddCourier from './pages/courier/AddCourier';
+import Courier from './pages/courier/Courier';
+import Login from './pages/Login';
+import User from './pages/user/User'
+import AddUser from './pages/user/AddUser'
+import ViewPost from './pages/post/ViewPost';
+import ViewCourier from './pages/courier/ViewCourier';
+import ViewMoneyorder from './pages/moneyorder/ViewMoneyorder';
 // ----------------------------------------------------------------------
 
-export default function Router() {
-  const loginStatus = localStorage.getItem('loginStatus')
-  return useRoutes([
+ const Router = (loginStatus) =>
+  
+   [
     {
-      path: '/dashboard',
-      element: <DashboardLayout />,
+      path: '/app',
+      element: loginStatus ? <DashboardLayout /> : <Navigate to="/" />,
       children: [
-        {path: '/' , element: <Navigate to="/dashboard/app"/> },
-        { path: 'app', element: <DashboardApp /> },
-        { path: 'user', element: <User /> },
-        { path: 'moneyorder', element: <MoneyOrder /> },
-        { path: 'post', element: <Post /> },
-        { path: 'courier', element: <Courier /> },
-        { path: 'blog', element: <Blog /> },
-        {path: '/profile', element: <Profile />},
-        { path: '/profile/edit', element: <EditProfile /> },
-        {path: '/addpost', element: <AddPost/>},
-        {path: '/addcourier', element: <AddCourier/>},
-        {path: '/editprofile', element: <EditProfile/>},
-        {path: '/adduser', element: <AddUser/>},
-        {path: '/viewpost/:id', element: <ViewPost/>},
+        { path: '', element: <DashboardApp /> },
+        { path: '/dashboard', element: <DashboardApp /> },
+        { path: '/addPostman', element: <AddPostman /> },
+        { path: '/editPostman/:id', element: <AddPostman /> },
+        { path: '/addClerk', element: <AddClerk /> },
+        { path: '/editClerk/:id', element: <AddClerk /> },
+        { path: '/addPost', element: <AddPost /> },
         { path: '/editPost/:id', element: <AddPost /> },
-        {path: '/viewcourier/:id', element: <ViewCourier/>},
-        { path: '/editCourier/:id', element: <AddCourier /> },
-        {path: '/viewmoneyorder/:id', element: <ViewMoneyorder/>},
-        {path: '/addmoneyorder', element: <AddMoneyorder/>},
+        { path: '/viewPost/:id', element: <ViewPost /> },
+        { path: '/postman', element: <Postman /> },
+        { path: '/clerk', element: <Clerk /> },
+        { path: '/viewPost', element: <Post /> },
+        { path: '/profile', element: <Profile /> },
+        { path: '/profile/:id', element: <Profile /> },
+        { path: '/profileClerk/:id', element: <ProfileClerk /> },
+        { path: '/profile/edit', element: <EditProfile /> },
+        { path: '/addMoneyOrders', element: <AddMoneyorder /> },
         { path: '/editMoneyorder/:id', element: <AddMoneyorder /> },
-        { path: '/viewMoneyOrders', element: <MoneyOrder /> },
-        
+        { path: '/viewMoneyorder/:id', element: <ViewMoneyorder /> },
+        { path: '/viewMoneyOrders', element: <Moneyorder /> },
+        { path: '/addCourier', element: <AddCourier /> },
+        { path: '/editCourier/:id', element: <AddCourier /> },
+        { path: '/viewCourier', element: <Courier /> },
+        { path: '/viewCourier/:id', element: <ViewCourier /> },
+        { path: '/users', element: <User /> },
+        { path: '/editUser/:id', element: <AddUser /> },
+        { path: '/addUser', element: <AddUser /> },
       ]
     },
     {
       path: '/',
-      element: <LogoOnlyLayout />,
+      element: !loginStatus ? <LogoOnlyLayout /> : <Navigate to="/app/dashboard"/>,
       children: [
         { path: '', element: <Login /> },
-        { path: 'register', element: <Register /> },
+        // loginStatus && {path: '' , element: <Navigate to="/dashboard"/> },
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/dashboard" /> },
         { path: '*', element: <Navigate to="/404" /> }
@@ -69,5 +78,6 @@ export default function Router() {
     },
 
     { path: '*', element: <Navigate to="/404" replace /> }
-  ]);
-}
+  ];
+
+  export default Router

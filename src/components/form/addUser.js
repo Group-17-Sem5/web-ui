@@ -39,8 +39,8 @@ export default function AddUserForm() {
     email: Yup.string().email('Email must be a valid email address'),
     mobileNumber: Yup.string().required('Mobile number is required').matches(phoneRegExp, 'Mobile number is not valid'),
     // branch: Yup.string().required('Branch name is required'),
-    address: Yup.string().required('address is required'),
-    name: Yup.string().required('First Name is required').min(2,'Too short').max(50,'Too long'),
+    address: Yup.string().required('address is required').min(6,'Too short').max(256,'Too long'),
+    userName: Yup.string().required('Username is required').min(3,'Too short').max(50,'Too long').matches(/^[a-zA-Z0-9\s]*$/,"Name must contain letters, numbers and space only").trim(),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
@@ -51,11 +51,12 @@ export default function AddUserForm() {
   useEditData('/postMaster/user/'+id,
     data=>{
       if(data){
+        console.log(data)
         setVal(data)
         setFieldValue('email',data.email)
         setFieldValue('mobileNumber',data.mobileNumber)
         setFieldValue('address',data.address)
-        setFieldValue('name',data.name)
+        setFieldValue('userName',data.userName)
       }
     }
   )
@@ -65,7 +66,7 @@ export default function AddUserForm() {
     initialValues:{
       email: '',
       mobileNumber: '',
-      name: '',
+      userName: '',
       address:'',
     },
     validationSchema: postmanSchema,
@@ -106,10 +107,10 @@ export default function AddUserForm() {
           <TextField
             fullWidth
             type="text"
-            label="name"
-            {...getFieldProps('name')}
-            error={Boolean(touched.name && errors.name)}
-            helperText={touched.name && errors.name}
+            label="Username"
+            {...getFieldProps('userName')}
+            error={Boolean(touched.userName && errors.userName)}
+            helperText={touched.userName && errors.userName}
           />
           </Grid>
           <Grid item xs={12} sm={6} md={6}>

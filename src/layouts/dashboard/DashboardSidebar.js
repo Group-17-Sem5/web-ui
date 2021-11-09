@@ -1,5 +1,9 @@
 import PropTypes from 'prop-types';
+<<<<<<< HEAD
 import { useEffect, useState } from 'react';
+=======
+import { useEffect,useState } from 'react';
+>>>>>>> main
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
@@ -11,7 +15,11 @@ import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
 import sidebarConfig from './SidebarConfig';
+<<<<<<< HEAD
 import account from '../../_mocks_/account';
+=======
+
+>>>>>>> main
 import { useDetail } from 'src/context/DetailContext';
 
 // ----------------------------------------------------------------------
@@ -47,7 +55,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const token = localStorage.getItem('adminToken')
   const id = (user._id)
   useEffect(()=>{
-    fetch (process.env.REACT_APP_API_HOST+'/clerk/clerk/'+id,{
+    fetch (process.env.REACT_APP_API_HOST+'/admin/postmaster/'+id,{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -74,22 +82,22 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       }}
     >
       <Box sx={{ px: 2.5, py: 3 }}>
-        <Box component={RouterLink} to="//dashboard/app" sx={{ display: 'inline-flex' }}>
+        <Box component={RouterLink} to="/app/dashboard" sx={{ display: 'inline-flex',textDecoration:'none' }}>
           <Logo />
+          <Typography  sx={{ color: 'text.primary',fontSize:'24px',ml:'15px' }}>Easy mail</Typography>
         </Box>
       </Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            
-            <Avatar src={account.photoURL} alt="photoURL">{data && data.username.charAt(0).toUpperCase()}</Avatar>
+            <Avatar>{data && data.username.charAt(0).toUpperCase()}</Avatar>
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-              {data && data.username}
+                {data && data.username}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {user.type}
+                {user.type}
               </Typography>
             </Box>
           </AccountStyle>
@@ -100,37 +108,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-        <Stack
-          alignItems="center"
-          spacing={3}
-          sx={{
-            p: 2.5,
-            pt: 5,
-            borderRadius: 2,
-            position: 'relative',
-            bgcolor: 'grey.200'
-          }}
-        >
-          <Box
-            component="img"
-            src="/static/illustrations/post.png"
-            sx={{ width: 100, position: 'absolute', top: -50 }}
-          />
-
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Post Office
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Galle
-              80000
-            </Typography>
-          </Box>
-
-         
-        </Stack>
-      </Box>
     </Scrollbar>
   );
 

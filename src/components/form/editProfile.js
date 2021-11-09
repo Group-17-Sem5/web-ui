@@ -47,13 +47,13 @@ export default function EditProfile() {
   const token = localStorage.getItem('adminToken')
   const {user} = useDetail()
   const id = (user._id)
-  const url = (user.type)=='clerk' ? '/admin/clerk/update/'+id : '' 
+  const url = (user.type)=='postmaster' ? '/admin/postmaster/update/'+id : '' 
 
-  useEditData('/admin/clerk/'+id,
+  useEditData('/admin/postmaster/'+id,
     data=>{
       if(data){
         setVal(data)
-        console.log("fuck",data)
+        console.log(data)
         setFieldValue('email',data.email)
         setFieldValue('mobileNumber',data.mobileNumber)
         setFieldValue('username',data.username)
@@ -79,7 +79,7 @@ export default function EditProfile() {
       })
       .then(result=>{
         if(result.status===200){
-          navigate('/dashboard/profile', { replace: true });
+          navigate('/app/profile', { replace: true });
         }
         console.log(result.status)
       })

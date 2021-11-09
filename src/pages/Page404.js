@@ -43,7 +43,7 @@ export default function Page404() {
               />
             </motion.div>
 
-            <Button to="/dashboard/app" size="large" variant="contained" component={RouterLink}>
+            <Button to="/app/dashboard" size="large" variant="contained" component={RouterLink}>
               Go to Home
             </Button>
           </Box>

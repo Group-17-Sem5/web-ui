@@ -5,6 +5,8 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 //
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
+import { useNavigate } from 'react-router';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +36,13 @@ const MainStyle = styled('div')(({ theme }) => ({
 
 export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
+  const loginStatus = localStorage.getItem('loginStatus')
+  const navigate = useNavigate()
+  useEffect(()=>{
+    if(!loginStatus){
+      navigate('/', { replace: true });
+    }
+  },[])
 
   return (
     <RootStyle>
