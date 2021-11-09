@@ -13,15 +13,20 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  FormControlLabel
+  FormControlLabel,
+  Alert
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
+import {useDetail} from 'src/context/DetailContext'
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [error,setError] = useState('')
+  const {login} = useDetail()
+  const [loading,setLoading] = useState(false)
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -35,8 +40,22 @@ export default function LoginForm() {
       remember: true
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: (values) => {
+      setLoading(true)
+      login(values.email, values.password)
+        .then(data => {
+            if (data.status) {
+              console.log(data)
+              navigate('/app/dashboard', { replace: true });
+                // history.push('/')
+            } else if (data.error) {
+                console.log(data.error)
+                setError(data.error)
+                setLoading(false)
+            }
+        }).catch(() => setError({error: true, email: true, password: true, message: 'Failed to login'}));
+
+      
     }
   });
 
@@ -49,7 +68,10 @@ export default function LoginForm() {
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      {error.message && <Alert severity="error">{error.message}</Alert>}
+      <br/>
         <Stack spacing={3}>
+          
           <TextField
             fullWidth
             autoComplete="username"
@@ -81,13 +103,13 @@ export default function LoginForm() {
         </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
             label="Remember me"
-          />
+          /> */}
 
           <Link component={RouterLink} variant="subtitle2" to="#">
-            Forgot password?
+            {/* Forgot password? */}
           </Link>
         </Stack>
 
@@ -96,7 +118,7 @@ export default function LoginForm() {
           size="large"
           type="submit"
           variant="contained"
-          loading={isSubmitting}
+          loading={loading}
         >
           Login
         </LoadingButton>
