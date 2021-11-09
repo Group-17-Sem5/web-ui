@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
@@ -12,6 +12,7 @@ import { MHidden } from '../../components/@material-extend';
 //
 import sidebarConfig from './SidebarConfig';
 import account from '../../_mocks_/account';
+import { useDetail } from 'src/context/DetailContext';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,22 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
+  const {user} = useDetail()
+  const [data,setData] = useState()
+  const token = localStorage.getItem('adminToken')
+  const id = (user._id)
+  useEffect(()=>{
+    fetch (process.env.REACT_APP_API_HOST+'/clerk/clerk/'+id,{
+      headers: { "Authorization": "Bearer " + token},
+    })
+    .then(result=>{
+      return result.json()
+    })
+    .then(data=>{
+      console.log(data)
+      setData(data)
+    })
+  },[id])
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -57,7 +74,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       }}
     >
       <Box sx={{ px: 2.5, py: 3 }}>
-        <Box component={RouterLink} to="/" sx={{ display: 'inline-flex' }}>
+        <Box component={RouterLink} to="//dashboard/app" sx={{ display: 'inline-flex' }}>
           <Logo />
         </Box>
       </Box>
@@ -65,13 +82,14 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            
+            <Avatar src={account.photoURL} alt="photoURL">{data && data.username.charAt(0).toUpperCase()}</Avatar>
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+              {data && data.username}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+              {user.type}
               </Typography>
             </Box>
           </AccountStyle>

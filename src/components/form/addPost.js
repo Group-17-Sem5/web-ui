@@ -24,34 +24,87 @@ import {
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { Box, width } from '@material-ui/system';
-
+import useFetch from 'src/hooks/useFetch'
+import { useParams } from 'react-router';
+import useEditData from 'src/hooks/useEditData'
+import { useDetail } from 'src/context/DetailContext';
 // ----------------------------------------------------------------------
 
 export default function AddPostmanForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+
   const postSchema = Yup.object().shape({
-    sender: Yup.string().required('Sender is required'),
-    receiver: Yup.string().required('Receiver is required'),
-    sourceBranch: Yup.string().required('Branch is required'),
-    lastAppearedBranch: Yup.string().required('Branch is required'),
-    // address: Yup.string().required('Address is required'),
+    senderID: Yup.string().required('Sender is required'),
+    receiverID: Yup.string().required('Receiver is required'),
+    postManID: Yup.string(),
+    sourceBranchID: Yup.string().required('Branch is required'),
+    lastAppearedBranchID: Yup.string().required('Branch is required'),
+    receivingBranchID: Yup.string().required('Branch is required'),
+    addressID: Yup.string().required('Address is required'),
+    // isAssigned: Yup.string().required('Enter true or false'),
+    // isCancelled: Yup.string().required('Enter true or false'),
+    // isDelivered: Yup.string().required('Enter true or false'),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
+  const token = localStorage.getItem('adminToken')
+  const {id} = useParams()
+  const url = id ? '/clerk/post/update/'+id : '/clerk/post/add' 
+
+  const {data:branches} = useFetch('/admin/branch')
+  const {data:users} = useFetch('/clerk/user/')
+  const {data:postman} = useFetch('/clerk/postman')
+  const {data: address} = useFetch('/clerk/address')
+  
+  useEditData('/clerk/post/'+id,
+    data=>{
+      if(data){
+        
+        setFieldValue('senderID',data.senderID)
+        setFieldValue('receiverID',data.receiverID)
+        setFieldValue('postManID',data.postManID)
+        setFieldValue('lastAppearedBranchID',data.lastAppearedBranchID)
+        setFieldValue('sourceBranchID',data.sourceBranchID)
+        setFieldValue('receivingBranchID',data.receivingBranchID)
+        setFieldValue('addressID',data.addressID)
+        // setFieldValue('isCancelled',data.isCancelled)
+        // setFieldValue('isDelivered',data.isDelivered)
+        // setFieldValue('isAssigned',data.isAssigned)
+      }
+    }
+  )
+  
 
   const formik = useFormik({
     initialValues: {
-      sender: '',
-      receiver: '',
-      sourceBranch: '',
-      lastAppearedBranch: '',
-      // address:''
+      senderID: '',
+      receiverID: '',
+      addressID:'',
+      postManID: '',
+      lastAppearedBranchID: '',
+      sourceBranchID: '',
+      receivingBranchID: ''
+      // isCancelled:'',
+      // isDelivered:'',
+      // isAssigned:'',
+      
     },
     validationSchema: postSchema,
     onSubmit: (values) => {
-        console.log(values)
-    //   navigate('/app/viewPost', { replace: true });
+      fetch(process.env.REACT_APP_API_HOST+url,{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token},
+        body: JSON.stringify( values)
+        // headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token },
+      })
+      .then(result=>{
+        if(result.status===200){
+          navigate('/dashboard/post', { replace: true });
+        }
+        console.log(result.status)
+      })
+      
     }
   });
 
@@ -74,62 +127,135 @@ export default function AddPostmanForm() {
           <Grid item xs={12} sm={6} md={6}>
           <Autocomplete
           
-            options={top100Films}
-            onChange={(event, value) =>setFieldValue('sender',value.title)}
-            getOptionLabel={(option) => option.title}
+            options={users}
+            onChange={(event, value) =>setFieldValue('senderID',value.userName)}
+            getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
-            name="sender"
-            {...getFieldProps('sender')}
-            error={Boolean(touched.sender && errors.sender)}
-            helperText={touched.sender && errors.sender}
-            value={values.sender}
+            name="senderID"
+            {...getFieldProps('senderID')}
+            error={Boolean(touched.senderID && errors.senderID)}
+            helperText={touched.senderID && errors.senderID}
+            value={values.senderID}
             />}
             />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             
             <Autocomplete
-             
-            
-            options={top100Films}
-            onChange={(event, value) =>setFieldValue('receiver',value.title)}
-            getOptionLabel={(option) => option.title}
+            options={users}
+            onChange={(event, value) =>setFieldValue('receiverID',value.userName)}
+            getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Receiver" variant="outlined" 
-            {...getFieldProps('receiver')}
-            name="receiver"
-            error={Boolean(touched.receiver && errors.receiver)}
-            helperText={touched.receiver && errors.receiver}
+            {...getFieldProps('receiverID')}
+            name="receiverID"
+            error={Boolean(touched.receiverID && errors.receiverID)}
+            helperText={touched.receiverID && errors.receiverID}
             />}
             />
            </Grid>
            <Grid item xs={12} sm={6} md={6}>
             <Autocomplete
            
-            options={top100Films}
-            onChange={(event, value) =>setFieldValue('sourceBranch',value.title)}
-            getOptionLabel={(option) => option.title}
-            renderInput={(params) => <TextField {...params} label="Source Branch" variant="outlined" 
-            {...getFieldProps('sourceBranch')}
-            name="sourceBranch"
-            error={Boolean(touched.sourceBranch && errors.sourceBranch)}
-            helperText={touched.sourceBranch && errors.sourceBranch}
+            options={postman}
+            onChange={(event, value) =>setFieldValue('postManID',value.username)}
+            getOptionLabel={(option) => option.username}
+            renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
+            {...getFieldProps('postManID')}
+            name="postManID"
+            error={Boolean(touched.postManID && errors.postManID)}
+            helperText={touched.postManID && errors.postManID}
             />}
             />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             <Autocomplete
             
-            options={top100Films}
-            getOptionLabel={(option) => option.title}
-            onChange={(event, value) =>setFieldValue('lastAppearedBranch',value.title)}
+            options={branches}
+            getOptionLabel={(option) => option.branchName}
+            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value.branchID)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
-            {...getFieldProps('lastAppearedBranch')}
-            name="lastAppearedBranch"
-            error={Boolean(touched.lastAppearedBranch && errors.lastAppearedBranch)}
-            helperText={touched.lastAppearedBranch && errors.lastAppearedBranch}
+            {...getFieldProps('lastAppearedBranchID')}
+            name="lastAppearedBranchID"
+            error={Boolean(touched.lastAppearedBranchID && errors.lastAppearedBranchID)}
+            helperText={touched.lastAppearedBranchID && errors.lastAppearedBranchID}
             />}
             />
             </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <Autocomplete
+            
+            options={branches}
+            getOptionLabel={(option) => option.branchName}
+            onChange={(event, value) =>setFieldValue('sourceBranchID',value.branchID)}
+            renderInput={(params) => <TextField {...params} label="Source Branch" variant="outlined" 
+            {...getFieldProps('sourceBranchID')}
+            name="sourceBranchID"
+            error={Boolean(touched.sourceBranchID && errors.sourceBranchID)}
+            helperText={touched.sourceBranchID && errors.sourceBranchID}
+            />}
+            />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <Autocomplete
+            
+            options={branches}
+            getOptionLabel={(option) => option.branchName}
+            onChange={(event, value) =>setFieldValue('receivingBranchID',value.branchID)}
+            renderInput={(params) => <TextField {...params} label="Receiving Branch" variant="outlined" 
+            {...getFieldProps('receivingBranchID')}
+            name="receivingBranchID"
+            error={Boolean(touched.receivingBranchID && errors.receivingBranchID)}
+            helperText={touched.receivingBranchID && errors.receivingBranchID}
+            />}
+            />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <Autocomplete
+            options={address}
+            getOptionLabel={(option) => option.addressID}
+            onChange={(event, value) =>setFieldValue('addressID',value.addressID)}
+            //getOptionLabel={(option) => option.description}
+            renderInput={(params) => <TextField {...params} label="Address (Only not receiver)" variant="outlined" 
+            {...getFieldProps('addressID')}
+            name="addressID"
+            error={Boolean(touched.addressID && errors.addressID)}
+            helperText={touched.addressID && errors.addressID}
+            />}
+            />
+              </Grid>
+           {/*<Grid item xs={12} sm={6} md={6}>
+            <TextField
+            fullWidth
+            // autoComplete="username"
+            type="isCancelled"
+            label="isCancelled"
+            {...getFieldProps('isCancelled')}
+            error={Boolean(touched.isCancelled && errors.isCancelled)}
+            helperText={touched.isCancelled && errors.isCancelled || 'true or false'}
+          />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <TextField
+            fullWidth
+            // autoComplete="username"
+            type="isDelivered"
+            label="isDelivered"
+            {...getFieldProps('isDelivered')}
+            error={Boolean(touched.isDelivered && errors.isDelivered)}
+            helperText={touched.isDelivered && errors.isDelivered || 'true or false'}
+          />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <TextField
+            fullWidth
+            // autoComplete="username"
+            type="isAssigned"
+            label="isAssigned"
+            {...getFieldProps('isAssigned')}
+            error={Boolean(touched.isAssigned && errors.isAssigned)}
+            helperText={touched.isAssigned && errors.isAssigned || 'true or false'}
+          />
+    </Grid>*/}
             </Grid>
             {/* <Autocomplete
             options={top100Films}
@@ -144,7 +270,7 @@ export default function AddPostmanForm() {
      
         
      
-<LoadingButton
+        <LoadingButton
           fullWidth
           style={{width:'100%'}}
           size="large"

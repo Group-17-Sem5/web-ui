@@ -45,7 +45,7 @@ const SORT_OPTIONS = [
 export default function Profile() {
     const {id} = useParams()
     const {user} = useDetail()
-    const {data:profile} = id ? useFetch('/postMaster/postman/'+id) : useFetch('/admin/postmaster/'+user._id)
+    const {data:profile} = id ? useFetch('/clerk/clerk/'+id) : useFetch('/admin/clerk/'+user._id)
     console.log(profile)
   return (
     <Page title="Profile | Easy Mail">

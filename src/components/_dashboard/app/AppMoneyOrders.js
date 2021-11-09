@@ -1,20 +1,19 @@
 import { Icon } from '@iconify/react';
-import user from '@iconify/icons-ant-design/usergroup-add';
+import windowsFilled from '@iconify/icons-ant-design/paper-clip';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react'
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
   textAlign: 'center',
   padding: theme.spacing(5, 0),
-  color: theme.palette.info.darker,
-  backgroundColor: theme.palette.info.lighter
+  color: theme.palette.warning.darker,
+  backgroundColor: theme.palette.warning.lighter
 }));
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
@@ -26,23 +25,23 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   height: theme.spacing(8),
   justifyContent: 'center',
   marginBottom: theme.spacing(3),
-  color: theme.palette.info.dark,
-  backgroundImage: `linear-gradient(135deg, ${alpha(theme.palette.info.dark, 0)} 0%, ${alpha(
-    theme.palette.info.dark,
+  color: theme.palette.warning.dark,
+  backgroundImage: `linear-gradient(135deg, ${alpha(theme.palette.warning.dark, 0)} 0%, ${alpha(
+    theme.palette.warning.dark,
     0.24
   )} 100%)`
 }));
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 135;
+const TOTAL = 1723;
 
-export default function AppNewUsers() {
+export default function AppMoneyOrders() {
   const [LIST,setLIST] = useState([])
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/clerk/user/',{
+    fetch ('http://localhost:5000/clerk/moneyorder/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -54,14 +53,15 @@ export default function AppNewUsers() {
     })
     
   },[])
+  console.log(LIST)
   return (
     <RootStyle>
       <IconWrapperStyle>
-        <Icon icon={user} width={24} height={24} />
+        <Icon icon={windowsFilled} width={24} height={24} />
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(LIST.length)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Current Users
+        Money Orders
       </Typography>
     </RootStyle>
   );

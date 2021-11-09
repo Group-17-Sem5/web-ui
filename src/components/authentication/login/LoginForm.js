@@ -47,7 +47,7 @@ export default function LoginForm() {
         .then(data => {
             if (data.status) {
               console.log(data)
-              navigate('/dashboard/profile', { replace: true });
+              navigate('/dashboard/app', { replace: true });
                 // history.push('/')
             } else if (data.error) {
                 console.log(data.error)

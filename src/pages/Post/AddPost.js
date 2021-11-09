@@ -4,9 +4,10 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Card, Button, Container, Stack, Typography, CardContent } from '@material-ui/core';
 // components
-import Page from '../components/Page';
+import Page from '../../components/Page';
 // import AddPostmanForm from '../components/postman/newPostman';
-import AddMoneyOrder from '../components/form/addMoneyOrder'
+import AddPostForm from 'src/components/form/addPost';
+import { useParams } from 'react-router';
 
 //
 
@@ -21,13 +22,14 @@ const SORT_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function AddMoneyorder() {
+export default function AddPost() {
+  const {id} = useParams()
   return (
-    <Page title="Dashboard: Add MoneyOrder | MIS">
+    <Page title="Dashboard: Add Post | MIS">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Add Money Order
+           {id? 'Edit Post': 'Add Post'} 
           </Typography>
           {/* <Button
             variant="contained"
@@ -40,7 +42,7 @@ export default function AddMoneyorder() {
         </Stack>
 
         
-        <AddMoneyOrder/>
+        <AddPostForm/>
         
           {/* <Add/>
           <Profile/> */}

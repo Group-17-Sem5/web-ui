@@ -43,7 +43,7 @@ export default function ChangePassword() {
   const token = localStorage.getItem('adminToken')
   const {user} = useDetail()
   const id = (user._id)
-  const url = (user.type)=='postmaster' ? '/admin/postmaster/updatePassword/'+id : '' 
+  const url = (user.type)=='clerk' ? '/changepassword/change' : '' 
 
 
 

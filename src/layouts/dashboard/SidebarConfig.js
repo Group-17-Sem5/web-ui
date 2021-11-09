@@ -28,25 +28,25 @@ const sidebarConfig = [
     icon: getIcon(shoppingBagFill)
   },
   {
-    title: 'mail',
-    path: '/dashboard/mail',
+    title: 'post',
+    path: '/dashboard/post',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'send notifiction',
-    path: '/dashboard/blog',
-    icon: getIcon(fileTextFill)
-  },
-  {
+    title: 'courier',
+    path: '/dashboard/courier',
+    icon: getIcon(shoppingBagFill)
+  }
+  /*{
     title: 'login',
-    path: '/login',
+    path: '/',
     icon: getIcon(lockFill)
   },
   {
     title: 'register',
     path: '/register',
     icon: getIcon(personAddFill)
-  },
+  },*/
 ];
 
 export default sidebarConfig;

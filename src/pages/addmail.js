@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
+import axios from "axios";
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
@@ -27,33 +28,66 @@ import { Box, width } from '@material-ui/system';
 
 // ----------------------------------------------------------------------
 
-export default function AddCourier() {
+export default function AddPostForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const postSchema = Yup.object().shape({
     sender: Yup.string().required('Sender is required'),
     receiver: Yup.string().required('Receiver is required'),
-    weight: Yup.number().required('weight is required'),
     sourceBranch: Yup.string().required('Branch is required'),
     lastAppearedBranch: Yup.string().required('Branch is required'),
     // address: Yup.string().required('Address is required'),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
+  const token = localStorage.getItem('adminToken')
+  const {id} = useParams()
+  const url = id ? '/postMaster/post/update/'+id : '/postMaster/post/add'
 
+  const {data:branches} = useFetch('/admin/branch')
+  const {data:users} = useFetch('/postMaster/user/')
+  const {data:postman} = useFetch('/postMaster/postman')
+
+  useEditData('/clerk/post'+id,
+  data=>{
+    if(data){
+      console.log(data)
+
+      setFieldValue('senderID',data.senderID)
+      setFieldValue('receiver',data.receiverID)
+      setFieldValue('postManID',data.sourceBranchID)
+      setFieldValue('lastAppearedBranch',data.lastAppearedBranchID)
+    }
+  }
+  )
   const formik = useFormik({
     initialValues: {
-      sender: '',
-      receiver: '',
-      sourceBranch: '',
-      lastAppearedBranch: '',
-      weight:0,
+      senderID: '',
+      receiverID: '',
+      sourceBranchID: null,
+      lastAppearedBranchID: ''
       // address:''
     },
     validationSchema: postSchema,
     onSubmit: (values) => {
+      fetch(process.env.REACT_APP_API_HOST + url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer'+ token},
+      body: JSON.stringify(values)
+  })
+      .then(result =>{
+        if (result.status==200){
+          navigate('/dashboard/post', {replace: true})
+        }
+        console.log(result.status )
+          return data;
+      })
+      .catch(err=>{
+          console.log(err)
+      })
         console.log(values)
-    //   navigate('/app/viewPost', { replace: true });
+        
+        navigate('/dashboard/post', { replace: true });
     }
   });
 
@@ -62,6 +96,18 @@ export default function AddCourier() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+  function handleClick(event){
+    event.preventDefault();
+
+   /*const newPost ={
+      sender: values.sender,
+      receiver: values.receiver,
+      sourceBranch: values.sourceBranch,
+      lastAppearedBranch: values.lastAppearedBranch
+    }
+    axios.post('http://localhost:5000/create',newPost)*/
+  }
 
   return (
     <FormikProvider value={formik}>
@@ -132,17 +178,6 @@ export default function AddCourier() {
             />}
             />
             </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-            <TextField
-            fullWidth
-            // autoComplete="username"
-            type="weight"
-            label="Weight"
-            {...getFieldProps('weight')}
-            error={Boolean(touched.weight && errors.weight)}
-            helperText={touched.weight && errors.weight || 'weight in grams'}
-          />
-            </Grid>
             </Grid>
             {/* <Autocomplete
             options={top100Films}
@@ -163,7 +198,8 @@ export default function AddCourier() {
           size="large"
           type="submit"
           variant="contained"
-          loading={isSubmitting}
+          //onClick={handleClick}
+          // loading={isSubmitting}
         >
           Save Details
         </LoadingButton>

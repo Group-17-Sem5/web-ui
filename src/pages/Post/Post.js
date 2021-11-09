@@ -4,6 +4,10 @@ import { sentenceCase } from 'change-case';
 import { useEffect, useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import MuIDialogTitle from '@material-ui/core/DialogTitle';
+import MuIDialogContent from '@material-ui/core/DialogContent';
+import MuIDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
 import React from 'react';
 import ReactDOM from 'react-dom';
 // material
@@ -27,45 +31,48 @@ import {
   DialogActions
 } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 //
-import USERLIST from '../_mocks_/mail';
+import USERLIST from '../../_mocks_/mail';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { ID: 'mailID', label: 'mailID', alignRight: false },
-  { ID: 'addressID', label: 'AddressID', alignRight: false },
-  { ID: 'amount', label: 'Amount', alignRight: false },
-  { ID: 'date', label: 'Date', alignRight: false },
-  { ID: 'assignedPostmanID', label: 'Assigned PostmanID', alignRight: false },
-  { ID: 'sourceBranchID', label: 'Source BranchID', alignRight: false },
-  { ID: 'receivingBranchID', label: 'Receiving BranchID', alignRight: false },
-  { ID: 'senderID', label: 'SenderID', alignRight: false },
-  { ID: 'receiverID', label: 'ReceiverID', alignRight: false },
-  //{ ID: 'isConfirmed', label: 'Confirmed', alignRight: false },
-  { ID: 'status', label: 'Status', alignRight: false },
+  { ID: 'senderID', label: 'Sender', alignRight: false },
+  { ID: 'receiverID', label: 'Receiver', alignRight: false },
+  { ID: 'addressID', label: 'Address', alignRight: false },
+  { ID: 'sourceBranchID', label: 'Source Branch', alignRight: false },
+  { ID: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
+  { ID: 'receivingBranchID', label: 'Receiving Branch', alignRight: false },
+  { ID: 'postManID', label: 'Postman', alignRight: false },
+  { ID: 'isAssigned', label: 'Assigned', alignRight: false },
+  { ID: 'isCancelled', label: 'Cancelled', alignRight: false },
+  { ID: 'isDelivered', label: 'Delivered', alignRight: false },
   { ID: '' }
+  // { ID: 'state', label: 'state', alignRight: false },
+  
 ];
-
 const TABLE_DATA = [
-  {mailID:'1',addressID:'qa222s2dwd',amount:'Rs.223',assignedPostmanID:'362642g',senderID:'sender1',receiverID:'receiver1',sourceBranchID:'jaffna',receivingBranchID:'colombo',status:'pending',_ID:'4545556rt667'},
-  {mailID:'2',addressID:'qa222s2dwd',amount:'Rs.45',assignedPostmanID:'362642g',senderID:'sender2',receiverID:'receiver2',sourceBranchID:'kokuvil',receivingBranchID:'colombo',status:'assigned',_ID:'4545556rtggg667'},
-  {mailID:'3',addressID:'qa222s2dwd',amount:'Rs.3',assignedPostmanID:'362642g',senderID:'sender3',receiverID:'receiver3',sourceBranchID:'koapy',receivingBranchID:'kandy',status:'cancelled',_ID:'4545556rt667gh'},
-  {mailID:'4',addressID:'qa222s2dwd',amount:'Rs.263',assignedPostmanID:'362642g',senderID:'sender4',receiverID:'receiver4',sourceBranchID:'nallur',receivingBranchID:'colombo',status:'pending',_ID:'4545556566rt667'},
-  {mailID:'5',addressID:'qa222s2dwd',amount:'Rs.23',assignedPostmanID:'362642g',senderID:'sender5',receiverID:'receiver5',sourceBranchID:'wellawatta',receivingBranchID:'jaffna',status:'delivered',_ID:'4545556rt66766fg'},
+  {senderID:'sender1',receiverID:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667'},
+  {senderID:'sender2',receiverID:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667'},
+  {senderID:'sender3',receiverID:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh'},
+  {senderID:'sender4',receiverID:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667'},
+  {senderID:'sender5',receiverID:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg'},
 ];
-
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
+
+
+
+  
   if (b[orderBy] > a[orderBy]) {
     return 1;
   }
@@ -86,7 +93,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.mailID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.senderID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -99,7 +106,7 @@ export default function User() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [USERLIST,setUSERLIST] = useState([])
-  const [filterStatus,setFilterStatus] = useState('');
+  const [filterstate,setFilterstate] = useState('');
   const [delItem,setDelItem] = useState(null)
   const [modal,setModal] = useState(false)
   const [open, setOpen] = React.useState(false);
@@ -111,7 +118,7 @@ export default function User() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/post/',{
+    fetch ('http://localhost:5000/clerk/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -121,7 +128,7 @@ export default function User() {
       console.log(data)
       setUSERLIST(data)
     })
-    setUSERLIST(TABLE_DATA)
+    //setUSERLIST(TABLE_DATA)
   },[])
   console.log(USERLIST)
 
@@ -132,7 +139,8 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/post/delete"+ delItem._ID;
+    const delApiURL = "clerk/post/delete/"+ delItem._id;
+    console.log(delItem._id)
     setDelItem(null)
     // setIsDelLoading(true)
     fetch( 'http://localhost:5000/'+delApiURL, {
@@ -159,18 +167,18 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.mailID);
+      const newSelecteds = USERLIST.map((n) => n.senderID);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, senderID) => {
+    const selectedIndex = selected.indexOf(senderID);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, senderID);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -197,8 +205,8 @@ export default function User() {
     setFilterName(event.target.value);
   };
 
-  const handleFilterByStatus = (event) => {
-    setFilterStatus(event.target.value);
+  const handleFilterBystate = (event) => {
+    setFilterstate(event.target.value);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -217,7 +225,7 @@ export default function User() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/app/addPost"
+            to="/dashboard/addpost"
             startIcon={<Icon icon={plusFill} />}
           >
             Add Post
@@ -229,7 +237,7 @@ export default function User() {
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
-            onFilterStatus={handleFilterByStatus}
+            onFilterstate={handleFilterBystate}
           />
 
           <Scrollbar>
@@ -248,57 +256,118 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { ID, mailID, addressID, amount, date, assignedPostmanID, sourceBranchID, receivingBranchID, senderID, receiverID, status } = row;
-                      const isItemSelected = selected.indexOf(mailID) !== -1;
+                      const { id,senderID,receiverID,addressID,sourceBranchID,lastAppearedBranchID,receivingBranchID,postManID,isAssigned,_id,isCancelled,isDelivered } = row;
+                      const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={ID}
+                          key={id}
                           tabIndex={-1}
-                          addressID="checkbox"
+                          role="checkbox"
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
                         >
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, mailID)}
+                              onChange={(event) => handleClick(event, senderID)}
                             />
                           </TableCell>
-                          <TableCell component="th" scope="row" padding="none">
+                          {/*<TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                              
                               <Typography variant="subtitle2" noWrap>
-                                {mailID}
+                                {senderID}
                               </Typography>
                             </Stack>
-                          </TableCell>
-                          <TableCell align="left">{addressID}</TableCell>
-                          <TableCell align="left">{amount}</TableCell>
-                          <TableCell align="left">{date}</TableCell>
-                          <TableCell align="left">{assignedPostmanID}</TableCell>
-                          <TableCell align="left">{sourceBranchID}</TableCell>
-                          <TableCell align="left">{receivingBranchID}</TableCell>
+                          </TableCell>*/}
                           <TableCell align="left">{senderID}</TableCell>
                           <TableCell align="left">{receiverID}</TableCell>
+                          <TableCell align="left">{addressID}</TableCell>
+                          <TableCell align="left">{sourceBranchID}</TableCell>
+                          <TableCell align="left">{lastAppearedBranchID}</TableCell>
+                          <TableCell align="left">{receivingBranchID}</TableCell>
+                          <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
+                         
                           <TableCell align="left">
-                            <Label 
+                            { postManID ?
+                              <Label
                               variant="ghost"
-                              color={(status === 'pending' ? 'warning' :(status === 'assigned' ? 'info' : status==='delivered' ? 'primary' : 'error' ))  }
+                              color='success'
                             >
-                              {sentenceCase(status)}
+                              {sentenceCase('assinged')}
                             </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not assigned
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isCancelled ?
+                              <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              {sentenceCase('cancelled')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='warning'
+                            >
+                              Not Cancelled
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isDelivered ?
+                              <Label
+                              variant="ghost"
+                              color='success'
+                            >
+                              {sentenceCase('delivered')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not Delivered
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                         
+                          {/* postManID ?
+                              <Label
+                              variant="ghost"
+                              color={(state === 'pending' ? 'warning' :(state === 'assigned' ? 'info' : state==='delivered' ? 'primary' : 'error' ))  }
+                            >
+                              {sentenceCase(state)}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not assigned
+                            </Label>
+                          */}
                           </TableCell>
 
                           <TableCell align="right">
-                             {/* <UserMoreMenu delUrl={`postMaster/post/delete/${_ID}`} handleDelete={handleDelete} item={row} 
-                            editUrl={`/app/editPostman/${_ID}`}
-                            viewUrl={`/app/profile/${_ID}`}
-                            /> */}
-                            <UserMoreMenu />
+                            <UserMoreMenu delUrl={`clerk/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/dashboard/editPost/${_id}`}
+                            //viewUrl={`/dashboard/viewpost/${_id}`}
+                            />
                           </TableCell>
-                        </TableRow>
+
+                      </TableRow>
                       );
                     })}
                   {emptyRows > 0 && (
@@ -331,10 +400,10 @@ export default function User() {
           />
         </Card>
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={modal}>
-          <DialogTitle ID="customized-dialog-title" onClose={handleClose} color="error">
+          <DialogTitle id="customized-dialog-title" onClose={handleClose} color="error">
             Confirm Delete
           </DialogTitle>
-          <DialogContent divIDers>
+          <DialogContent dividers>
             <Typography gutterBottom>
               Are you sure? You want to delete permanantly.
             </Typography>

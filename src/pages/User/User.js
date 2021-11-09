@@ -4,6 +4,14 @@ import { sentenceCase } from 'change-case';
 import { useEffect, useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
 // material
 import {
   Card,
@@ -18,32 +26,30 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
+import useFetch from 'src/hooks/useIntervalFetch';
 //
-import USERLIST from '../_mocks_/user';
-import axios from 'axios';
-import { result } from 'lodash-es';
+// import USERLIST from '../_mocks_/user';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'userID', label: 'UserID', alignRight: false },
-  { id: 'addresID', label: 'AddressID', alignRight: false },
-  { id: 'address', label: 'Address', alignRight: false },
-  { id: 'username', label: 'username', alignRight: false },
-  { id: 'branchID', label: 'branchID', alignRight: false },
-  { id: 'phoneNumber', label: 'PhoneNumber', alignRight: false },
-  { id: 'receivedPostID', label: 'ReceivedPostID', alignRight: false },
-  { id: 'sendPostID', label: 'SendPostID', alignRight: false },
-  { id: 'receivedMoneyOrderID', label: 'ReceivedMoneyOrderID', alignRight: false },
-  { id: 'sendMoneyOrderID', label: 'sendMoneyOrderID', alignRight: false },
+  { id: 'userName', label: 'UserName', alignRight: false },
+  { id: 'addressId', label: 'AddressID', alignRight: false },
+  { id: 'email', label: 'Email', alignRight: false },
+  { id: 'branchID', label: 'BranchID', alignRight: false },
+  { id: 'mobileNumber', label: 'Phone', alignRight: false },
+ 
   { id: '' }
 ];
 
@@ -65,7 +71,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query) {
+function applySortFilter(array, comparator, query,query2) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -73,8 +79,11 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.userID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.userName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
+  // if (query2) {
+  //   return filter(array, (_user) => (_user.status)===query2);
+  // }
   return stabilizedThis.map((el) => el[0]);
 }
 
@@ -85,19 +94,59 @@ export default function User() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [UserList, setUserList] = useState([]);
+  const [USERLIST,setUSERLIST] = useState([])
+  const [filterStatus,setFilterStatus] = useState('');
+  const [delItem,setDelItem] = useState(null)
+  const [modal,setModal] = useState(false)
+  const [open, setOpen] = React.useState(false);
+  const token = localStorage.getItem('adminToken')
+  const handleClose = () => {
+    setModal(false);
+  };
+
 
   useEffect(()=>{
-    fetch('https://jsonplaceholder.typicode.com/posts')
-    .then(res=>{
-      return res.json()
+    fetch ('http://localhost:5000/clerk/user/',{
+      headers: { "Authorization": "Bearer " + token},
+    })
+    .then(result=>{
+      return result.json()
     })
     .then(data=>{
-      setUserList(data)
+      console.log(data)
+      setUSERLIST(data)
     })
   },[])
-  console.log(UserList)
+  console.log(USERLIST)
 
+  const handleDelete = (item) => {
+    // console.log(item)
+    setDelItem(item)
+    setModal(true)
+  }
+
+  const handleConfirmDelete = () => { 
+    const delApiURL = "clerk/user/delete/"+ delItem._id;
+    setDelItem(null)
+    // setIsDelLoading(true)
+    fetch( 'http://localhost:5000/'+delApiURL, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + token }
+    }).then( () => {
+      setUSERLIST(USERLIST.filter(i=>i!==delItem))
+        // setIsDelLoading(false)
+        setModal(false)
+        console.log('success')
+    } )
+    .catch( console.log )
+}
+
+
+
+  // const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
+
+  // console.log(USERLISTT)
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -106,18 +155,18 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.userID);
+      const newSelecteds = USERLIST.map((n) => n.userName);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, userID) => {
-    const selectedIndex = selected.indexOf(userID);
+  const handleClick = (event, userName) => {
+    const selectedIndex = selected.indexOf(userName);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, userID);
+      newSelected = newSelected.concat(selected, userName);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -143,28 +192,24 @@ export default function User() {
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
   };
+  const handleFilterByStatus = (event) => {
+    setFilterStatus(event.target.value);
+  };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName,filterStatus);
 
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="User | Minimal-UI">
+    <Page title="User | Easy Mail">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="#"
-            startIcon={<Icon icon={plusFill} />}
-          >
-            User
-          </Button>
+         
         </Stack>
 
         <Card>
@@ -172,6 +217,7 @@ export default function User() {
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
+            onFilterStatus={handleFilterByStatus}
           />
 
           <Scrollbar>
@@ -190,8 +236,8 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, avatarUrl, userID, addresID, address, username, branchID, phoneNumber, receivedPostID, sendPostID, receivedMoneyOrderID, sendMoneyOrderID} = row;
-                      const isItemSelected = selected.indexOf(userID) !== -1;
+                      const { id, userName, email, mobileNumber,_id,branchID,addressId} = row;
+                      const isItemSelected = selected.indexOf(userName) !== -1;
 
                       return (
                         <TableRow
@@ -205,31 +251,39 @@ export default function User() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, userID)}
+                              onChange={(event) => handleClick(event, userName)}
                             />
                           </TableCell>
-                          <TableCell component="th" scope="row" padding="none">
+                            {/*<TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={userID} src={avatarUrl} />
+                             <Avatar alt={userName} src={avatarUrl} /> 
                               <Typography variant="subtitle2" noWrap>
-                                {userID}
+                                {userName}
                               </Typography>
                             </Stack>
-                          </TableCell>
-                          <TableCell align="left">{addresID}</TableCell>
-                          <TableCell align="left">{address}</TableCell>
-                          <TableCell align="left">{username}</TableCell>
+                          </TableCell>*/}
+                          <TableCell align="left">{userName}</TableCell>
+                          <TableCell align="left">{addressId}</TableCell>
+                          <TableCell align="left"><a href={`mailto:${email}`}>{email}</a></TableCell>
                           <TableCell align="left">{branchID}</TableCell>
-                          <TableCell align="left">{phoneNumber}</TableCell>
-                          <TableCell align="left">{receivedPostID}</TableCell>
-                          <TableCell align="left">{sendPostID}</TableCell>
-                          <TableCell align="left">{receivedMoneyOrderID}</TableCell>
-                          <TableCell align="left">{sendMoneyOrderID}</TableCell>
-                          
+                          <TableCell align="left">{mobileNumber}</TableCell>
+                  
+                          {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> 
+                          <TableCell align="left">
+                            <Label
+                              variant="ghost"
+                              color={!status ? 'error' : 'success'}
+                            >
+                              {sentenceCase(status?"active":"not active")}
+                            </Label>
+                          </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu />
-                          </TableCell>
+                            <UserMoreMenu delUrl={`postMaster/clerk/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                            editUrl={`/app/editClerk/${_id}`}
+                            viewUrl={`/app/profileClerk/${_id}`}
+                            />
+                          </TableCell>*/}
                         </TableRow>
                       );
                     })}
@@ -262,8 +316,26 @@ export default function User() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+
+        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={modal}>
+          <DialogTitle id="customized-dialog-title" onClose={handleClose} color="error">
+            Confirm Delete
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Are you sure? You want to delete permanantly.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button autoFocus onClick={handleConfirmDelete} color="error">
+              Delete
+            </Button>
+          </DialogActions>
+      </Dialog>
       </Container>
     </Page>
   );
 }
-

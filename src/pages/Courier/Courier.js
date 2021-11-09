@@ -7,10 +7,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
-import MuIDialogTitle from '@material-ui/core/DialogTitle';
-import MuIDialogContent from '@material-ui/core/DialogContent';
-import MuIDialogActions from '@material-ui/core/DialogActions';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
 // material
 import {
   Card,
@@ -31,40 +32,40 @@ import {
   DialogActions
 } from '@material-ui/core';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 import useFetch from 'src/hooks/useIntervalFetch';
 //
-import USERLIST from '../_mocks_/moneyorder';
+// import USERLIST from '../_mocks_/user';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { ID: 'moneyOrderID', label: 'MoneyOrderID', alignRight: false },
-  { ID: 'addressID', label: 'AddressID', alignRight: false },
-  { ID: 'amount', label: 'Amount', alignRight: false },
-  { ID: 'date', label: 'Date', alignRight: false },
-  { ID: 'assignedPostmanID', label: 'Assigned PostmanID', alignRight: false },
-  { ID: 'sourceBranchID', label: 'Source BranchID', alignRight: false },
-  { ID: 'receivingBranchID', label: 'Receiving BranchID', alignRight: false },
-  { ID: 'senderID', label: 'SenderID', alignRight: false },
-  { ID: 'receiverID', label: 'ReceiverID', alignRight: false },
-  //{ ID: 'isConfirmed', label: 'Confirmed', alignRight: false },
-  { ID: 'status', label: 'Status', alignRight: false },
-  { ID: '' }
-];
+  { id: '_id', label: 'Courier ID', alignRight: false },
+  { id: 'senderID', label: 'Sender', alignRight: false },
+  { id: 'receiverID', label: 'Receiver', alignRight: false },
+  { id: 'addressID', label: 'Address', alignRight: false },
+  { id: 'postManID', label: 'Postman', alignRight: false },
+  { id: 'weight', label: 'Weight', alignRight: false },
+  { id: 'sourceBranchID', label: 'Source Branch', alignRight: false },
+  { id: 'lastAppearedBranchID', label: 'Last appeared Branch', alignRight: false },
+  { ID: 'receivingBranchID', label: 'Receiving Branch', alignRight: false },
+  { id: 'isAssigned', label: 'Assigned Status', alignRight: false },
+  { id: 'isDelevered', label: 'Delivery Status', alignRight: false },
+  { id: 'isCancelled', label: 'Cancelled Status', alignRight: false },
+  { id: '' }
 
+  
+];
 const TABLE_DATA = [
-  {moneyOrderID:'1',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender1',receiverID:'receiver1',assignedPostmanID:'3e363636',sourceBranchID:'jaffna',receivingBranchID:'colombo',status:'pending',_ID:'4545556rt667',amount:'200'},
-  {moneyOrderID:'2',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender2',receiverID:'receiver2',assignedPostmanID:'3e363636',sourceBranchID:'kokuvil',receivingBranchID:'colombo',status:'assigned',_ID:'4545556rtggg667',amount:'350'},
-  {moneyOrderID:'3',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender3',receiverID:'receiver3',assignedPostmanID:'3e363636',sourceBranchID:'koapy',receivingBranchID:'kandy',status:'cancelled',_ID:'4545556rt667gh',amount:'2000'},
-  {moneyOrderID:'4',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender4',receiverID:'receiver4',assignedPostmanID:'3e363636',sourceBranchID:'nallur',receivingBranchID:'colombo',status:'pending',_ID:'4545556566rt667',amount:'120'},
-  {moneyOrderID:'5',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender5',receiverID:'receiver5',assignedPostmanID:'3e363636',sourceBranchID:'wellawatta',receivingBranchID:'jaffna',status:'delivered',_ID:'4545556rt66766fg',amount:'130'},
-  {moneyOrderID:'6',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender6',receiverID:'receiver6',assignedPostmanID:'3e363636',sourceBranchID:'nallur',receivingBranchID:'colombo',status:'pending',_ID:'4545556566rt667',amount:'120'},
-  {moneyOrderID:'7',addressID:'2wd2ed21',date:'2021/10/11',senderID:'sender7',receiverID:'receiver7',assignedPostmanID:'3e363636',sourceBranchID:'wellawatta',receivingBranchID:'jaffna',status:'delivered',_ID:'4545556rt66766fg',amount:'130'},
+  {senderId:'sender1',receiverId:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667',weight:'200'},
+  {senderId:'sender2',receiverId:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667',weight:'350'},
+  {senderId:'sender3',receiverId:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh',weight:'2000'},
+  {senderId:'sender4',receiverId:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',weight:'120'},
+  {senderId:'sender5',receiverId:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',weight:'130'},
 ];
 // ----------------------------------------------------------------------
 
@@ -84,7 +85,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query) {
+function applySortFilter(array, comparator, query,query2) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -92,12 +93,15 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.moneyOrderID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user._id.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
+  // if (query2) {
+  //   return filter(array, (_user) => (_user.status)===query2);
+  // }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function MoneyOrder() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -117,7 +121,7 @@ export default function User() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/post/',{
+    fetch (process.env.REACT_APP_API_HOST+'/clerk/courier/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -127,9 +131,9 @@ export default function User() {
       console.log(data)
       setUSERLIST(data)
     })
-    setUSERLIST(TABLE_DATA)
+    // setUSERLIST(TABLE_DATA)
   },[])
-  console.log(USERLIST)
+  // console.log(USERLIST)
 
   const handleDelete = (item) => {
     // console.log(item)
@@ -138,14 +142,15 @@ export default function User() {
   }
 
   const handleConfirmDelete = () => { 
-    const delApiURL = "postMaster/post/delete"+ delItem._ID;
+    const delApiURL = "/clerk/courier/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/'+delApiURL, {
+    fetch( process.env.REACT_APP_API_HOST+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {
       setUSERLIST(USERLIST.filter(i=>i!==delItem))
+      window.location.reload();
         // setIsDelLoading(false)
         setModal(false)
         console.log('success')
@@ -153,10 +158,12 @@ export default function User() {
     .catch( console.log )
 }
 
-// const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
+
+
+  // const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
 
   // console.log(USERLISTT)
-
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -165,18 +172,18 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.moneyOrderID);
+      const newSelecteds = USERLIST.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -202,31 +209,30 @@ export default function User() {
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
   };
-
   const handleFilterByStatus = (event) => {
     setFilterStatus(event.target.value);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName,filterStatus);
 
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="Money Order | Minimal-UI">
+    <Page title="Courier | Easy Mail">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Money Order
+            Courier
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/app/addMoneyorders"
+            to="/dashboard/addcourier"
             startIcon={<Icon icon={plusFill} />}
           >
-           Add Money Order
+           Add Courier
           </Button>
         </Stack>
 
@@ -239,7 +245,7 @@ export default function User() {
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWIDth: 800 }}>
+            <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <UserListHead
                   order={order}
@@ -254,51 +260,102 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { ID, moneyOrderID, addressID, amount, date, assignedPostmanID, sourceBranchID, receivingBranchID, senderID, receiverID, status } = row;
-                      const isItemSelected = selected.indexOf(moneyOrderID) !== -1;
+                      const { id,senderID,receiverID,lastAppearedBranchID,sourceBranchID,courierID,_id,postManID,addressID,receivingBranchID,weight,isAssigned,isDelivered,isCancelled } = row;
+                      const isItemSelected = selected.indexOf(_id) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={ID}
+                          key={id}
                           tabIndex={-1}
-                          addressID="checkbox"
+                          role="checkbox"
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
                         >
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, moneyOrderID)}
+                              onChange={(event) => handleClick(event, _id)}
                             />
                           </TableCell>
+                          {/* <TableCell align="left">{courierID ? courierID : 'Not included' }</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                             
+                              <Avatar alt={senderId} src={avatarUrl} /> 
                               <Typography variant="subtitle2" noWrap>
-                                {moneyOrderID}
+                                {senderID}
                               </Typography>
                             </Stack>
-                          </TableCell>
-                          <TableCell align="left">{addressID}</TableCell>
-                          <TableCell align="left">{amount}</TableCell>
-                          <TableCell align="left">{date}</TableCell>
-                          <TableCell align="left">{assignedPostmanID}</TableCell>
-                          <TableCell align="left">{sourceBranchID}</TableCell>
-                          <TableCell align="left">{receivingBranchID}</TableCell>
+                            
+                          </TableCell>*/}
+                          <TableCell align="left">{_id}</TableCell>
                           <TableCell align="left">{senderID}</TableCell>
                           <TableCell align="left">{receiverID}</TableCell>
+                          <TableCell align="left">{addressID}</TableCell>
+                          <TableCell align="left">{ postManID?postManID : 'Not assigned yet'}</TableCell>
+                          <TableCell align="left">{weight} g</TableCell>
+                          <TableCell align="left">{sourceBranchID}</TableCell>
+                          <TableCell align="left">{lastAppearedBranchID}</TableCell>
+                          <TableCell align="left">{receivingBranchID}</TableCell>
+                         
                           <TableCell align="left">
-                            <Label 
+                            { isAssigned ?
+                              <Label
                               variant="ghost"
-                              color={(status === 'pending' ? 'warning' :(status === 'assigned' ? 'info' : status==='delivered' ? 'primary' : 'error' ))  }
+                              color='success'
                             >
-                              {sentenceCase(status)}
+                              {sentenceCase('assinged')}
                             </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not assigned
+                            </Label>
+                            }
                           </TableCell>
+                          <TableCell align="left">
+                            { isDelivered ?
+                              <Label
+                              variant="ghost"
+                              color='success'
+                            >
+                              {sentenceCase('delivered')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              Not Delivered
+                            </Label>
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            { isCancelled ?
+                              <Label
+                              variant="ghost"
+                              color='error'
+                            >
+                              {sentenceCase('cancelled')}
+                            </Label>
+                            :
+                            <Label
+                              variant="ghost"
+                              color='warning'
+                            >
+                              Not Cancelled
+                            </Label>
+                            }
+                          </TableCell>
+                          
 
                           <TableCell align="right">
-                            <UserMoreMenu />
+                            <UserMoreMenu delUrl={`clerk/courier/delete/${_id}`} handleDelete={handleDelete} item={row} 
+                              editUrl={`/dashboard/editCourier/${_id}`}
+                             // viewUrl={`/app/viewCourier/${_id}`}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -332,11 +389,12 @@ export default function User() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={modal}>
-          <DialogTitle ID="customized-dialog-title" onClose={handleClose} color="error">
+          <DialogTitle id="customized-dialog-title" onClose={handleClose} color="error">
             Confirm Delete
           </DialogTitle>
-          <DialogContent divIDers>
+          <DialogContent dividers>
             <Typography gutterBottom>
               Are you sure? You want to delete permanantly.
             </Typography>

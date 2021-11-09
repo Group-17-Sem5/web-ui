@@ -29,43 +29,45 @@ import { useParams } from 'react-router';
 import useFetch from 'src/hooks/useFetch';
 // ----------------------------------------------------------------------
 
-export default function AddMoneyOrder() {
+export default function AddCourier() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const postSchema = Yup.object().shape({
     senderID: Yup.string().required('Sender is required'),
     receiverID: Yup.string().required('Receiver is required'),
-    amount: Yup.number().required('amount is required'),
+    postManID: Yup.string(),
+    weight: Yup.number().required('weight is required'),
+    courierID: Yup.string().required('CourierID is required'),
     sourceBranchID: Yup.string().required('Branch is required'),
+    lastAppearedBranchID: Yup.string().required('Branch is required'),
     receivingBranchID: Yup.string().required('Branch is required'),
-    specialCode: Yup.string().required('Special Code is required'),
-    // isCancelled: Yup.string().required('Enter true or false'),
-    // isDelivered: Yup.string().required('Enter true or false'),
-    // address: Yup.string().required('Address is required'),
+    addressID: Yup.string().required('Address is required'),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
     // password: Yup.string().required('Password is required')
   });
   const token = localStorage.getItem('adminToken')
   const {id} = useParams()
-  const url = id ? '/clerk/moneyorder/update/'+id : '/clerk/moneyorder/add' 
+  const url = id ? '/clerk/courier/update/'+id : '/clerk/courier/add' 
 
   const {data:branches} = useFetch('/admin/branch')
   const {data:users} = useFetch('/clerk/user/')
-  
+  const {data:postman} = useFetch('/clerk/postman')
+  const {data: address} = useFetch('/clerk/address')
   const [val,setVal]=useState('')
-  useEditData('/clerk/moneyorder/'+id,
+  useEditData('/clerk/courier/'+id,
     data=>{
       if(data){
+        
         setVal(data)
         setFieldValue('senderID',data.senderID)
         setFieldValue('receiverID',data.receiverID)
+        setFieldValue('postManID',data.postManID)
         setFieldValue('sourceBranchID',data.sourceBranchID)
+        setFieldValue('lastAppearedBranchID',data.lastAppearedBranchID)
         setFieldValue('receivingBranchID',data.receivingBranchID)
-        setFieldValue('specialCode',data.specialCode)
-        setFieldValue('amount',data.amount)
-        // setFieldValue('isCancelled',data.isCancelled)
-        // setFieldValue('isDelivered',data.isDelivered)
-      
+        setFieldValue('addressID',data.addressID)
+        setFieldValue('weight',data.weight)
+        //setFieldValue('courierID',data.courierID)
       }
     }
   )
@@ -74,17 +76,16 @@ export default function AddMoneyOrder() {
     initialValues: {
       senderID: '',
       receiverID: '',
-      sourceBranchID: '',
-      receivingBranchID: '',
-      specialCode:'',
-      amount:0,
-      // isCancelled:'',
-      // isDelivered:''
-      // address:''
+      postManID: '',
+      sourceBranchID:'',
+      lastAppearedBranchID: '',
+      receivingBranchID:'',
+      addressID:'',
+      weight:0
     },
     validationSchema: postSchema,
     onSubmit: (values) => {
-      console.log("fuccccckkkk",values)
+      console.log("post",values)
       fetch(process.env.REACT_APP_API_HOST+url,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token},
@@ -93,11 +94,12 @@ export default function AddMoneyOrder() {
       })
       .then(result=>{
         if(result.status===200){
-          navigate('/dashboard/moneyorder', { replace: true });
+          navigate('/dashboard/courier', { replace: true });
         }
         console.log(result.status)
-      })
       
+      })
+    
       }
 });
 
@@ -106,7 +108,7 @@ export default function AddMoneyOrder() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
-console.log(values)
+  console.log("not going",values)
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="on"  onSubmit={handleSubmit}>
@@ -117,6 +119,7 @@ console.log(values)
       >
           
           <Grid container spacing={3}>
+        
           <Grid item xs={12} sm={6} md={6}>
           <Autocomplete
             
@@ -147,7 +150,20 @@ console.log(values)
             />
 
            </Grid>
-          
+           <Grid item xs={12} sm={6} md={6}>
+            <Autocomplete
+           
+            options={postman}
+            onChange={(event, value) =>setFieldValue('postManID',value.username)}
+            getOptionLabel={(option) => option.username}
+            renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
+            {...getFieldProps('postManID')}
+            name="postManID"
+            error={Boolean(touched.postManID && errors.postManID)}
+            helperText={touched.postManID && errors.postManID}
+            />}
+            />
+            </Grid>
             <Grid item xs={12} sm={6} md={6}>
             <Autocomplete
             
@@ -167,8 +183,22 @@ console.log(values)
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
+            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value.branchID)}
+            renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
+            {...getFieldProps('lastAppearedBranchID')}
+            name="lastAppearedBranchID"
+            error={Boolean(touched.lastAppearedBranchID && errors.lastAppearedBranchID)}
+            helperText={touched.lastAppearedBranchID && errors.lastAppearedBranchID}
+            />}
+            />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <Autocomplete
+            
+            options={branches}
+            getOptionLabel={(option) => option.branchName}
             onChange={(event, value) =>setFieldValue('receivingBranchID',value.branchID)}
-            renderInput={(params) => <TextField {...params} label="Receiving Branch" variant="outlined" 
+            renderInput={(params) => <TextField {...params} label="ReceivingBranch Branch" variant="outlined" 
             {...getFieldProps('receivingBranchID')}
             name="receivingBranchID"
             error={Boolean(touched.receivingBranchID && errors.receivingBranchID)}
@@ -177,49 +207,31 @@ console.log(values)
             />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
-            <TextField
-            fullWidth
-            // autoComplete="username"
-            type="text"
-            label="Special Code"
-            {...getFieldProps('specialCode')}
-            error={Boolean(touched.specialCode && errors.specialCode)}
-            helperText={touched.specialCode && errors.specialCode || 'Special Code is'}
-          />
-            </Grid>
+            
+            <Autocomplete
+            options={address}
+            getOptionLabel={(option) => option.addressID}
+            onChange={(event, value) =>setFieldValue('addressID',value.addressID)}
+            //getOptionLabel={(option) => option.description}
+            renderInput={(params) => <TextField {...params} label="Address (Only not receiver)" variant="outlined" 
+            {...getFieldProps('addressID')}
+            name="addressID"
+            error={Boolean(touched.addressID && errors.addressID)}
+            helperText={touched.addressID && errors.addressID}
+            />}
+            />
+           </Grid>
             <Grid item xs={12} sm={6} md={6}>
             <TextField
             fullWidth
             // autoComplete="username"
             type="number"
-            label="Amount"
-            {...getFieldProps('amount')}
-            error={Boolean(touched.amount && errors.amount)}
-            helperText={touched.amount && errors.amount || 'amount in Rs'}
+            label="Weight"
+            {...getFieldProps('weight')}
+            error={Boolean(touched.weight && errors.weight)}
+            helperText={touched.weight && errors.weight || 'weight in grams'}
           />
             </Grid>
-            {/*<Grid item xs={12} sm={6} md={6}>
-            <TextField
-            fullWidth
-            // autoComplete="username"
-            type="isCancelled"
-            label="isCancelled"
-            {...getFieldProps('isCancelled')}
-            error={Boolean(touched.isCancelled && errors.isCancelled)}
-            helperText={touched.isCancelled && errors.isCancelled || 'true or false'}
-          />
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-            <TextField
-            fullWidth
-            // autoComplete="username"
-            type="isDelivered"
-            label="isDelivered"
-            {...getFieldProps('isDelivered')}
-            error={Boolean(touched.isDelivered && errors.isDelivered)}
-            helperText={touched.isDelivered && errors.isDelivered || 'true or false'}
-          />
-    </Grid>*/}
             </Grid>
             
      
