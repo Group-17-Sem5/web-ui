@@ -85,11 +85,11 @@ const sidebarConfig = [
       }
     ]
   },
-  {
-    title: 'Users',
-    path: '/app/users',
-    icon: getIcon(peopleFill)
-  },
+  // {
+  //   title: 'Users',
+  //   path: '/app/users',
+  //   icon: getIcon(peopleFill)
+  // },
 
   // {
   //   title:'services',
