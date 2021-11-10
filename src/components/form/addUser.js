@@ -51,7 +51,7 @@ export default function AddUserForm() {
   useEditData('/postMaster/user/'+id,
     data=>{
       if(data){
-        console.log(data)
+        // console.log(data)
         setVal(data)
         setFieldValue('email',data.email)
         setFieldValue('mobileNumber',data.mobileNumber)
@@ -82,7 +82,7 @@ export default function AddUserForm() {
         if(result.status===200){
           navigate('/app/users', { replace: true });
         }
-        console.log(result.status)
+        // console.log(result.status)
       })
      
     }

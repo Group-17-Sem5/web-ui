@@ -65,7 +65,7 @@ export default function ChangePassword() {
         if(result.status===200){
           navigate('/app/profile', { replace: true });
         }
-        console.log(result.status)
+        // console.log(result.status)
       })
      
     }

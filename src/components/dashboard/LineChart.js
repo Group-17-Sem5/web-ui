@@ -15,7 +15,7 @@ import React,{useState} from 'react';
 export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
   const [data,setData] =  useState()
   const [chartData,setChartData] = useState(CHART_DATA)
-  console.log(chartData)
+  // console.log(chartData)
   const [label, setLabel] = useState(labels)
   const token = localStorage.getItem('adminToken')
 
@@ -57,7 +57,7 @@ export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
             // if(result.status===200){
             //   navigate('/app', { replace: true });
             // }
-            console.log(result.status)
+            // console.log(result.status)
             return result.json()
           })
           .then(data=>{
@@ -82,7 +82,7 @@ export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
       //   CHART_DATA[2].data.push(count.cancelledcount)
       //   labels.push(count.date)
       // })
-      console.log(data)
+      // console.log(data)
 
   const chartOptions = merge(BaseOptionChart(), {
     // stroke: { width: [0, 2, 3] },

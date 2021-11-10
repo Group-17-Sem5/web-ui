@@ -46,7 +46,7 @@ export default function Profile() {
     const {id} = useParams()
     const {user} = useDetail()
     const {data:profile} = id ? useFetch('/postMaster/postman/'+id) : useFetch('/admin/postmaster/'+user._id)
-    console.log(profile)
+    // console.log(profile)
   return (
     <Page title="Profile | Easy Mail">
       <Container>

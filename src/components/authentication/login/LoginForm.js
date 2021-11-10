@@ -45,11 +45,11 @@ export default function LoginForm() {
       login(values.email, values.password)
         .then(data => {
             if (data.status) {
-              console.log(data)
+              
               navigate('/app/dashboard', { replace: true });
                 // history.push('/')
             } else if (data.error) {
-                console.log(data.error)
+                
                 setError(data.error)
                 setLoading(false)
             }

@@ -27,10 +27,12 @@ import { Box, width } from '@material-ui/system';
 import useFetch from 'src/hooks/useFetch'
 import { useParams } from 'react-router';
 import useEditData from 'src/hooks/useEditData'
+import AlertComponent from '../animate/AlertComponent';
 // ----------------------------------------------------------------------
 
 export default function AddPostmanForm() {
   const navigate = useNavigate();
+  const [success, setSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
 
   const postSchema = Yup.object().shape({
@@ -50,7 +52,7 @@ export default function AddPostmanForm() {
   const {data:users} = useFetch('/postMaster/user/')
   const {data:postman} = useFetch('/postMaster/postman')
   const {data: address} = useFetch('/postMaster/address')
-  console.log(address)
+  // console.log(address)
   useEditData('/postMaster/post/'+id,
     data=>{
       if(data){
@@ -79,7 +81,7 @@ export default function AddPostmanForm() {
     },
     validationSchema: postSchema,
     onSubmit: (values) => {
-      console.log(values)
+      // console.log(values)
       fetch(process.env.REACT_APP_API_HOST+url,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token},
@@ -88,22 +90,26 @@ export default function AddPostmanForm() {
       })
       .then(result=>{
         if(result.status===200){
-          navigate('/app/viewPost', { replace: true });
+          setSuccess(true)
+          setTimeout(()=>{
+            setSuccess(false)
+            navigate('/app/viewPost', { replace: true });
+          },3000)
         }
-        console.log(result.status)
       })
       
     }
   });
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps ,setFieldValue} = formik;
-console.log(values)
+// console.log(values)
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
 
   return (
     <FormikProvider value={formik}>
+      {success?<AlertComponent title={'Success!'}/>:null}
       <Form autoComplete="on"  onSubmit={handleSubmit}>
       <Box 
       sx={{

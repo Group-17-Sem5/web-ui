@@ -130,9 +130,9 @@ export default function DashboardApp() {
   })
   
   
-console.log(ChartDataMoneyorder)
-console.log(ChartDataPost)
-console.log(ChartData);
+// console.log(ChartDataMoneyorder)
+// console.log(ChartDataPost)
+// console.log(ChartData);
   return (
     <Page title="Dashboard | Easy Mail">
       <Container maxWidth="xl">

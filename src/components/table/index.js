@@ -113,11 +113,11 @@ export default function CustomTable({TABLE_HEAD,itemsUrl,delUrl,editRoute}) {
       return result.json()
     })
     .then(data=>{
-      console.log(data)
+      // console.log(data)
       setUSERLIST(data)
     })
   },[])
-  console.log(USERLIST)
+  // console.log(USERLIST)
 
   const handleDelete = (item) => {
     // console.log(item)

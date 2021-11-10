@@ -48,7 +48,7 @@ export default function AccountPopover() {
       return result.json()
     })
     .then(data=>{
-      console.log(data)
+      // console.log(data)
       setData(data)
     })
   },[id])

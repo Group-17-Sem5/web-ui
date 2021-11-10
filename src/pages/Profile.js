@@ -170,8 +170,8 @@ export default function Profile() {
     
     
   // console.log(ChartDataMoneyorder)
-  console.log(ChartDataPost)
-  console.log(ChartData);
+  // console.log(ChartDataPost)
+  // console.log(ChartData);
 
 
   return (

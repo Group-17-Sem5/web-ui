@@ -21,12 +21,13 @@ import {
   Grid
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-
+import AlertComponent from '../animate/AlertComponent';
 import useEditData from 'src/hooks/useEditData'
 // ----------------------------------------------------------------------
 
 export default function AddPostmanForm() {
   const navigate = useNavigate();
+  const [success, setSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const clerkSchema = Yup.object().shape({
@@ -70,9 +71,12 @@ export default function AddPostmanForm() {
       })
       .then(result=>{
         if(result.status===200){
-          navigate('/app/clerk', { replace: true });
+          setSuccess(true)
+          setTimeout(()=>{
+            setSuccess(false)
+            navigate('/app/clerk', { replace: true });
+          },2000)
         }
-        console.log(result.status)
       })
     }
   });
@@ -86,48 +90,47 @@ export default function AddPostmanForm() {
 
   return (
     <FormikProvider value={formik}>
+      {success?<AlertComponent title={'Success!'}/>:null}
       <Form autoComplete="on"  onSubmit={handleSubmit}>
-      <Box 
-      sx={{
-        '& > :not(style)': {mb:3},boxShadow: 3 ,p:5
-      }}
-      >
+        <Box 
+        sx={{
+          '& > :not(style)': {mb:3},boxShadow: 3 ,p:5
+        }}
+        >
           
           <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={6}>
-          <TextField
-            fullWidth
-            type="text"
-            label="Username"
-            {...getFieldProps('username')}
-            error={Boolean(touched.username && errors.username)}
-            helperText={touched.username && errors.username}
-          />
+            <Grid item xs={12} sm={6} md={6}>
+            <TextField
+              fullWidth
+              type="text"
+              label="Username"
+              {...getFieldProps('username')}
+              error={Boolean(touched.username && errors.username)}
+              helperText={touched.username && errors.username}
+            />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <TextField
+              fullWidth
+              // autoComplete="username"
+              type="email"
+              label="Email address"
+              {...getFieldProps('email')}
+              error={Boolean(touched.email && errors.email)}
+              helperText={touched.email && errors.email}
+            />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+            <TextField
+              fullWidth
+              type="number"
+              label="Phone Number"
+              {...getFieldProps('mobileNumber')}
+              error={Boolean(touched.mobileNumber && errors.mobileNumber)}
+              helperText={touched.mobileNumber && errors.mobileNumber}
+            />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-          <TextField
-            fullWidth
-            // autoComplete="username"
-            type="email"
-            label="Email address"
-            {...getFieldProps('email')}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
-          />
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-          <TextField
-            fullWidth
-            type="number"
-            label="Phone Number"
-            {...getFieldProps('mobileNumber')}
-            error={Boolean(touched.mobileNumber && errors.mobileNumber)}
-            helperText={touched.mobileNumber && errors.mobileNumber}
-          />
-          </Grid>
-          </Grid>
-        
-
         <LoadingButton
           fullWidth
           style={{width:'100%'}}

@@ -27,10 +27,12 @@ import { Box, width } from '@material-ui/system';
 import useEditData from 'src/hooks/useEditData';
 import { useParams } from 'react-router';
 import useFetch from 'src/hooks/useFetch';
+import AlertComponent from '../animate/AlertComponent';
 // ----------------------------------------------------------------------
 
 export default function AddCourier() {
   const navigate = useNavigate();
+  const [success, setSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const postSchema = Yup.object().shape({
     senderID: Yup.string().required('Sender is required'),
@@ -83,9 +85,14 @@ export default function AddCourier() {
       })
       .then(result=>{
         if(result.status===200){
-          navigate('/app/viewMoneyOrders', { replace: true });
+          setSuccess(true)
+          setTimeout(()=>{
+            setSuccess(false)
+            navigate('/app/viewMoneyOrders', { replace: true });
+          },3000)
+         
         }
-        console.log(result.status)
+       
       })
       
       }
@@ -96,9 +103,10 @@ export default function AddCourier() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
-console.log(values)
+// console.log(values)
   return (
     <FormikProvider value={formik}>
+      {success?<AlertComponent title={'Success!'}/>:null}
       <Form autoComplete="on"  onSubmit={handleSubmit}>
       <Box 
       sx={{

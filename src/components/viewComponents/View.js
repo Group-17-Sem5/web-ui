@@ -61,13 +61,13 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
             if(result.status===200){
               navigate(navigateUrl, { replace: true });
             }
-            console.log(result.status)
+            // console.log(result.status)
           })
     }
 
     const {data:senderDetails} = useFetch('/postMaster/user/'+profile.senderID)
     const {data:receiverDetails} = useFetch('/postMaster/user/'+profile.receiverID)
-console.log(parseInt('3'))
+// console.log(parseInt('3'))
     const senderPlaces =[
         { id: senderDetails.addressId, location: { lat: parseInt(senderDetails.lat), lng: parseInt(senderDetails.lng) } ,title:senderDetails.address}
       ]

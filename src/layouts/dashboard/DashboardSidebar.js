@@ -54,7 +54,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       return result.json()
     })
     .then(data=>{
-      console.log(data)
+      // console.log(data)
       setData(data)
     })
   },[id])

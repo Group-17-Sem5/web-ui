@@ -38,6 +38,7 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 import useFetch from 'src/hooks/useIntervalFetch';
+import Loader from 'src/components/animate/Loader';
 //
 // import USERLIST from '../_mocks_/user';
 
@@ -109,6 +110,7 @@ export default function User() {
   const [delItem,setDelItem] = useState(null)
   const [modal,setModal] = useState(false)
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem('adminToken')
 
   const handleClose = () => {
@@ -117,6 +119,7 @@ export default function User() {
 
 
   useEffect(()=>{
+    setLoading(true)
     fetch (process.env.REACT_APP_API_HOST+'/postMaster/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
@@ -124,8 +127,8 @@ export default function User() {
       return result.json()
     })
     .then(data=>{
-      console.log(data)
       setUSERLIST(data)
+      setLoading(false)
     })
     // setUSERLIST(TABLE_DATA)
   },[])
@@ -357,7 +360,7 @@ export default function User() {
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
+                        {loading?<Loader/>:<SearchNotFound searchQuery={filterName} />}
                       </TableCell>
                     </TableRow>
                   </TableBody>

@@ -53,7 +53,7 @@ export default function EditProfile() {
     data=>{
       if(data){
         setVal(data)
-        console.log(data)
+        // console.log(data)
         setFieldValue('email',data.email)
         setFieldValue('mobileNumber',data.mobileNumber)
         setFieldValue('username',data.username)
@@ -81,7 +81,7 @@ export default function EditProfile() {
         if(result.status===200){
           navigate('/app/profile', { replace: true });
         }
-        console.log(result.status)
+        // console.log(result.status)
       })
      
     }

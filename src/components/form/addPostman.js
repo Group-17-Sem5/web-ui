@@ -26,12 +26,13 @@ import { result } from 'lodash';
 import useEditData from 'src/hooks/useEditData';
 import { useParams } from 'react-router';
 import { id } from 'date-fns/locale';
-
+import AlertComponent from '../animate/AlertComponent';
 
 // ----------------------------------------------------------------------
 
 export default function AddPostmanForm() {
   const navigate = useNavigate();
+  const [success, setSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const [val,setVal] = useState()
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -79,9 +80,12 @@ export default function AddPostmanForm() {
       })
       .then(result=>{
         if(result.status===200){
-          navigate('/app/postman', { replace: true });
+          setSuccess(true)
+          setTimeout(()=>{
+            setSuccess(false)
+            navigate('/app/postman', { replace: true });
+          },3000)
         }
-        console.log(result)
       })
      
     }
@@ -95,6 +99,7 @@ export default function AddPostmanForm() {
 
   return (
     <FormikProvider value={formik}>
+      {success?<AlertComponent title={'Success!'}/>:null}
       <Form autoComplete="on"  onSubmit={handleSubmit}>
       <Box 
       sx={{

@@ -14,7 +14,7 @@ export default function App() {
    
   const {loginStatus} = useDetail()
   const isLoggedIn = localStorage.getItem('loginStatus')
-  console.log(loginStatus)
+  
   const Router = useRoutes(Routing(loginStatus));
 
   return (

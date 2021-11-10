@@ -50,7 +50,7 @@ export function DetailProvider({  children }) {
                     setToken(data.token)
                     setLoginStatus(true)
                     localStorage.setItem('loginStatus',true)
-                    console.log(data.token)
+                    // console.log(data.token)
                 }
                 return data;
             })
