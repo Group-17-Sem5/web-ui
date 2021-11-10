@@ -51,26 +51,26 @@ export default function Profile() {
     <Page title="Profile | Easy Mail">
       <Container>
         <Grid spacing={3} container  >
-            <Grid item xs={2} sx={{ p: 2, margin: 'auto', flexGrow: 1 }} style={{padding: '0 1.5rem 0 2.5rem',float:'left',textAlign:'center',display:'flex'}}>
+            <Grid item xs={12} md={2} sx={{ p: 2, margin: 'auto', flexGrow: 1 }} style={{padding: '0 1.5rem 0 2.5rem',float:'left',textAlign:'center',display:'flex'}}>
                 <Table>
                     <TableRow> <Icon icon={userOutlined} width={50} height={50} /></TableRow>
                     <TableRow>Change your profile details</TableRow>
                </Table>
             </Grid>
-            <Grid item xs={8} sx={{mr:15}}>
-                <Card sx={{boxShadow:5}}>
+            <Grid item md={9} xs={12} >
+                <Card sx={{boxShadow:5,mb:5}}>
                     <Box sx={{ p: 3, pb: 1 }} dir="ltr">
                         <EditProfile />
                     </Box>
                 </Card>
             </Grid>
-            <Grid item xs={2} sx={{ p: 2, margin: 'auto', flexGrow: 1 }} style={{padding: '0 1.5rem 0 2.5rem',float:'left',textAlign:'center',display:'flex'}}>
+            <Grid item xs={12} md={2} sx={{ p: 2, margin: 'auto', flexGrow: 1 }} style={{padding: '0 1.5rem 0 2.5rem',float:'left',textAlign:'center',display:'flex'}}>
                 <Table>
                     <TableRow> <Icon icon={settings2Fill} width={50} height={50} /></TableRow>
                     <TableRow>Change your password</TableRow>
                </Table>
             </Grid>
-            <Grid item xs={8} sx={{mr:15}} style={{marginTop:'30px'}}>
+            <Grid item md={9} xs={12}  style={{marginTop:'30px'}}>
                 <Card sx={{boxShadow:5}}>
                     <Box sx={{ p: 3, pb: 1 }} dir="ltr">
                         <ChangePassword />

@@ -49,7 +49,7 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', alignRight: false },
   // { id: 'password', label: 'Role', alignRight: false },
   { id: 'mobileNumber', label: 'Phone', alignRight: false },
-  { id: 'address', label: 'Address', alignRight: false },
+  { id: 'addressId', label: 'Address', alignRight: false },
 //   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
 ];
@@ -75,14 +75,14 @@ export default function X() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button
+          {/* <Button
             variant="contained"
             component={RouterLink}
             to="/app/addUser"
             startIcon={<Icon icon={plusFill} />}
           >
            Add User
-          </Button>
+          </Button> */}
         </Stack>
         <CustomTable
               TABLE_HEAD={TABLE_HEAD}

@@ -28,7 +28,7 @@ import { useDetail } from 'src/context/DetailContext';
 import { useState } from 'react';
 import { LoadingButton } from '@material-ui/lab';
 import MapContainer from 'src/components/Map';
-
+import UserDetails from './UserDetails';
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
@@ -43,14 +43,14 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
     const {id} = useParams()
     const {user} = useDetail()
     const {data:profile} = useFetch(url+id)
-    console.log(profile)
+    // console.log(profile)
     const navigate = useNavigate()
     const token = localStorage.getItem('adminToken')
     const [value,setValue] = useState('')
     const [isSubmitting,setIsSunmitting] = useState(false)
     const {data:postman} = useFetch('/postMaster/postman')
     const handleAssignPostman = () => {
-        console.log(value)
+        // console.log(value)
         fetch(process.env.REACT_APP_API_HOST+updatePostmanUrl+id,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token},
@@ -65,11 +65,16 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
           })
     }
 
-    const places =[
-        { id: "place1", location: { lat: 39.09366509575983, lng: -94.58751660204751 } ,title:'Place1'},
-        { id: "place2", location: { lat: 39.10894664788252, lng: -94.57926449532226 },title:'Place2' },
-        { id: "place3", location: { lat: 39.07602397235644, lng: -94.5184089401211 } ,title:'Place3'}
+    const {data:senderDetails} = useFetch('/postMaster/user/'+profile.senderID)
+    const {data:receiverDetails} = useFetch('/postMaster/user/'+profile.receiverID)
+console.log(parseInt('3'))
+    const senderPlaces =[
+        { id: senderDetails.addressId, location: { lat: parseInt(senderDetails.lat), lng: parseInt(senderDetails.lng) } ,title:senderDetails.address}
       ]
+
+    const receiverPlaces = [
+        { id: receiverDetails.addressId, location: { lat: parseInt(receiverDetails.lat), lng: parseInt(receiverDetails.lng) },title:receiverDetails.address },
+    ]
 
 
 
@@ -117,97 +122,21 @@ export default function View({title,url,updatePostmanUrl,navigateUrl}) {
         : null}
 
         <Grid container spacing={3}>
-            <Grid  xs={6} item>
-                <Card >
-                    <CardActionArea >
-                        
-                        <CardContent>
-                        <h2>Sender Details</h2><br/>
-                            <Grid container spacing={3} >
-                                <Grid item sm={4} >
-                                    <Typography  variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        Name
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={8} >
-                                    <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.senderID}
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={4} >
-                                    <Typography  variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        Mobile Number
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={8} >
-                                    <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.mobileNumber}
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={4} >
-                                    <Typography  variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        Address
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={8} >
-                                    <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.senderAddress || 'colombo'}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </CardActionArea>
-                   
-                </Card>
-            </Grid>
-            <Grid xs={6} item>
-                <Card >
-                    <CardActionArea >
-                    <CardContent>
-                        <h2>Receiver Details</h2><br/>
-                            <Grid container spacing={3} >
-                                <Grid item sm={4} >
-                                    <Typography  variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        Name
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={8} >
-                                    <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.receiverID}
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={4} >
-                                    <Typography  variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        Mobile Number
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={8} >
-                                    <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.receiverPhone}
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={4} >
-                                    <Typography  variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        Address
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={8} >
-                                    <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.receiverAddress || 'jaffna'}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            </Grid>
-            <Grid item  xs={6}>
+            <UserDetails userDetails={senderDetails} title={"Sender Details"} />
+            <UserDetails userDetails={receiverDetails} title={"Receiver Details"} />
+            <Grid item  xs={12} md={6}>
+                Sender Location
                <MapContainer
-                array= {places}
+                array= {senderPlaces}
+                isAdding={false}
                />
             </Grid>
-            <Grid item  xs={6}>
-                <MapContainer/>
+            <Grid item  xs={12} md={6}>
+                Receiver Location
+                <MapContainer
+                array= {receiverPlaces}
+                isAdding={false}
+                />
             </Grid>
         </Grid>
         

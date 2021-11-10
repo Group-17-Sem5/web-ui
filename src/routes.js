@@ -22,8 +22,8 @@ import Moneyorder from './pages/moneyorder/MoneyOrder';
 import AddCourier from './pages/courier/AddCourier';
 import Courier from './pages/courier/Courier';
 import Login from './pages/Login';
-import User from './pages/user/User'
-import AddUser from './pages/user/AddUser'
+import User from './pages/User/User'
+import AddUser from './pages/User/AddUser'
 import ViewPost from './pages/post/ViewPost';
 import ViewCourier from './pages/courier/ViewCourier';
 import ViewMoneyorder from './pages/moneyorder/ViewMoneyorder';

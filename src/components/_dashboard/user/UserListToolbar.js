@@ -81,7 +81,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
-            <Icon icon={roundFilterList} />
+            {/* <Icon icon={roundFilterList} /> */}
           </IconButton>
         </Tooltip>
       )}

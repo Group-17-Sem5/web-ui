@@ -184,7 +184,7 @@ export default function Profile() {
         </Stack>
 
         <Grid container spacing={3}>
-            <Grid  xs={3} item>
+            <Grid  md={3} xs={12} item>
                 <Card >
                     <CardActionArea >
                         <Grid 
@@ -231,7 +231,7 @@ export default function Profile() {
                     </CardActions>
                 </Card>
             </Grid>
-            <Grid xs={9} item>
+            <Grid xs={12} md={9} item>
                 <Card >
                     <CardActionArea >
                         <CardContent>

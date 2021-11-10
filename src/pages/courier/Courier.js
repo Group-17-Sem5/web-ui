@@ -44,7 +44,6 @@ import useFetch from 'src/hooks/useIntervalFetch';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'courierID', label: 'Courier ID', alignRight: false },
   { id: 'senderID', label: 'Sender', alignRight: false },
   { id: 'receiverID', label: 'Receiver', alignRight: false },
   // { id: 'addressID', label: 'Address', alignRight: false },
@@ -257,7 +256,7 @@ export default function MoneyOrder() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id,senderID,receiverID,lastAppearedBranchID,courierID,_id,postManID,weight,isAssigned,isDelivered,isCancelled } = row;
+                      const { id,senderID,receiverID,lastAppearedBranchID,_id,postManID,weight,isAssigned,isDelivered,isCancelled } = row;
                       const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
@@ -275,7 +274,6 @@ export default function MoneyOrder() {
                               onChange={(event) => handleClick(event, senderID)}
                             />
                           </TableCell>
-                          <TableCell align="left">{courierID ? courierID : 'Not included' }</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               {/* <Avatar alt={senderId} src={avatarUrl} /> */}

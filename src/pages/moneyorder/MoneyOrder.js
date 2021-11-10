@@ -49,6 +49,7 @@ const TABLE_HEAD = [
 //   { id: 'addressID', label: 'Address', alignRight: false },
   { id: 'receivingBranchID', label: 'Receiving Branch', alignRight: false },
   { id: 'amount', label: 'Money order', alignRight: false },
+  { id: 'specialCode', label: 'Special Code', alignRight: false },
   { id: '', label: 'Delivery Status', alignRight: false },
   { id: '', label: 'Cancel Status', alignRight: false },
   { id: '' }
@@ -256,7 +257,7 @@ export default function MoneyOrder() {
                 {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const {id,senderID,receiverID,receivingBranchID,state,_id,amount,isDelivered,isCancelled } = row;
+                      const {id,senderID,receiverID,specialCode,receivingBranchID,state,_id,amount,isDelivered,isCancelled } = row;
                       const isItemSelected = selected.indexOf(senderID) !== -1;
 
                       return (
@@ -286,6 +287,7 @@ export default function MoneyOrder() {
                           <TableCell align="left">{receivingBranchID}</TableCell>
                           {/* <TableCell align="left">{sourceBranchID}</TableCell> */}
                           <TableCell align="left">{amount} Rs</TableCell>
+                          <TableCell align="left">{specialCode}</TableCell>
                           <TableCell align="left">
                             { isDelivered ?
                               <Label

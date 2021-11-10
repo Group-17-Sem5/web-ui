@@ -85,7 +85,7 @@ const MapContainer = ({ array, isAdding, getLocation }) => {
           {
             array ?
             array.map(item => {
-                console.log(item)
+                // console.log(item)
               return (
               <Marker 
             //   visible={true}

@@ -106,7 +106,7 @@ export default function CustomTable({TABLE_HEAD,itemsUrl,delUrl,editRoute}) {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000'+itemsUrl,{
+    fetch (process.env.REACT_APP_API_HOST+itemsUrl,{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -274,12 +274,12 @@ export default function CustomTable({TABLE_HEAD,itemsUrl,delUrl,editRoute}) {
                     </TableCell>
                   ))}
 
-                          <TableCell align="right">
+                          {/* <TableCell align="right">
                             <UserMoreMenu delUrl={`"/postMaster/user/delete/"${_id}`} handleDelete={handleDelete} item={row} 
                             editUrl={`/app/editUser/${_id}`}
                             // viewUrl={`/app/profile/${_id}`}
                             />
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                       );
                     })}

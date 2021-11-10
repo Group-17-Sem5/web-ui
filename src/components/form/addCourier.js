@@ -36,7 +36,7 @@ export default function AddCourier() {
     senderID: Yup.string().required('Sender is required'),
     receiverID: Yup.string().required('Receiver is required'),
     weight: Yup.number().required('weight is required'),
-    courierID: Yup.string().required('CourierID is required'),
+    // courierID: Yup.string().required('CourierID is required'),
     lastAppearedBranchID: Yup.string().required('Branch is required'),
     // address: Yup.string().required('Address is required'),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
@@ -111,7 +111,7 @@ export default function AddCourier() {
       >
           
           <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={6}>
+          {/* <Grid item xs={12} sm={6} md={6}>
             <TextField
             fullWidth
             // autoComplete="username"
@@ -121,21 +121,22 @@ export default function AddCourier() {
             error={Boolean(touched.courierID && errors.courierID)}
             helperText={touched.courierID && errors.courierID}
           />
-            </Grid>
+            </Grid> */}
           <Grid item xs={12} sm={6} md={6}>
           <Autocomplete
-            
-            options={users}
-            onChange={(event, value) =>setFieldValue('senderID',value.userName)}
-            getOptionLabel={(option) => option.userName}
-            renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
-            name="senderID"
-            {...getFieldProps('senderID')}
-            error={Boolean(touched.senderID && errors.senderID)}
-            helperText={touched.senderID && errors.senderID}
-            value={values.senderID}
-            />}
-            />
+          
+          options={users}
+          onChange={(event, value) =>setFieldValue('senderID',value.userName)}
+          getOptionLabel={(option) => option.userName}
+          renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
+          name="senderID"
+          {...getFieldProps('senderID')}
+          error={Boolean(touched.senderID && errors.senderID)}
+          helperText={touched.senderID && errors.senderID}
+          value={values.senderID}
+          defaultvalue={users.find(v => v.userName==values.senderID)} 
+          />}
+          />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             
@@ -197,7 +198,7 @@ export default function AddCourier() {
             <Grid item xs={12} sm={6} md={6}>
             
             <Autocomplete
-            options={address.addresses}
+            options={address}
             onChange={(event, value) =>setFieldValue('addressID',value.addressID)}
             getOptionLabel={(option) => option.description}
             renderInput={(params) => <TextField {...params} label="Address (Only not receiver)" variant="outlined" 
