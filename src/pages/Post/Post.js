@@ -108,14 +108,18 @@ export default function User() {
   const [USERLIST,setUSERLIST] = useState([])
   const [filterstate,setFilterstate] = useState('');
   const [delItem,setDelItem] = useState(null)
+  const [canItem,setCanItem] = useState(null)
   const [modal,setModal] = useState(false)
+  const [canmodal,setCanModal] = useState(false)
   const [open, setOpen] = React.useState(false);
   const token = localStorage.getItem('adminToken')
 
   const handleClose = () => {
     setModal(false);
   };
-
+  const handleConfirm = () => {
+    setCanModal(false);
+  };
 
   useEffect(()=>{
     fetch ('http://localhost:5000/api/clerk/post/',{
@@ -136,6 +140,29 @@ export default function User() {
     // console.log(item)
     setDelItem(item)
     setModal(true)
+  }
+
+  const handleCancel = (item) => {
+    // console.log(item)
+    setCanItem(item)
+    setCanModal(true)
+  }
+
+  const handleConfirmCancel = () => { 
+    const conApiURL = "clerk/post/confirm/"+ canItem._id;
+    setCanItem(null)
+    // setIsDelLoading(true)
+    fetch( 'http://localhost:5000/api/'+conApiURL, {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
+    }).then( () => {
+      window.location.reload();
+      //setUSERLIST(USERLIST.filter(i=>i!==canItem))
+        // setIsDelLoading(false)
+        setCanModal(false)
+        console.log('success')
+    } )
+    .catch( console.log )
   }
 
   const handleConfirmDelete = () => { 
@@ -363,6 +390,7 @@ export default function User() {
                           <TableCell align="right">
                             <UserMoreMenu delUrl={`clerk/post/delete/${_id}`} handleDelete={handleDelete} item={row} 
                             editUrl={`/dashboard/editPost/${_id}`}
+                            conUrl={`clerk/post/confirm/${_id}`} handleCancel={handleCancel} item={row} 
                             //viewUrl={`/dashboard/viewpost/${_id}`}
                             />
                           </TableCell>
@@ -414,6 +442,25 @@ export default function User() {
             </Button>
             <Button autoFocus onClick={handleConfirmDelete} color="error">
               Delete
+            </Button>
+          </DialogActions>
+      </Dialog>
+
+      <Dialog onClose={handleConfirm} aria-labelledby="customized-dialog-title" open={canmodal}>
+          <DialogTitle id="customized-dialog-title" onClose={handleConfirm} color="primary">
+            Confirm Post
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Are you sure? You want to Confirm Post
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleConfirm} color="error">
+              Cancel
+            </Button>
+            <Button autoFocus onClick={handleConfirmCancel} color="success">
+              Confirm
             </Button>
           </DialogActions>
       </Dialog>

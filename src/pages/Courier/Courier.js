@@ -111,14 +111,18 @@ export default function MoneyOrder() {
   const [USERLIST,setUSERLIST] = useState([])
   const [filterStatus,setFilterStatus] = useState('');
   const [delItem,setDelItem] = useState(null)
+  const [canItem,setCanItem] = useState(null)
   const [modal,setModal] = useState(false)
+  const [canmodal,setCanModal] = useState(false)
   const [open, setOpen] = React.useState(false);
   const token = localStorage.getItem('adminToken')
 
   const handleClose = () => {
     setModal(false);
   };
-
+  const handleConfirm = () => {
+    setCanModal(false);
+  };
 
   useEffect(()=>{
     fetch (process.env.REACT_APP_API_HOST+'/clerk/courier/',{
@@ -141,6 +145,12 @@ export default function MoneyOrder() {
     setModal(true)
   }
 
+  const handleCancel = (item) => {
+    // console.log(item)
+    setCanItem(item)
+    setCanModal(true)
+  }
+
   const handleConfirmDelete = () => { 
     const delApiURL = "/clerk/courier/delete/"+ delItem._id;
     setDelItem(null)
@@ -159,6 +169,22 @@ export default function MoneyOrder() {
 }
 
 
+const handleConfirmCancel = () => { 
+  const conApiURL = "clerk/courier/confirm/"+ canItem._id;
+  setCanItem(null)
+  // setIsDelLoading(true)
+  fetch( 'http://localhost:5000/api/'+conApiURL, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
+  }).then( () => {
+    window.location.reload();
+    //setUSERLIST(USERLIST.filter(i=>i!==canItem))
+      // setIsDelLoading(false)
+      setCanModal(false)
+      console.log('success')
+  } )
+  .catch( console.log )
+}
 
   // const {data:USERLISTT} = useFetch('http://localhost:5000/postMaster/postman/')
 
@@ -299,7 +325,7 @@ export default function MoneyOrder() {
                           <TableCell align="left">{receivingBranchID}</TableCell>
                          
                           <TableCell align="left">
-                            { isAssigned ?
+                            { postManID ?
                               <Label
                               variant="ghost"
                               color='success'
@@ -354,6 +380,7 @@ export default function MoneyOrder() {
                           <TableCell align="right">
                             <UserMoreMenu delUrl={`clerk/courier/delete/${_id}`} handleDelete={handleDelete} item={row} 
                               editUrl={`/dashboard/editCourier/${_id}`}
+                              conUrl={`clerk/courier/confirm/${_id}`} handleCancel={handleCancel} item={row} 
                              // viewUrl={`/app/viewCourier/${_id}`}
                             />
                           </TableCell>
@@ -405,6 +432,25 @@ export default function MoneyOrder() {
             </Button>
             <Button autoFocus onClick={handleConfirmDelete} color="error">
               Delete
+            </Button>
+          </DialogActions>
+      </Dialog>
+
+      <Dialog onClose={handleConfirm} aria-labelledby="customized-dialog-title" open={canmodal}>
+          <DialogTitle id="customized-dialog-title" onClose={handleConfirm} color="primary">
+            Confirm Courier
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Are you sure? You want to Confirm Courier
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleConfirm} color="error">
+              Cancel
+            </Button>
+            <Button autoFocus onClick={handleConfirmCancel} color="success">
+              Confirm
             </Button>
           </DialogActions>
       </Dialog>

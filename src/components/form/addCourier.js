@@ -37,7 +37,7 @@ export default function AddCourier() {
     receiverID: Yup.string().required('Receiver is required'),
     postManID: Yup.string(),
     weight: Yup.number().required('weight is required'),
-    courierID: Yup.string().required('CourierID is required'),
+    //courierID: Yup.string().required('CourierID is required'),
     sourceBranchID: Yup.string().required('Branch is required'),
     lastAppearedBranchID: Yup.string().required('Branch is required'),
     receivingBranchID: Yup.string().required('Branch is required'),
