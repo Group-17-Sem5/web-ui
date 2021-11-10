@@ -116,7 +116,7 @@ export default function MoneyOrder() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/postMaster/post/',{
+    fetch ('http://localhost:5000/api/postMaster/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -140,7 +140,7 @@ export default function MoneyOrder() {
     const delApiURL = "postMaster/post/delete"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/'+delApiURL, {
+    fetch( 'http://localhost:5000/api/'+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {

@@ -173,7 +173,7 @@ console.log("ChartData",ChartData);
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits />
-          </Grid>*/}
+          </Grid>
          
           <Grid item xs={12} md={6} lg={8}>
             <LineChart 
@@ -263,6 +263,9 @@ console.log("ChartData",ChartData);
           <Grid item xs={12} md={6} lg={8}>
             <AppTasks />
           </Grid> */}
+          <Grid item xs={5} md={3} lg={15}>
+            <AppTrafficBySite />
+          </Grid>
         </Grid>
       </Container>
     </Page>

@@ -41,7 +41,7 @@ export default function AppEmployees() {
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/clerk/postman/',{
+    fetch ('http://localhost:5000/api/clerk/postman/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{

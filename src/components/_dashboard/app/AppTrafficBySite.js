@@ -46,8 +46,8 @@ function SiteItem({ site }) {
 
   return (
     <Grid item xs={6}>
-      <Paper variant="outlined" sx={{ py: 2.5, textAlign: 'center' }}>
-        <Box sx={{ mb: 0.5 }}>{icon}</Box>
+      <Paper variant="outlined" sx={{ py: -5, textAlign: 'center' }}>
+        <Box sx={{ mb: -2 }}>{icon}</Box>
         {/*<Typography variant="h6">{fShortenNumber(value)}</Typography>*/}
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {name}

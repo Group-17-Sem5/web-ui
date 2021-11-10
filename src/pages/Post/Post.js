@@ -118,7 +118,7 @@ export default function User() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/clerk/post/',{
+    fetch ('http://localhost:5000/api/clerk/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -143,7 +143,7 @@ export default function User() {
     console.log(delItem._id)
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/'+delApiURL, {
+    fetch( 'http://localhost:5000/api/'+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {

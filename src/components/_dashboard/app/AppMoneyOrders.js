@@ -41,7 +41,7 @@ export default function AppMoneyOrders() {
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/clerk/moneyorder/',{
+    fetch ('http://localhost:5000/api/clerk/moneyorder/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{

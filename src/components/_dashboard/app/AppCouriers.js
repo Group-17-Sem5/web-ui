@@ -42,7 +42,7 @@ export default function AppCouriers() {
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/clerk/courier/',{
+    fetch ('http://localhost:5000/api/clerk/courier/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{

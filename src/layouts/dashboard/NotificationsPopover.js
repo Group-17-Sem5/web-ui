@@ -36,8 +36,8 @@ import MenuPopover from '../../components/MenuPopover';
 const NOTIFICATIONS = [
   {
     id: faker.datatype.uuid(),
-    title: 'Your order is placed',
-    description: 'waiting for shipping',
+    title: 'Money order is placed',
+    description: 'waiting for confirmation',
     avatar: null,
     type: 'order_placed',
     createdAt: set(new Date(), { hours: 10, minutes: 30 }),
@@ -46,7 +46,7 @@ const NOTIFICATIONS = [
   {
     id: faker.datatype.uuid(),
     title: faker.name.findName(),
-    description: 'answered to your comment on the Minimal',
+    description: 'has a complain',
     avatar: mockImgAvatar(2),
     type: 'friend_interactive',
     createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
@@ -72,8 +72,8 @@ const NOTIFICATIONS = [
   },
   {
     id: faker.datatype.uuid(),
-    title: 'Delivery processing',
-    description: 'Your order is being shipped',
+    title: 'Courier is not arrived',
+    description: 'Your courier is not dropped',
     avatar: null,
     type: 'order_shipped',
     createdAt: sub(new Date(), { days: 3, hours: 3, minutes: 30 }),

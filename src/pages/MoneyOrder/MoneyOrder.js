@@ -126,7 +126,7 @@ export default function MoneyOrder() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/clerk/moneyorder/',{
+    fetch ('http://localhost:5000/api/clerk/moneyorder/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -155,7 +155,7 @@ export default function MoneyOrder() {
     const delApiURL = "clerk/moneyorder/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/'+delApiURL, {
+    fetch( 'http://localhost:5000/api/'+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {
@@ -172,7 +172,7 @@ const handleConfirmCancel = () => {
   const conApiURL = "clerk/moneyorder/confirm/"+ canItem._id;
   setCanItem(null)
   // setIsDelLoading(true)
-  fetch( 'http://localhost:5000/'+conApiURL, {
+  fetch( 'http://localhost:5000/api/'+conApiURL, {
       method: 'post',
       headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
   }).then( () => {

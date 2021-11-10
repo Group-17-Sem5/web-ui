@@ -60,7 +60,7 @@ export default function Profile() {
     }
 
     useEffect(()=>{
-      fetch ('http://localhost:5000/clerk/post/count',{
+      fetch ('http://localhost:5000/api/clerk/post/count',{
         headers: { "Authorization": "Bearer " + token},
       })
       .then(result=>{

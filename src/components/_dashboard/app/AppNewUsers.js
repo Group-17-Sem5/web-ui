@@ -42,7 +42,7 @@ export default function AppNewUsers() {
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/clerk/user/',{
+    fetch ('http://localhost:5000/api/clerk/user/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{

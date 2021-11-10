@@ -44,7 +44,7 @@ export default function AppWeeklySales() {
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/clerk/post/',{
+    fetch ('http://localhost:5000/api/clerk/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -65,7 +65,7 @@ export default function AppWeeklySales() {
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(LIST.length)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Weekly Posts
+        Posts
       </Typography>
     </RootStyle>
   );
