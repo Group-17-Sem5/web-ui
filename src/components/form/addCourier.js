@@ -37,7 +37,12 @@ export default function AddCourier() {
   const postSchema = Yup.object().shape({
     senderID: Yup.string().required('Sender is required'),
     receiverID: Yup.string().required('Receiver is required'),
-    weight: Yup.number().required('weight is required'),
+    weight: Yup.number().required('weight is required')
+    .test(
+      'Is positive?', 
+      'The weight must be positive value', 
+      (value) => value >= 0
+    ),
     // courierID: Yup.string().required('CourierID is required'),
     lastAppearedBranchID: Yup.string().required('Branch is required'),
     // address: Yup.string().required('Address is required'),
@@ -133,7 +138,7 @@ export default function AddCourier() {
           <Autocomplete
           
           options={users}
-          onChange={(event, value) =>setFieldValue('senderID',value.userName)}
+          onChange={(event, value) =>setFieldValue('senderID',value?.userName)}
           getOptionLabel={(option) => option.userName}
           renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
           name="senderID"
@@ -149,7 +154,7 @@ export default function AddCourier() {
             
             <Autocomplete
             options={users}
-            onChange={(event, value) =>setFieldValue('receiverID',value.userName)}
+            onChange={(event, value) =>setFieldValue('receiverID',value?.userName)}
             getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Receiver" variant="outlined" 
             {...getFieldProps('receiverID')}
@@ -164,7 +169,7 @@ export default function AddCourier() {
             <Autocomplete
            
             options={postman}
-            onChange={(event, value) =>setFieldValue('postManID',value.username)}
+            onChange={(event, value) =>setFieldValue('postManID',value?.username)}
             getOptionLabel={(option) => option.username}
             renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
             {...getFieldProps('postManID')}
@@ -179,7 +184,7 @@ export default function AddCourier() {
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value.branchID)}
+            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value?.branchID)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
             {...getFieldProps('lastAppearedBranchID')}
             name="lastAppearedBranchID"
@@ -193,7 +198,7 @@ export default function AddCourier() {
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('receivingBranch',value.branchID)}
+            onChange={(event, value) =>setFieldValue('receivingBranch',value?.branchID)}
             renderInput={(params) => <TextField {...params} label="ReceivingBranch Branch" variant="outlined" 
             {...getFieldProps('receivingBranch')}
             name="receivingBranch"
@@ -204,9 +209,9 @@ export default function AddCourier() {
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             
-            <Autocomplete
+            {!values.receiverID && <Autocomplete
             options={address}
-            onChange={(event, value) =>setFieldValue('addressID',value.addressID)}
+            onChange={(event, value) =>setFieldValue('addressID',value?.addressID)}
             getOptionLabel={(option) => option.description}
             renderInput={(params) => <TextField {...params} label="Address (Only not receiver)" variant="outlined" 
             {...getFieldProps('addressID')}
@@ -214,7 +219,8 @@ export default function AddCourier() {
             error={Boolean(touched.addressID && errors.addressID)}
             helperText={touched.addressID && errors.addressID}
             />}
-            />
+            />}
+
            </Grid>
             <Grid item xs={12} sm={6} md={6}>
             <TextField

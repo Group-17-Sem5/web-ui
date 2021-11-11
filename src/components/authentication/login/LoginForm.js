@@ -53,7 +53,10 @@ export default function LoginForm() {
                 setError(data.error)
                 setLoading(false)
             }
-        }).catch(() => setError({error: true, email: true, password: true, message: 'Failed to login'}));
+        }).catch(() => 
+          setError({error: true, email: true, password: true, message: 'Failed to login'}),
+          // setLoading(false)
+          );
 
       
     }
@@ -71,7 +74,7 @@ export default function LoginForm() {
       {error.message && <Alert severity="error">{error.message}</Alert>}
       <br/>
         <Stack spacing={3}>
-          <label htmlFor="Email address">Email</label>
+          
           <TextField
             data-testid="email-login"
             placeholder="Email address"

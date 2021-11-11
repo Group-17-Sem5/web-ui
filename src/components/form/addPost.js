@@ -123,7 +123,7 @@ export default function AddPostmanForm() {
             data-testid="autocomplete"
             placeholder="sender"
             options={users}
-            onChange={(event, value) =>setFieldValue('senderID',value.userName)}
+            onChange={(event, value) =>setFieldValue('senderID',value?.userName)}
             getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
             name="senderID"
@@ -141,7 +141,7 @@ export default function AddPostmanForm() {
             <Autocomplete
             placeholder="receiver"
             options={users}
-            onChange={(event, value) =>setFieldValue('receiverID',value.userName)}
+            onChange={(event, value) =>setFieldValue('receiverID',value?.userName)}
             getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Receiver" variant="outlined" 
             {...getFieldProps('receiverID')}
@@ -155,7 +155,7 @@ export default function AddPostmanForm() {
             <Autocomplete
            
             options={postman}
-            onChange={(event, value) =>setFieldValue('postManID',value.username)}
+            onChange={(event, value) =>setFieldValue('postManID',value?.username)}
             getOptionLabel={(option) => option.username}
             renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
             {...getFieldProps('postManID')}
@@ -170,7 +170,7 @@ export default function AddPostmanForm() {
             placeholder="LastAppeared Branch"
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value.branchID)}
+            onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value?.branchID)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
             {...getFieldProps('lastAppearedBranchID')}
             name="lastAppearedBranchID"
@@ -184,7 +184,7 @@ export default function AddPostmanForm() {
             placeholder="Receiving Branch"
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('receivingBranchID',value.branchID)}
+            onChange={(event, value) =>setFieldValue('receivingBranchID',value?.branchID)}
             renderInput={(params) => <TextField {...params} label="Receiving Branch" variant="outlined" 
             {...getFieldProps('receivingBranchID')}
             name="receivingBranchID"
@@ -195,9 +195,9 @@ export default function AddPostmanForm() {
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             
-            <Autocomplete
+            {!values.receiverID &&<Autocomplete
             options={address}
-            onChange={(event, value) =>setFieldValue('addressID',value.addressID)}
+            onChange={(event, value) =>setFieldValue('addressID',value?.addressID)}
             getOptionLabel={(option) => option.description}
             renderInput={(params) => <TextField {...params} label="Address (Only not receiver)" variant="outlined" 
             {...getFieldProps('addressID')}
@@ -205,7 +205,7 @@ export default function AddPostmanForm() {
             error={Boolean(touched.addressID && errors.addressID)}
             helperText={touched.addressID && errors.addressID}
             />}
-            />
+            />}
            </Grid>
             </Grid>
             

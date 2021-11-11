@@ -37,7 +37,12 @@ export default function AddCourier() {
   const postSchema = Yup.object().shape({
     senderID: Yup.string().required('Sender is required'),
     receiverID: Yup.string().required('Receiver is required'),
-    amount: Yup.number().required('weight is required'),
+    amount: Yup.number().required('weight is required')
+    .test(
+      'Is positive?', 
+      'The amount must be positive value', 
+      (value) => value >= 0
+    ),
     specialCode: Yup.string().required('Specialcode is required'),
     // receivingBranchID: Yup.string().required('Branch is required'),
     // address: Yup.string().required('Address is required'),
@@ -119,7 +124,7 @@ export default function AddCourier() {
           <Autocomplete
             
             options={users}
-            onChange={(event, value) =>setFieldValue('senderID',value.userName)}
+            onChange={(event, value) =>setFieldValue('senderID',value?.userName)}
             getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Sender" variant="outlined" 
             name="senderID"
@@ -134,7 +139,7 @@ export default function AddCourier() {
             
             <Autocomplete
             options={users}
-            onChange={(event, value) =>setFieldValue('receiverID',value.userName)}
+            onChange={(event, value) =>setFieldValue('receiverID',value?.userName)}
             getOptionLabel={(option) => option.userName}
             renderInput={(params) => <TextField {...params} label="Receiver" variant="outlined" 
             {...getFieldProps('receiverID')}
@@ -149,7 +154,7 @@ export default function AddCourier() {
             <Autocomplete
            
             options={postman}
-            onChange={(event, value) =>setFieldValue('postManID',value.username)}
+            onChange={(event, value) =>setFieldValue('postManID',value?.username)}
             getOptionLabel={(option) => option.username}
             renderInput={(params) => <TextField {...params} label="Postman" variant="outlined" 
             {...getFieldProps('postManID')}
@@ -164,7 +169,7 @@ export default function AddCourier() {
             
             options={branches}
             getOptionLabel={(option) => option.branchName}
-            onChange={(event, value) =>setFieldValue('receivingBranchID',value.branchID)}
+            onChange={(event, value) =>setFieldValue('receivingBranchID',value?.branchID)}
             renderInput={(params) => <TextField {...params} label="LastAppeared Branch" variant="outlined" 
             {...getFieldProps('receivingBranchID')}
             name="receivingBranchID"
