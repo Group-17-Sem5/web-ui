@@ -103,7 +103,7 @@ export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
         },
         export: {
           csv: {
-            filename: undefined,
+            filename: (title+new Date().toDateString()),
             columnDelimiter: ',',
             headerCategory: 'category',
             headerValue: 'value',
@@ -112,7 +112,7 @@ export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
             }
           },
           svg: {
-            filename: undefined,
+            filename: (title+new Date().toDateString()),
           },
           png: {
             filename: (title+new Date().toDateString()),
