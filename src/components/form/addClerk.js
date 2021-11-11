@@ -76,7 +76,7 @@ export default function AddPostmanForm() {
           setTimeout(()=>{
             setSuccess(false)
             navigate('/app/clerk', { replace: true });
-          },2000)
+          },1000)
         }
       })
     }

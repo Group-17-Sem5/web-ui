@@ -91,6 +91,7 @@ export default function ChangePassword() {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
           <TextField
+            placeholder="Enter value"
             fullWidth
             type={showPassword ? 'text' : 'password'}
             label="Password"
@@ -110,6 +111,7 @@ export default function ChangePassword() {
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
           <TextField
+            placeholder="Confirm Password"
             fullWidth
             // autoComplete="username"
             type={showConPassword ? 'text' : 'password'}

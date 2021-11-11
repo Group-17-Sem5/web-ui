@@ -94,7 +94,7 @@ export default function AddPostmanForm() {
           setTimeout(()=>{
             setSuccess(false)
             navigate('/app/viewPost', { replace: true });
-          },3000)
+          },1000)
         }
       })
       

@@ -89,7 +89,7 @@ export default function AddCourier() {
           setTimeout(()=>{
             setSuccess(false)
             navigate('/app/viewMoneyOrders', { replace: true });
-          },3000)
+          },1000)
          
         }
        

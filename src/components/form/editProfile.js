@@ -104,6 +104,7 @@ export default function EditProfile() {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
           <TextField
+            placeholder="Username"
             fullWidth
             type="text"
             label="Username"
@@ -114,6 +115,7 @@ export default function EditProfile() {
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
           <TextField
+            placeholder="Email address"
             fullWidth
             // autoComplete="username"
             type="email"
@@ -125,6 +127,7 @@ export default function EditProfile() {
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
           <TextField
+            placeholder="Phone Number"
             fullWidth
             type="number"
             label="Phone Number"

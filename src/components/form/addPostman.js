@@ -84,7 +84,7 @@ export default function AddPostmanForm() {
           setTimeout(()=>{
             setSuccess(false)
             navigate('/app/postman', { replace: true });
-          },3000)
+          },1000)
         }
       })
      

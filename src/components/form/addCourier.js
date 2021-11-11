@@ -93,7 +93,7 @@ export default function AddCourier() {
           setTimeout(()=>{
             setSuccess(false)
             navigate('/app/viewCourier', { replace: true });
-          },3000)
+          },1000)
          
         }
       })
