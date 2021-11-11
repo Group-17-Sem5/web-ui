@@ -87,23 +87,57 @@ export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
   const chartOptions = merge(BaseOptionChart(), {
     // stroke: { width: [0, 2, 3] },
     chart: {
-      zoom: {
-          enabled: true,
-          type: 'x',  
-          autoScaleYaxis: false,  
-          zoomedArea: {
-            fill: {
-              color: '#90CAF9',
-              opacity: 0.4
-            },
-            stroke: {
-              color: '#0D47A1',
-              opacity: 0.4,
-              width: 1
+      toolbar: {
+        show: true,
+        offsetX: 0,
+        offsetY: 0,
+        tools: {
+          download: true,
+          selection: true,
+          zoom: true,
+          zoomin: true,
+          zoomout: true,
+          pan: true,
+          reset: true | '<img src="/static/icons/reset.png" width="20">',
+          customIcons: []
+        },
+        export: {
+          csv: {
+            filename: undefined,
+            columnDelimiter: ',',
+            headerCategory: 'category',
+            headerValue: 'value',
+            dateFormatter(timestamp) {
+              return new Date(timestamp).toDateString()
             }
+          },
+          svg: {
+            filename: undefined,
+          },
+          png: {
+            filename: (title+new Date().toDateString()),
           }
-      }
+        },
+        autoSelected: 'zoom' 
+      },
+      zoom: {
+        enabled: true,
+        type: 'x',  
+        autoScaleYaxis: false,  
+        zoomedArea: {
+          fill: {
+            color: '#90CAF9',
+            opacity: 0.4
+          },
+          stroke: {
+            color: '#0D47A1',
+            opacity: 0.4,
+            width: 1
+          }
+        }
+    }
   },
+
     plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
     fill: { type: ['solid', 'solid', 'solid'] },
     labels: label.length>0?label : labels,

@@ -2,6 +2,7 @@
 import Routing from './routes';
 // theme
 import ThemeConfig from './theme';
+import './App.css';
 // components
 import ScrollToTop from './components/ScrollToTop';
 import { useEffect } from 'react';

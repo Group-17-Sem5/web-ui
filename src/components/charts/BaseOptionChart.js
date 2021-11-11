@@ -44,7 +44,14 @@ const useStyles = makeStyles((theme) =>
       '.apexcharts-legend-text': {
         lineHeight: '18px',
         textTransform: 'capitalize'
-      }
+      },
+      '.apexcharts-toolbar' :{
+        position: 'absolute',
+        top:'100px'
+    },
+    '.apexcharts-legend apexcharts-align-right position-top':{
+      
+    }
     }
   })
 );
@@ -153,7 +160,7 @@ export default function BaseOptionChart() {
       show: true,
       fontSize: 13,
       position: 'top',
-      horizontalAlign: 'right',
+      horizontalAlign: 'left',
       markers: { radius: 12 },
       itemMargin: { horizontal: 12 },
       labels: {
