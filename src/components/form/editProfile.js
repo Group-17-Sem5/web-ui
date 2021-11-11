@@ -134,19 +134,6 @@ export default function EditProfile() {
           />
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
-          {/* <TextField
-          // component="span"
-          //   style={{display:'inline'}}
-          fullWidth
-            select
-            label="Branch Name"
-            {...getFieldProps('branch')}
-            error={Boolean(touched.branch && errors.branch)}
-            helperText={touched.branch && errors.branch}
-          >
-            <MenuItem value="colombo">Colombo</MenuItem>
-            <MenuItem value="Jaffna">Jaffna</MenuItem>
-          </TextField> */}
           
          
             </Grid>
@@ -154,57 +141,8 @@ export default function EditProfile() {
       
          
         
-          {/* <TextField
-            fullWidth
-            type="text"
-            label="Last Name"
-            {...getFieldProps('lastName')}
-            error={Boolean(touched.lastName && errors.lastName)}
-            helperText={touched.lastName && errors.lastName}
-          /> */}
-          
-         
-          
-          
-          
-          
 
-  
-          {/* <TextField
-            fullWidth
-            autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
-            label="Password"
-            {...getFieldProps('password')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword} edge="end">
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
-          /> */}
-       
-
-        {/* <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <FormControlLabel
-            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label="Remember me"
-          />
-
-          <Link component={RouterLink} variant="subtitle2" to="#">
-            Forgot password?
-          </Link>
-        </Stack> */}
-  
-        
-        
-
-<LoadingButton
+        <LoadingButton
           fullWidth
           style={{width:'100%'}}
           size="large"

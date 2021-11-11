@@ -120,7 +120,8 @@ export default function AddPostmanForm() {
           <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
           <Autocomplete
-          
+            data-testid="autocomplete"
+            placeholder="sender"
             options={users}
             onChange={(event, value) =>setFieldValue('senderID',value.userName)}
             getOptionLabel={(option) => option.userName}
@@ -138,6 +139,7 @@ export default function AddPostmanForm() {
             <Grid item xs={12} sm={6} md={6}>
             
             <Autocomplete
+            placeholder="receiver"
             options={users}
             onChange={(event, value) =>setFieldValue('receiverID',value.userName)}
             getOptionLabel={(option) => option.userName}
@@ -165,7 +167,7 @@ export default function AddPostmanForm() {
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             <Autocomplete
-            
+            placeholder="LastAppeared Branch"
             options={branches}
             getOptionLabel={(option) => option.branchName}
             onChange={(event, value) =>setFieldValue('lastAppearedBranchID',value.branchID)}
@@ -179,11 +181,11 @@ export default function AddPostmanForm() {
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
             <Autocomplete
-            
+            placeholder="Receiving Branch"
             options={branches}
             getOptionLabel={(option) => option.branchName}
             onChange={(event, value) =>setFieldValue('receivingBranchID',value.branchID)}
-            renderInput={(params) => <TextField {...params} label="ReceivingBranch Branch" variant="outlined" 
+            renderInput={(params) => <TextField {...params} label="Receiving Branch" variant="outlined" 
             {...getFieldProps('receivingBranchID')}
             name="receivingBranchID"
             error={Boolean(touched.receivingBranchID && errors.receivingBranchID)}
@@ -206,18 +208,7 @@ export default function AddPostmanForm() {
             />
            </Grid>
             </Grid>
-            {/* <Autocomplete
-            options={top100Films}
-            onChange={(event, value) =>setFieldValue('address',value.title)}
-            getOptionLabel={(option) => option.title}
-            renderInput={(params) => <TextField {...params} label="Address" variant="outlined" 
-            name="address"
-            error={Boolean(touched.address && errors.address)}
-            helperText={touched.address && errors.address}
-            />}
-            /> */}
-     
-        
+            
      
         <LoadingButton
           fullWidth
@@ -226,6 +217,7 @@ export default function AddPostmanForm() {
           type="submit"
           variant="contained"
           loading={isSubmitting}
+          disabled={!(formik.isValid && formik.dirty)}
         >
           Save Details
         </LoadingButton>

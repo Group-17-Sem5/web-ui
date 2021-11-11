@@ -167,6 +167,7 @@ export default function AddPostmanForm() {
           variant="contained"
           loading={isSubmitting}
           disabled={!formik.dirty}
+          disabled={!(formik.isValid && formik.dirty)}
         >
           Save Details
         </LoadingButton></Box>

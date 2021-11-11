@@ -141,7 +141,7 @@ export default function AddPostmanForm() {
           size="large"
           type="submit"
           variant="contained"
-          disabled={!formik.dirty}
+          disabled={!(formik.isValid && formik.dirty)}
           loading={isSubmitting}
         >
           Save Details

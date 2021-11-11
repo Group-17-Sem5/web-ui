@@ -56,7 +56,7 @@ describe("Login page", () => {
           userEvent.type(number, "0776544342");
           expect(number.value).toBe("776544342")
 
-          const area = screen.getByPlaceholderText(/phone number/i)
+          const area = screen.getByPlaceholderText(/area/i)
           userEvent.type(area, "jaffna road");
           expect(area.value).toBe("jaffna road")
           

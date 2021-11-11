@@ -96,38 +96,14 @@ export default function Profile() {
         data: []
       }
     ]
-    // const ChartDataMoneyorder = [
-    //   {
-    //     name: 'Delivered',
-    //     type: 'line',
-    //     // column
-    //     data: []
-    //   },
-    //   {
-    //     name: 'Total',
-    //     type: 'line',
-    //     // area
-    //     data: []
-    //   },
-    //   {
-    //     name: 'Cancelled',
-    //     type: 'line',
-    //     data: []
-    //   }
-    // ]
+    
     const Labels = []
     const LabelsPost = []
-    // const LabelsMoneyorder = []
-    // const ChartPieDataCourier = []
-    // const ChartPieDataPost = []
-    // const ChartPieDataMoneyorder = []
+    
   
     const {data:courierCount} = useFetch('/postMaster/courier/count/'+postmanID)
     const {data:postCount} = useFetch('/postMaster/post/count/'+postmanID)
-    // const {data:moneyorderrCount} = useFetch('/postMaster/moneyorder/count/'+postmanID)
-    // const {data:courierAllCount} = useFetch('/postMaster/courier/allCount')
-    // const {data:postAllCount} = useFetch('/postMaster/post/allCount')
-    // const {data:moneyorderAllCount} = useFetch('/postMaster/moneyorder/allCount')
+    
   
     courierCount.map((count,i)=>{
       ChartData[0].data.push(count.deliveredcount)
@@ -143,35 +119,7 @@ export default function Profile() {
       LabelsPost.push(count.date)
     })
     
-    // moneyorderrCount.map((count,i)=>{
-    //   ChartDataMoneyorder[0].data.push(count.deliveredcount)
-    //   ChartDataMoneyorder[1].data.push(count.totalcount)
-    //   ChartDataMoneyorder[2].data.push(count.cancelledcount)
-    //   LabelsMoneyorder.push(count.date)
-    // })
-  
-    // courierAllCount.map((count,i)=>{
-    //   ChartPieDataCourier.push(count.delivered)
-    //   ChartPieDataCourier.push(count.assigned)
-    //   ChartPieDataCourier.push(count.cancelled)
-    // })
-  
-    // postAllCount.map((count,i)=>{
-    //   ChartPieDataPost.push(count.delivered)
-    //   ChartPieDataPost.push(count.assigned)
-    //   ChartPieDataPost.push(count.cancelled)
-    // })
-  
-    // moneyorderAllCount.map((count,i)=>{
-    //   ChartPieDataMoneyorder.push(count.delivered)
-    //   ChartPieDataMoneyorder.push(count.assigned)
-    //   ChartPieDataMoneyorder.push(count.cancelled)
-    // })
     
-    
-  // console.log(ChartDataMoneyorder)
-  // console.log(ChartDataPost)
-  // console.log(ChartData);
 
 
   return (
