@@ -38,7 +38,7 @@ export default function AddPostmanForm() {
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const postmanSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    mobileNumber: Yup.string().required('Mobile number is required').matches(phoneRegExp, 'Mobile number is not valid'),
+    mobileNumber: Yup.string().required('Mobile number is required').matches(phoneRegExp, 'Mobile number is not valid').min(9,'not valid').max(10,'not valid'),
     // branch: Yup.string().required('Branch name is required'),
     area: Yup.string().required('Area is required'),
     username: Yup.string().required('First Name is required').min(2,'Too short').max(50,'Too long'),
