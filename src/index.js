@@ -15,9 +15,9 @@ import {DetailProvider} from 'src/context/DetailContext'
 ReactDOM.render(
   <DetailProvider>
   <HelmetProvider>
-    <HashRouter>
+    <BrowserRouter>
       <App />
-    </HashRouter>
+    </BrowserRouter>
   </HelmetProvider>
   </DetailProvider>,
   document.getElementById('root')
