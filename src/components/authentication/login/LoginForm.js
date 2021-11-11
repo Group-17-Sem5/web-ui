@@ -71,8 +71,10 @@ export default function LoginForm() {
       {error.message && <Alert severity="error">{error.message}</Alert>}
       <br/>
         <Stack spacing={3}>
-          
+          <label htmlFor="Email address">Email</label>
           <TextField
+            data-testid="email-login"
+            placeholder="Email address"
             fullWidth
             autoComplete="username"
             type="email"
@@ -83,6 +85,8 @@ export default function LoginForm() {
           />
 
           <TextField
+            data-testid="password-login"
+            placeholder="password"
             fullWidth
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
@@ -119,6 +123,7 @@ export default function LoginForm() {
           type="submit"
           variant="contained"
           loading={loading}
+          disabled={!formik.dirty}
         >
           Login
         </LoadingButton>

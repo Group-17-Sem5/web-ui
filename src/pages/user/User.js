@@ -69,7 +69,7 @@ export default function X() {
   :`
 
   return (
-    <Page title="User | Minimal-UI">
+    <Page title="User | EasyMail">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>

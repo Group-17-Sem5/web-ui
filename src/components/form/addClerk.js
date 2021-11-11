@@ -28,11 +28,12 @@ import useEditData from 'src/hooks/useEditData'
 export default function AddPostmanForm() {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false)
+  const [states, setstates] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const clerkSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    mobileNumber: Yup.string().required('Mobile number is required').matches(phoneRegExp, 'Mobile number is not valid'),
+    mobileNumber: Yup.string().required('Mobile number is required').matches(phoneRegExp, 'Mobile number is not valid').min(9,'Not valid').max(10,'Not valid'),
     username: Yup.string().required('First Name is required').min(2,'Too short').max(50,'Too long'),
     // firstName: Yup.string().required('First Name is required').min(2,'Too short').max(50,'Too long'),
     // lastName: Yup.string().required('Last Name is required').min(2,'Too short').max(50,'Too long')
@@ -101,6 +102,7 @@ export default function AddPostmanForm() {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={6}>
             <TextField
+              placeholder="username"
               fullWidth
               type="text"
               label="Username"
@@ -112,6 +114,7 @@ export default function AddPostmanForm() {
             <Grid item xs={12} sm={6} md={6}>
             <TextField
               fullWidth
+              placeholder="Email Address"
               // autoComplete="username"
               type="email"
               label="Email address"
@@ -123,6 +126,7 @@ export default function AddPostmanForm() {
             <Grid item xs={12} sm={6} md={6}>
             <TextField
               fullWidth
+              placeholder="Phone Number"
               type="number"
               label="Phone Number"
               {...getFieldProps('mobileNumber')}
@@ -137,6 +141,7 @@ export default function AddPostmanForm() {
           size="large"
           type="submit"
           variant="contained"
+          disabled={!formik.dirty}
           loading={isSubmitting}
         >
           Save Details

@@ -11,7 +11,7 @@ export function useDetail() {
 export function DetailProvider({  children }) {
     const [token, setToken] = useState(localStorage.getItem('adminToken') || '')
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('adminUser') || '{}'))
-    const [loginStatus, setLoginStatus] = useState(false)
+    const [loginStatus, setLoginStatus] = useState()
     const [details, setDetails] = useState({})
     const [isLoading, setIsLoading] = useState(true)
 

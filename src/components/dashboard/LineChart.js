@@ -86,6 +86,24 @@ export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
 
   const chartOptions = merge(BaseOptionChart(), {
     // stroke: { width: [0, 2, 3] },
+    chart: {
+      zoom: {
+          enabled: true,
+          type: 'x',  
+          autoScaleYaxis: false,  
+          zoomedArea: {
+            fill: {
+              color: '#90CAF9',
+              opacity: 0.4
+            },
+            stroke: {
+              color: '#0D47A1',
+              opacity: 0.4,
+              width: 1
+            }
+          }
+      }
+  },
     plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
     fill: { type: ['solid', 'solid', 'solid'] },
     labels: label.length>0?label : labels,

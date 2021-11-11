@@ -64,7 +64,7 @@ export default function Profile() {
         </Stack>
 
         <Grid container spacing={3}>
-            <Grid  xs={3} item>
+            <Grid   md={3} xs={12} item>
                 <Card >
                     <CardActionArea >
                         <Grid 
@@ -109,7 +109,7 @@ export default function Profile() {
                     </CardActions>
                 </Card>
             </Grid>
-            <Grid xs={9} item>
+            <Grid  md={9} xs={12} item>
                 <Card >
                     <CardActionArea >
                         <CardContent>
@@ -150,20 +150,7 @@ export default function Profile() {
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            { id &&
-                            <Grid container spacing={3}>
-                                <Grid item sm={3} md={3}>
-                                    <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        Area
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={9} md={9}>
-                                    <Typography gutterBottom variant="h6" component="h2" style={{fontSize:'16px'}}>
-                                        {profile && profile.area}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                            }
+                            
                             {/* <Typography variant="body2" color="textSecondary" component="p">
                                 Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
                                 across all continents except Antarctica
