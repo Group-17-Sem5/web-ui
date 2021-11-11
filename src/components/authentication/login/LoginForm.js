@@ -131,6 +131,8 @@ export default function LoginForm() {
           type="submit"
           variant="contained"
           //loading={isSubmitting}
+          loading={loading}
+          disabled={!(formik.isValid && formik.dirty)}
         >
           Login
         </LoadingButton>

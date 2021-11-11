@@ -244,6 +244,7 @@ export default function AddCourier() {
           type="submit"
           variant="contained"
           loading={isSubmitting}
+          disabled={!(formik.isValid && formik.dirty)}
         >
           Save Details
         </LoadingButton>

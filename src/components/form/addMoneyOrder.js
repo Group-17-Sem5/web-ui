@@ -84,7 +84,7 @@ export default function AddMoneyOrder() {
     },
     validationSchema: postSchema,
     onSubmit: (values) => {
-      console.log("fuccccckkkk",values)
+      
       fetch(process.env.REACT_APP_API_HOST+url,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token},
@@ -232,6 +232,7 @@ console.log(values)
           type="submit"
           variant="contained"
           loading={isSubmitting}
+          disabled={!(formik.isValid && formik.dirty)}
         >
           Save Details
         </LoadingButton>

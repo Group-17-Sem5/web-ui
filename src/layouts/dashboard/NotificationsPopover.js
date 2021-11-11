@@ -54,8 +54,8 @@ const NOTIFICATIONS = [
   },
   {
     id: faker.datatype.uuid(),
-    title: 'You have new message',
-    description: '5 unread messages',
+    title: 'You have new email',
+    description: '5 unread emails',
     avatar: null,
     type: 'chat_message',
     createdAt: sub(new Date(), { days: 1, hours: 3, minutes: 30 }),

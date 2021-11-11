@@ -57,15 +57,7 @@ const TABLE_HEAD = [
 
   
 ];
-const TABLE_DATA = [
-  {senderID:'sender1',receiverID:'receiver1',sourceBranchID:'jaffna',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556rt667',amount:'200'},
-  {senderID:'sender2',receiverID:'receiver2',sourceBranchID:'kokuvil',lastAppearedBranchID:'colombo',state:'assigned',_id:'4545556rtggg667',amount:'350'},
-  {senderID:'sender3',receiverID:'receiver3',sourceBranchID:'koapy',lastAppearedBranchID:'kandy',state:'cancelled',_id:'4545556rt667gh',amount:'2000'},
-  {senderID:'sender4',receiverID:'receiver4',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
-  {senderID:'sender5',receiverID:'receiver5',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
-  {senderID:'sender6',receiverID:'receiver6',sourceBranchID:'nallur',lastAppearedBranchID:'colombo',state:'pending',_id:'4545556566rt667',amount:'120'},
-  {senderID:'sender7',receiverID:'receiver7',sourceBranchID:'wellawatta',lastAppearedBranchID:'jaffna',state:'delivered',_id:'4545556rt66766fg',amount:'130'},
-];
+
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -92,7 +84,7 @@ function applySortFilter(array, comparator, query,query2) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.senderID.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.specialCode.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   // if (query2) {
   //   return filter(array, (_user) => (_user.status)===query2);
@@ -199,18 +191,18 @@ const handleConfirmCancel = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.senderID);
+      const newSelecteds = USERLIST.map((n) => n.specialCode);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, senderID) => {
-    const selectedIndex = selected.indexOf(senderID);
+  const handleClick = (event, specialCode) => {
+    const selectedIndex = selected.indexOf(specialCode);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, senderID);
+      newSelected = newSelected.concat(selected, specialCode);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -288,7 +280,7 @@ const handleConfirmCancel = () => {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const {id,senderID,receiverID,sourceBranchID,receivingBranchID,_id,amount,specialCode,isCancelled,isDelivered } = row;
-                      const isItemSelected = selected.indexOf(senderID) !== -1;
+                      const isItemSelected = selected.indexOf(specialCode) !== -1;
 
                       return (
                         <TableRow
@@ -302,7 +294,7 @@ const handleConfirmCancel = () => {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, senderID)}
+                              onChange={(event) => handleClick(event, specialCode)}
                             />
                           </TableCell>
                           {/*<TableCell component="th" scope="row" padding="none">
