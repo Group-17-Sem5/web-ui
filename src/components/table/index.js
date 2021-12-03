@@ -230,7 +230,7 @@ export default function CustomTable({TABLE_HEAD,itemsUrl,delUrl,editRoute}) {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row,id) => {
                       const _id = row._id
-                      console.log(row)
+                      // console.log(row)
                       const isItemSelected = selected.indexOf(row.userName) !== -1;
 
                       return (

@@ -168,7 +168,7 @@ export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
         label="From"
         type="date"
         {...getFieldProps('startDate')}
-        defaultValue= "2021-09-27"
+        // defaultValue= "2021-09-27"
         // className={classes.textField}
         InputLabelProps={{
           shrink: true,
@@ -180,7 +180,7 @@ export default function LineChart({title,CHART_DATA,labels,subheader,url}) {
         label="To"
         type="date"
         {...getFieldProps('endDate')}
-        defaultValue="2021-09-27"
+        // defaultValue="2021-09-27"
         // className={classes.textField}
         InputLabelProps={{
           shrink: true,
