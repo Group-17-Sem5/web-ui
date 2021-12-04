@@ -122,7 +122,7 @@ export default function User() {
   };
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/api/clerk/post/',{
+    fetch ('https://easymailwebapp.herokuapp.com/api/clerk/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -152,7 +152,7 @@ export default function User() {
     const conApiURL = "clerk/post/confirm/"+ canItem._id;
     setCanItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/api/'+conApiURL, {
+    fetch( 'https://easymailwebapp.herokuapp.com/api/'+conApiURL, {
         method: 'post',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {
@@ -170,7 +170,7 @@ export default function User() {
     console.log(delItem._id)
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/api/'+delApiURL, {
+    fetch( 'https://easymailwebapp.herokuapp.com/api/'+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
     }).then( () => {

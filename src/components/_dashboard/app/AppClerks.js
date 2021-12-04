@@ -42,7 +42,7 @@ export default function AppNewUsers() {
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/api/clerk/clerk/',{
+    fetch ('https://easymailwebapp.herokuapp.com/api/clerk/clerk/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{

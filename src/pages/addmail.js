@@ -100,13 +100,7 @@ export default function AddPostForm() {
   function handleClick(event){
     event.preventDefault();
 
-   /*const newPost ={
-      sender: values.sender,
-      receiver: values.receiver,
-      sourceBranch: values.sourceBranch,
-      lastAppearedBranch: values.lastAppearedBranch
-    }
-    axios.post('http://localhost:5000/create',newPost)*/
+   
   }
 
   return (

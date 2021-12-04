@@ -60,7 +60,7 @@ export default function Profile() {
     }
 
     useEffect(()=>{
-      fetch ('http://localhost:5000/api/clerk/post/count',{
+      fetch ('https://easymailwebapp.herokuapp.com/api/clerk/post/count',{
         headers: { "Authorization": "Bearer " + token},
       })
       .then(result=>{

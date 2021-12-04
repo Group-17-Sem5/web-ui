@@ -44,7 +44,7 @@ export default function AppWeeklySales() {
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/api/clerk/post/',{
+    fetch ('https://easymailwebapp.herokuapp.com/api/clerk/post/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{

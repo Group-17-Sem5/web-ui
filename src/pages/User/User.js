@@ -106,7 +106,7 @@ export default function User() {
 
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/api/clerk/user/',{
+    fetch ('https://easymailwebapp.herokuapp.com/api/clerk/user/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
@@ -129,7 +129,7 @@ export default function User() {
     const delApiURL = "clerk/user/delete/"+ delItem._id;
     setDelItem(null)
     // setIsDelLoading(true)
-    fetch( 'http://localhost:5000/api/'+delApiURL, {
+    fetch( 'https://easymailwebapp.herokuapp.com/api/'+delApiURL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + token }
     }).then( () => {

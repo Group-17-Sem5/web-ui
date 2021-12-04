@@ -173,7 +173,7 @@ const handleConfirmCancel = () => {
   const conApiURL = "clerk/courier/confirm/"+ canItem._id;
   setCanItem(null)
   // setIsDelLoading(true)
-  fetch( 'http://localhost:5000/api/'+conApiURL, {
+  fetch( 'https://easymailwebapp.herokuapp.com/api/'+conApiURL, {
       method: 'post',
       headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + token }
   }).then( () => {

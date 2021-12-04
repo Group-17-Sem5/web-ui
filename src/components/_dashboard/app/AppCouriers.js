@@ -42,7 +42,7 @@ export default function AppCouriers() {
   const token = localStorage.getItem('adminToken')
 
   useEffect(()=>{
-    fetch ('http://localhost:5000/api/clerk/courier/',{
+    fetch ('https://easymailwebapp.herokuapp.com/api/clerk/courier/',{
       headers: { "Authorization": "Bearer " + token},
     })
     .then(result=>{
