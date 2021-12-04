@@ -108,7 +108,7 @@ export default function AddCourier() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
-  console.log("not going",values)
+ 
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="on"  onSubmit={handleSubmit}>
